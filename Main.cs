@@ -134,7 +134,6 @@ namespace AeroShot
 				}
 				catch (Exception)
 				{
-					throw;
 					MessageBox.Show(
 						"An error occurred while trying to take a screenshot.\r\n\r\nPlease make sure you have selected a valid window.",
 						"Error",
