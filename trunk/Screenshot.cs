@@ -108,13 +108,10 @@ namespace AeroShot
 			}
 			int sizeX = a1.Width;
 			int sizeY = a1.Height;
-			var f1 = new Bitmap(sizeX, sizeY, PixelFormat.Format32bppArgb);
 			var a = new UnsafeBitmap(a1);
 			var b = new UnsafeBitmap(b1);
-			var f = new UnsafeBitmap(f1);
 			a.LockImage();
 			b.LockImage();
-			f.LockImage();
 
 			PixelData pixelA;
 			PixelData pixelB;
@@ -130,7 +127,7 @@ namespace AeroShot
 				pixelB.Green = (byte) (pixelB.Alpha != 0 ? pixelB.Green * 255 / pixelB.Alpha : 0);
 				pixelB.Blue = (byte) (pixelB.Alpha != 0 ? pixelB.Blue * 255 / pixelB.Alpha : 0);
 
-				f.SetPixel(x, y, pixelB);
+				b.SetPixel(x, y, pixelB);
 
 				if (x == sizeX - 1)
 				{
@@ -143,8 +140,7 @@ namespace AeroShot
 
 			a.UnlockImage();
 			b.UnlockImage();
-			f.UnlockImage();
-			return f1;
+			return b1;
 		}
 
 		private static int Abs(int i)
