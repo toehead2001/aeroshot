@@ -20,6 +20,14 @@ using System.Drawing.Imaging;
 
 namespace AeroShot
 {
+	public struct PixelData
+	{
+		public byte Red;
+		public byte Green;
+		public byte Blue;
+		public byte Alpha;
+	}
+
 	public unsafe class UnsafeBitmap
 	{
 		private readonly Bitmap _inputBitmap;
@@ -27,14 +35,6 @@ namespace AeroShot
 		private Byte* _pBase = null;
 		private PixelData* _pixelData = null;
 		private int _width;
-
-		private struct PixelData
-		{
-			public byte Red;
-			public byte Green;
-			public byte Blue;
-			public byte Alpha;
-		}
 
 		public UnsafeBitmap(Bitmap inputBitmap)
 		{
@@ -53,19 +53,19 @@ namespace AeroShot
 			_pBase = (Byte*) _bitmapData.Scan0.ToPointer();
 		}
 
-		public byte[] GetPixel(int x, int y)
+		public PixelData GetPixel(int x, int y)
 		{
 			_pixelData = (PixelData*) (_pBase + y*_width + x*sizeof (PixelData));
-			return new[] {_pixelData->Red, _pixelData->Green, _pixelData->Blue, _pixelData->Alpha};
+			return *_pixelData;
 		}
 
-		public void SetPixel(int x, int y, byte[] p)
+		public void SetPixel(int x, int y, PixelData p)
 		{
 			var data = (PixelData*) (_pBase + y*_width + x*sizeof (PixelData));
-			data->Red = p[0];
-			data->Green = p[1];
-			data->Blue = p[2];
-			data->Alpha = p[3];
+			data->Red = p.Red;
+			data->Green = p.Green;
+			data->Blue = p.Blue;
+			data->Alpha = p.Alpha;
 		}
 
 		public void UnlockImage()

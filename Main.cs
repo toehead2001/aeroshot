@@ -34,7 +34,7 @@ namespace AeroShot
 		private const long WS_VISIBLE = 0x10000000L;
 		private static int windowId;
 		private readonly List<IntPtr> handleList = new List<IntPtr>();
-		private WindowsApi.CallBackPtr callBackPtr;
+		private CallBackPtr callBackPtr;
 		private RegistryKey registryKey;
 
 		public AeroShot()
@@ -71,7 +71,7 @@ namespace AeroShot
 			handleList.Clear();
 			windowList.Items.Clear();
 
-			callBackPtr = new WindowsApi.CallBackPtr(ListWindows);
+			callBackPtr = new CallBackPtr(ListWindows);
 			WindowsApi.EnumWindows(callBackPtr, (IntPtr) 0);
 			windowList.SelectedIndex = 0;
 		}

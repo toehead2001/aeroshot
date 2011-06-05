@@ -35,9 +35,9 @@ namespace AeroShot
 			foreach (Screen s in Screen.AllScreens)
 				totalSize = Rectangle.Union(totalSize, s.Bounds);
 
-			WindowsApi.Rect rct;
+			WindowsRect rct;
 
-			if (WindowsApi.DwmGetWindowAttribute(hWnd, WindowsApi.DwmWindowAttribute.DWMWA_EXTENDED_FRAME_BOUNDS, &rct, sizeof(WindowsApi.Rect)) != 0)
+			if (WindowsApi.DwmGetWindowAttribute(hWnd, DwmWindowAttribute.DWMWA_EXTENDED_FRAME_BOUNDS, &rct, sizeof(WindowsRect)) != 0)
 			{
 				// DwmGetWindowAttribute() failed, usually means Aero is disabled so we fall back to GetWindowRect()
 				WindowsApi.GetWindowRect(hWnd, &rct);
@@ -116,19 +116,19 @@ namespace AeroShot
 			b.LockImage();
 			f.LockImage();
 
-			byte[] pixelA;
-			byte[] pixelB;
+			PixelData pixelA;
+			PixelData pixelB;
 
 			for (int x = 0, y = 0; x < sizeX && y < sizeY; )
 			{
 				pixelA = a.GetPixel(x, y);
 				pixelB = b.GetPixel(x, y);
 
-				pixelB[3] = Convert.ToByte(255 - ((Abs(pixelA[0] - pixelB[0]) + Abs(pixelA[1] - pixelB[1]) + Abs(pixelA[2] - pixelB[2])) / 3));
+				pixelB.Alpha = Convert.ToByte(255 - ((Abs(pixelA.Red - pixelB.Red) + Abs(pixelA.Green - pixelB.Green) + Abs(pixelA.Blue - pixelB.Blue)) / 3));
 
-				pixelB[0] = (byte) (pixelB[3] != 0 ? pixelB[0] * 255 / pixelB[3] : 0);
-				pixelB[1] = (byte) (pixelB[3] != 0 ? pixelB[1] * 255 / pixelB[3] : 0);
-				pixelB[2] = (byte) (pixelB[3] != 0 ? pixelB[2] * 255 / pixelB[3] : 0);
+				pixelB.Red = (byte) (pixelB.Alpha != 0 ? pixelB.Red * 255 / pixelB.Alpha : 0);
+				pixelB.Green = (byte) (pixelB.Alpha != 0 ? pixelB.Green * 255 / pixelB.Alpha : 0);
+				pixelB.Blue = (byte) (pixelB.Alpha != 0 ? pixelB.Blue * 255 / pixelB.Alpha : 0);
 
 				f.SetPixel(x, y, pixelB);
 

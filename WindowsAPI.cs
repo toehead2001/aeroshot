@@ -20,35 +20,35 @@ using System.Text;
 
 namespace AeroShot
 {
+	public delegate bool CallBackPtr(IntPtr hwnd, int lParam);
+
+	public struct WindowsRect
+	{
+		public int Left;
+		public int Top;
+		public int Right;
+		public int Bottom;
+	}
+
+	public enum DwmWindowAttribute
+	{
+		DWMWA_NCRENDERING_ENABLED = 1,
+		DWMWA_NCRENDERING_POLICY,
+		DWMWA_TRANSITIONS_FORCEDISABLED,
+		DWMWA_ALLOW_NCPAINT,
+		DWMWA_CAPTION_BUTTON_BOUNDS,
+		DWMWA_NONCLIENT_RTL_LAYOUT,
+		DWMWA_FORCE_ICONIC_REPRESENTATION,
+		DWMWA_FLIP3D_POLICY,
+		DWMWA_EXTENDED_FRAME_BOUNDS,
+		DWMWA_HAS_ICONIC_BITMAP,
+		DWMWA_DISALLOW_PEEK,
+		DWMWA_EXCLUDED_FROM_PEEK,
+		DWMWA_LAST
+	}
+
 	internal unsafe class WindowsApi
 	{
-		public delegate bool CallBackPtr(IntPtr hwnd, int lParam);
-
-		public struct Rect
-		{
-			public int Left;
-			public int Top;
-			public int Right;
-			public int Bottom;
-		}
-
-		public enum DwmWindowAttribute
-		{
-			DWMWA_NCRENDERING_ENABLED = 1,
-			DWMWA_NCRENDERING_POLICY,
-			DWMWA_TRANSITIONS_FORCEDISABLED,
-			DWMWA_ALLOW_NCPAINT,
-			DWMWA_CAPTION_BUTTON_BOUNDS,
-			DWMWA_NONCLIENT_RTL_LAYOUT,
-			DWMWA_FORCE_ICONIC_REPRESENTATION,
-			DWMWA_FLIP3D_POLICY,
-			DWMWA_EXTENDED_FRAME_BOUNDS,
-			DWMWA_HAS_ICONIC_BITMAP,
-			DWMWA_DISALLOW_PEEK,
-			DWMWA_EXCLUDED_FROM_PEEK,
-			DWMWA_LAST
-		}
-
 		[DllImport("user32.dll")]
 		public static extern bool RegisterHotKey(IntPtr hWnd, int id, int fsModifiers, int vlc);
 
@@ -68,10 +68,10 @@ namespace AeroShot
 		public static extern int GetWindowLong(IntPtr hWnd, int nIndex);
 
 		[DllImport("user32.dll")]
-		public static extern int GetWindowRect(IntPtr hWnd, Rect* rect);
+		public static extern int GetWindowRect(IntPtr hWnd, WindowsRect* rect);
 
 		[DllImport("dwmapi.dll")]
-		public static extern int DwmGetWindowAttribute(IntPtr hWnd, DwmWindowAttribute dwAttribute, Rect* pvAttribute, int cbAttribute);
+		public static extern int DwmGetWindowAttribute(IntPtr hWnd, DwmWindowAttribute dwAttribute, WindowsRect* pvAttribute, int cbAttribute);
 
 		[DllImport("user32.dll")]
 		public static extern IntPtr GetForegroundWindow();
