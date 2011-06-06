@@ -17,16 +17,13 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
 using Microsoft.Win32;
 
-namespace AeroShot
-{
-	public sealed partial class AeroShot : Form
-	{
+namespace AeroShot {
+	public sealed partial class AeroShot : Form {
 		private const int GWL_STYLE = -16;
 		private const int MOD_WIN = 0x0008;
 		private const int WM_HOTKEY = 0x0312;
@@ -34,11 +31,10 @@ namespace AeroShot
 		private const long WS_VISIBLE = 0x10000000L;
 		private static int windowId;
 		private readonly List<IntPtr> handleList = new List<IntPtr>();
+		private readonly RegistryKey registryKey;
 		private CallBackPtr callBackPtr;
-		private RegistryKey registryKey;
 
-		public AeroShot()
-		{
+		public AeroShot() {
 			Icon = Icon.ExtractAssociatedIcon(Application.ExecutablePath);
 			InitializeComponent();
 
@@ -47,27 +43,24 @@ namespace AeroShot
 
 			object value;
 			registryKey = Registry.CurrentUser.CreateSubKey(@"Software\AeroShot");
-			if((value = registryKey.GetValue("LastPath")) != null && value.GetType() == (typeof(string)))
-				folderTextBox.Text = (string)value;
+			if ((value = registryKey.GetValue("LastPath")) != null && value.GetType() == (typeof (string)))
+				folderTextBox.Text = (string) value;
 			else
 				folderTextBox.Text = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
 		}
 
-		protected override void WndProc(ref Message m)
-		{
+		protected override void WndProc(ref Message m) {
 			base.WndProc(ref m);
 
 			if (m.Msg == WM_HOTKEY)
 				TakeScreenshot(WindowsApi.GetForegroundWindow());
 		}
 
-		private void ssButton_Click(object sender, EventArgs e)
-		{
+		private void ssButton_Click(object sender, EventArgs e) {
 			TakeScreenshot(handleList[windowList.SelectedIndex]);
 		}
 
-		private void rButton_Click(object sender, EventArgs e)
-		{
+		private void rButton_Click(object sender, EventArgs e) {
 			handleList.Clear();
 			windowList.Items.Clear();
 
@@ -76,23 +69,19 @@ namespace AeroShot
 			windowList.SelectedIndex = 0;
 		}
 
-		private void AeroShot_Shown(object sender, EventArgs e)
-		{
+		private void AeroShot_Shown(object sender, EventArgs e) {
 			rButton_Click(null, null);
 		}
 
-		private void AeroShot_Closing(object sender, FormClosingEventArgs e)
-		{
+		private void AeroShot_Closing(object sender, FormClosingEventArgs e) {
 			WindowsApi.UnregisterHotKey(Handle, windowId);
 			registryKey.SetValue("LastPath", folderTextBox.Text);
 		}
 
-		private bool ListWindows(IntPtr hWnd, int lParam)
-		{
+		private bool ListWindows(IntPtr hWnd, int lParam) {
 			if ((WindowsApi.GetWindowLong(hWnd, GWL_STYLE) & WS_VISIBLE) == WS_VISIBLE &&
-				(WindowsApi.GetWindowLong(hWnd, GWL_STYLE) & WS_CAPTION) == WS_CAPTION)
-			{
-				int length = WindowsApi.GetWindowTextLength(hWnd);
+				(WindowsApi.GetWindowLong(hWnd, GWL_STYLE) & WS_CAPTION) == WS_CAPTION) {
+				var length = WindowsApi.GetWindowTextLength(hWnd);
 				var sb = new StringBuilder(length + 1);
 				WindowsApi.GetWindowText(hWnd, sb, sb.Capacity);
 
@@ -102,55 +91,54 @@ namespace AeroShot
 			return true;
 		}
 
-		private void TakeScreenshot(IntPtr hWnd)
-		{
-			if (Directory.Exists(folderTextBox.Text))
-			{
-				try
-				{
-					int length = WindowsApi.GetWindowTextLength(hWnd);
+		private void TakeScreenshot(IntPtr hWnd) {
+			if (Directory.Exists(folderTextBox.Text)) {
+				try {
+					var length = WindowsApi.GetWindowTextLength(hWnd);
 					var sb = new StringBuilder(length + 1);
 					WindowsApi.GetWindowText(hWnd, sb, sb.Capacity);
 
-					string name = sb.ToString();
+					var name = sb.ToString();
 
-					foreach (char inv in Path.GetInvalidFileNameChars())
+					foreach (var inv in Path.GetInvalidFileNameChars())
 						name = name.Replace(inv.ToString(), string.Empty);
 
 					name = name.Trim();
 					if (name == string.Empty)
 						name = "AeroShot";
 
-					string path = folderTextBox.Text + Path.DirectorySeparatorChar + name + ".png";
+					var path = folderTextBox.Text + Path.DirectorySeparatorChar + name + ".png";
 
 					if (File.Exists(path))
-						for (int i = 1; i < 9999; i++)
-						{
+						for (var i = 1; i < 9999; i++) {
 							path = folderTextBox.Text + Path.DirectorySeparatorChar + name + " " + i + ".png";
 							if (!File.Exists(path))
 								break;
 						}
-					Screenshot.GetScreenshot(hWnd).Save(path, ImageFormat.Png);
+					var s = Screenshot.TrimTransparency(Screenshot.GetScreenshot(hWnd));
+					if (s == null) {
+						MessageBox.Show(
+							"The screenshot taken was blank, it will not be saved.", "Warning",
+							MessageBoxButtons.OK, MessageBoxIcon.Warning);
+					}
+					else
+						s.Save(path, System.Drawing.Imaging.ImageFormat.Png);
 				}
-				catch (Exception)
-				{
+				catch (Exception) {
 					MessageBox.Show(
 						"An error occurred while trying to take a screenshot.\r\n\r\nPlease make sure you have selected a valid window.",
 						"Error",
 						MessageBoxButtons.OK, MessageBoxIcon.Error);
 				}
 			}
-			else
-			{
+			else {
 				MessageBox.Show("Invalid directory chosen.", "Error",
 								MessageBoxButtons.OK, MessageBoxIcon.Error);
 			}
 		}
 
-		private void bButton_Click(object sender, EventArgs e)
-		{
-			if (folderSelection.ShowDialog() == DialogResult.OK)
-			{
+		private void bButton_Click(object sender, EventArgs e) {
+			if (folderSelection.ShowDialog() == DialogResult.OK) {
 				folderTextBox.Text = folderSelection.SelectedPath;
 			}
 		}
