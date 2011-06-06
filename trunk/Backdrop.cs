@@ -17,12 +17,9 @@
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace AeroShot
-{
-	public sealed class Backdrop : Form
-	{
-		public Backdrop()
-		{
+namespace AeroShot {
+	public sealed class Backdrop : Form {
+		public Backdrop() {
 			SuspendLayout();
 			AutoScaleMode = AutoScaleMode.None;
 			ClientSize = new Size(100, 100);

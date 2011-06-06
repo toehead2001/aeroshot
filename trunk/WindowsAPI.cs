@@ -18,20 +18,17 @@ using System;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace AeroShot
-{
+namespace AeroShot {
 	public delegate bool CallBackPtr(IntPtr hwnd, int lParam);
 
-	public struct WindowsRect
-	{
+	public struct WindowsRect {
 		public int Left;
 		public int Top;
 		public int Right;
 		public int Bottom;
 	}
 
-	public enum DwmWindowAttribute
-	{
+	public enum DwmWindowAttribute {
 		DWMWA_NCRENDERING_ENABLED = 1,
 		DWMWA_NCRENDERING_POLICY,
 		DWMWA_TRANSITIONS_FORCEDISABLED,
@@ -47,8 +44,7 @@ namespace AeroShot
 		DWMWA_LAST
 	}
 
-	internal unsafe class WindowsApi
-	{
+	internal unsafe class WindowsApi {
 		[DllImport("user32.dll")]
 		public static extern bool RegisterHotKey(IntPtr hWnd, int id, int fsModifiers, int vlc);
 

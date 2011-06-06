@@ -20,35 +20,30 @@ using System.Drawing.Imaging;
 using System.Threading;
 using System.Windows.Forms;
 
-namespace AeroShot
-{
-	internal class Screenshot
-	{
-		public static unsafe Bitmap GetScreenshot(IntPtr hWnd)
-		{
+namespace AeroShot {
+	internal class Screenshot {
+		public static unsafe Bitmap GetScreenshot(IntPtr hWnd) {
 			WindowsApi.ShowWindow(hWnd, 1); // Show selected window, if minimized
 			WindowsApi.SetForegroundWindow(hWnd);
-			Thread.Sleep(100); // Wait for window to be fully visible
+			Thread.Sleep(200); // Wait for window to be fully visible
 
 			// Generate a rectangle with the size of all monitors combined
-			Rectangle totalSize = Rectangle.Empty;
-			foreach (Screen s in Screen.AllScreens)
+			var totalSize = Rectangle.Empty;
+			foreach (var s in Screen.AllScreens)
 				totalSize = Rectangle.Union(totalSize, s.Bounds);
 
 			WindowsRect rct;
 
-			if (WindowsApi.DwmGetWindowAttribute(hWnd, DwmWindowAttribute.DWMWA_EXTENDED_FRAME_BOUNDS, &rct, sizeof(WindowsRect)) != 0)
-			{
+			if (WindowsApi.DwmGetWindowAttribute(hWnd, DwmWindowAttribute.DWMWA_EXTENDED_FRAME_BOUNDS, &rct, sizeof(WindowsRect)) != 0) {
 				// DwmGetWindowAttribute() failed, usually means Aero is disabled so we fall back to GetWindowRect()
 				WindowsApi.GetWindowRect(hWnd, &rct);
 			}
-			else // DwmGetWindowAttribute() succeeded
-			{
-				// Add a 30px margin for window shadows
-				rct.Left -= 30;
-				rct.Right += 30;
-				rct.Top -= 30;
-				rct.Bottom += 30;
+			else { // DwmGetWindowAttribute() succeeded
+				// Add a 40px margin for window shadows. Excess transparency is trimmed out later
+				rct.Left -= 40;
+				rct.Right += 40;
+				rct.Top -= 40;
+				rct.Bottom += 40;
 			}
 
 			// These next 4 checks handle if the window is outside of the visible screen
@@ -62,9 +57,9 @@ namespace AeroShot
 				rct.Bottom = totalSize.Bottom;
 
 			var whiteShot = new Bitmap(rct.Right - rct.Left, rct.Bottom - rct.Top, PixelFormat.Format32bppArgb);
-			Graphics whiteShotGraphics = Graphics.FromImage(whiteShot);
+			var whiteShotGraphics = Graphics.FromImage(whiteShot);
 			var blackShot = new Bitmap(rct.Right - rct.Left, rct.Bottom - rct.Top, PixelFormat.Format32bppArgb);
-			Graphics blackShotGraphics = Graphics.FromImage(blackShot);
+			var blackShotGraphics = Graphics.FromImage(blackShot);
 
 			var backdrop = new Backdrop();
 			backdrop.BackColor = Color.FromArgb(255, 255, 255);
@@ -74,24 +69,22 @@ namespace AeroShot
 			backdrop.Location = new Point(rct.Left, rct.Top);
 
 			WindowsApi.SetForegroundWindow(backdrop.Handle);
-			Thread.Sleep(100);
 			WindowsApi.SetForegroundWindow(hWnd);
-			Thread.Sleep(100);
+			Thread.Sleep(200);
 
 			// Capture screenshot with white background
 			whiteShotGraphics.CopyFromScreen(rct.Left, rct.Top, 0, 0, new Size(rct.Right - rct.Left, rct.Bottom - rct.Top),
-			                                 CopyPixelOperation.SourceCopy);
+											 CopyPixelOperation.SourceCopy);
 			whiteShotGraphics.Dispose();
 
 			backdrop.BackColor = Color.FromArgb(0, 0, 0);
 			WindowsApi.SetForegroundWindow(backdrop.Handle);
-			Thread.Sleep(100);
 			WindowsApi.SetForegroundWindow(hWnd);
-			Thread.Sleep(100);
+			Thread.Sleep(200);
 
 			// Capture screenshot with black background
 			blackShotGraphics.CopyFromScreen(rct.Left, rct.Top, 0, 0, new Size(rct.Right - rct.Left, rct.Bottom - rct.Top),
-			                                 CopyPixelOperation.SourceCopy);
+											 CopyPixelOperation.SourceCopy);
 			blackShotGraphics.Dispose();
 
 			backdrop.Dispose();
@@ -100,24 +93,105 @@ namespace AeroShot
 			return DifferentiateAlpha(whiteShot, blackShot);
 		}
 
-		private static Bitmap DifferentiateAlpha(Bitmap a1, Bitmap b1)
-		{
-			if (a1.Width != b1.Width || a1.Height != b1.Height)
-			{
-				return null;
-			}
-			int sizeX = a1.Width;
-			int sizeY = a1.Height;
-			var a = new UnsafeBitmap(a1);
+		public static Bitmap TrimTransparency(Bitmap b1) {
+			var sizeX = b1.Width;
+			var sizeY = b1.Height;
 			var b = new UnsafeBitmap(b1);
+			b.LockImage();
+
+			var left = -1;
+			var top = -1;
+			var right = -1;
+			var bottom = -1;
+
+			PixelData p;
+
+			for (int x = 0, y = 0;;) {
+				p = b.GetPixel(x, y);
+				if(left == -1) {
+					if(p.Alpha != 0) {
+						left = x;
+						x = 0;
+						y = 0;
+						continue;
+					}
+					if (y == sizeY - 1) {
+						x++;
+						y = 0;
+					}
+					else
+						y++;
+
+					continue;
+				}
+				if (top == -1) {
+					if (p.Alpha != 0) {
+						top = y;
+						x = sizeX - 1;
+						y = 0;
+						continue;
+					}
+					if (x == sizeX - 1) {
+						y++;
+						x = 0;
+					}
+					else
+						x++;
+
+					continue;
+				}
+				if (right == -1) {
+					if (p.Alpha != 0) {
+						right = x + 1;
+						x = 0;
+						y = sizeY - 1;
+						continue;
+					}
+					if (y == sizeY - 1) {
+						x--;
+						y = 0;
+					}
+					else
+						y++;
+
+					continue;
+				}
+				if (bottom == -1) {
+					if (p.Alpha != 0) {
+						bottom = y + 1;
+						break;
+					}
+					if (x == sizeX - 1) {
+						y--;
+						x = 0;
+					}
+					else
+						x++;
+
+					continue;
+				}
+			}
+			b.UnlockImage();
+			if(left >= right || top >= bottom)
+				return null;
+
+			return b1.Clone(new Rectangle(left, top, right - left, bottom - top), b1.PixelFormat);
+		}
+
+		private static Bitmap DifferentiateAlpha(Bitmap whiteBitmap, Bitmap blackBitmap) {
+			if (whiteBitmap.Width != blackBitmap.Width || whiteBitmap.Height != blackBitmap.Height)
+				return null;
+			var sizeX = whiteBitmap.Width;
+			var sizeY = whiteBitmap.Height;
+			var a = new UnsafeBitmap(whiteBitmap);
+			var b = new UnsafeBitmap(blackBitmap);
 			a.LockImage();
 			b.LockImage();
 
 			PixelData pixelA;
 			PixelData pixelB;
 
-			for (int x = 0, y = 0; x < sizeX && y < sizeY; )
-			{
+			for (int x = 0, y = 0; x < sizeX && y < sizeY; ) {
 				pixelA = a.GetPixel(x, y);
 				pixelB = b.GetPixel(x, y);
 
@@ -129,8 +203,7 @@ namespace AeroShot
 
 				b.SetPixel(x, y, pixelB);
 
-				if (x == sizeX - 1)
-				{
+				if (x == sizeX - 1) {
 					y++;
 					x = 0;
 					continue;
@@ -140,11 +213,10 @@ namespace AeroShot
 
 			a.UnlockImage();
 			b.UnlockImage();
-			return b1;
+			return blackBitmap;
 		}
 
-		private static int Abs(int i)
-		{
+		private static int Abs(int i) {
 			// This is a magnitude more faster than Math.Abs()
 			return i < 0 ? -i : i;
 		}

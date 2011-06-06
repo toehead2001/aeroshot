@@ -14,16 +14,12 @@
 	You should have received a copy of the GNU General Public License
 	along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
-namespace AeroShot
-{
-	sealed partial class AeroShot
-	{
+namespace AeroShot {
+	sealed partial class AeroShot {
 		private System.ComponentModel.IContainer components = null;
 
-		protected override void Dispose(bool disposing)
-		{
-			if (disposing && (components != null))
-			{
+		protected override void Dispose(bool disposing) {
+			if (disposing && (components != null)) {
 				components.Dispose();
 			}
 			base.Dispose(disposing);
@@ -35,8 +31,7 @@ namespace AeroShot
 		/// Required method for Designer support - do not modify
 		/// the contents of this method with the code editor.
 		/// </summary>
-		private void InitializeComponent()
-		{
+		private void InitializeComponent() {
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AeroShot));
 			this.ssButton = new System.Windows.Forms.Button();
 			this.windowList = new System.Windows.Forms.ComboBox();
