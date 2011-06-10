@@ -25,6 +25,7 @@ namespace AeroShot {
 			ClientSize = new Size(100, 100);
 			ShowInTaskbar = false;
 			ShowIcon = false;
+			StartPosition = FormStartPosition.Manual;
 			ControlBox = false;
 			MaximizeBox = false;
 			MinimizeBox = false;

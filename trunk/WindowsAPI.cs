@@ -26,6 +26,20 @@ namespace AeroShot {
 		public int Top;
 		public int Right;
 		public int Bottom;
+
+		public WindowsRect(int l, int t, int r, int b) {
+			Left = l;
+			Top = t;
+			Right = r;
+			Bottom = b;
+		}
+
+		public WindowsRect(int x) {
+			Left = x;
+			Top = x;
+			Right = x;
+			Bottom = x;
+		}
 	}
 
 	public enum DwmWindowAttribute {
@@ -46,6 +60,18 @@ namespace AeroShot {
 
 	internal unsafe class WindowsApi {
 		[DllImport("user32.dll")]
+		public static extern bool SetForegroundWindow(IntPtr hWnd);
+
+		[DllImport("user32.dll")]
+		public static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+
+		[DllImport("user32.dll")]
+		public static extern bool MoveWindow(IntPtr hWnd, int x, int y, int nWidth, int nHeight, bool bRepaint);
+
+		[DllImport("user32.dll")]
+		public static extern bool GetWindowRect(IntPtr hWnd, WindowsRect* rect);
+
+		[DllImport("user32.dll")]
 		public static extern bool RegisterHotKey(IntPtr hWnd, int id, int fsModifiers, int vlc);
 
 		[DllImport("user32.dll")]
@@ -55,27 +81,18 @@ namespace AeroShot {
 		public static extern bool EnumWindows(CallBackPtr lpEnumFunc, IntPtr lParam);
 
 		[DllImport("user32.dll")]
+		public static extern long GetWindowLong(IntPtr hWnd, int nIndex);
+
+		[DllImport("user32.dll")]
 		public static extern int GetWindowText(IntPtr hWnd, StringBuilder lpString, int nMaxCount);
 
 		[DllImport("user32.dll")]
 		public static extern int GetWindowTextLength(IntPtr hWnd);
-
-		[DllImport("user32.dll")]
-		public static extern int GetWindowLong(IntPtr hWnd, int nIndex);
-
-		[DllImport("user32.dll")]
-		public static extern int GetWindowRect(IntPtr hWnd, WindowsRect* rect);
 
 		[DllImport("dwmapi.dll")]
 		public static extern int DwmGetWindowAttribute(IntPtr hWnd, DwmWindowAttribute dwAttribute, WindowsRect* pvAttribute, int cbAttribute);
 
 		[DllImport("user32.dll")]
 		public static extern IntPtr GetForegroundWindow();
-
-		[DllImport("user32.dll")]
-		public static extern bool SetForegroundWindow(IntPtr hWnd);
-
-		[DllImport("user32.dll")]
-		public static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
 	}
 }

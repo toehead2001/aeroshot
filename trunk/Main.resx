@@ -119,14 +119,14 @@
   </resheader>
   <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="ssButton.Location" type="System.Drawing.Point, System.Drawing">
-    <value>15, 110</value>
+    <value>12, 127</value>
   </data>
   <data name="ssButton.Size" type="System.Drawing.Size, System.Drawing">
-    <value>401, 23</value>
+    <value>404, 23</value>
   </data>
   <assembly alias="mscorlib" name="mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="ssButton.TabIndex" type="System.Int32, mscorlib">
-    <value>4</value>
+    <value>10</value>
   </data>
   <data name="ssButton.Text" xml:space="preserve">
     <value>Take Screenshot</value>
@@ -141,7 +141,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;ssButton.ZOrder" xml:space="preserve">
-    <value>6</value>
+    <value>10</value>
   </data>
   <data name="windowList.Location" type="System.Drawing.Point, System.Drawing">
     <value>15, 25</value>
@@ -150,7 +150,7 @@
     <value>305, 21</value>
   </data>
   <data name="windowList.TabIndex" type="System.Int32, mscorlib">
-    <value>0</value>
+    <value>1</value>
   </data>
   <data name="&gt;&gt;windowList.Name" xml:space="preserve">
     <value>windowList</value>
@@ -162,7 +162,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;windowList.ZOrder" xml:space="preserve">
-    <value>5</value>
+    <value>9</value>
   </data>
   <data name="label1.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -174,7 +174,7 @@
     <value>130, 13</value>
   </data>
   <data name="label1.TabIndex" type="System.Int32, mscorlib">
-    <value>4</value>
+    <value>0</value>
   </data>
   <data name="label1.Text" xml:space="preserve">
     <value>Select window to capture:</value>
@@ -189,7 +189,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;label1.ZOrder" xml:space="preserve">
-    <value>4</value>
+    <value>8</value>
   </data>
   <data name="label2.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -201,7 +201,7 @@
     <value>107, 13</value>
   </data>
   <data name="label2.TabIndex" type="System.Int32, mscorlib">
-    <value>5</value>
+    <value>3</value>
   </data>
   <data name="label2.Text" xml:space="preserve">
     <value>Save screenshots to:</value>
@@ -216,7 +216,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;label2.ZOrder" xml:space="preserve">
-    <value>3</value>
+    <value>7</value>
   </data>
   <data name="rButton.Location" type="System.Drawing.Point, System.Drawing">
     <value>326, 25</value>
@@ -225,7 +225,7 @@
     <value>90, 23</value>
   </data>
   <data name="rButton.TabIndex" type="System.Int32, mscorlib">
-    <value>1</value>
+    <value>2</value>
   </data>
   <data name="rButton.Text" xml:space="preserve">
     <value>Refresh List</value>
@@ -240,7 +240,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;rButton.ZOrder" xml:space="preserve">
-    <value>2</value>
+    <value>6</value>
   </data>
   <data name="folderTextBox.Location" type="System.Drawing.Point, System.Drawing">
     <value>15, 75</value>
@@ -249,7 +249,7 @@
     <value>305, 20</value>
   </data>
   <data name="folderTextBox.TabIndex" type="System.Int32, mscorlib">
-    <value>2</value>
+    <value>4</value>
   </data>
   <data name="&gt;&gt;folderTextBox.Name" xml:space="preserve">
     <value>folderTextBox</value>
@@ -261,7 +261,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;folderTextBox.ZOrder" xml:space="preserve">
-    <value>0</value>
+    <value>4</value>
   </data>
   <data name="bButton.Location" type="System.Drawing.Point, System.Drawing">
     <value>326, 72</value>
@@ -270,7 +270,7 @@
     <value>90, 23</value>
   </data>
   <data name="bButton.TabIndex" type="System.Int32, mscorlib">
-    <value>3</value>
+    <value>5</value>
   </data>
   <data name="bButton.Text" xml:space="preserve">
     <value>Browse</value>
@@ -285,7 +285,7 @@
     <value>$this</value>
   </data>
   <data name="&gt;&gt;bButton.ZOrder" xml:space="preserve">
-    <value>1</value>
+    <value>5</value>
   </data>
   <metadata name="folderSelection.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
@@ -294,14 +294,110 @@
     <value>Please select the folder you wish screenshots to be saved to.
 Filenames are determined by the title of the window you are capturing.</value>
   </data>
+  <data name="resizeCheckBox.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="resizeCheckBox.Location" type="System.Drawing.Point, System.Drawing">
+    <value>15, 102</value>
+  </data>
+  <data name="resizeCheckBox.Size" type="System.Drawing.Size, System.Drawing">
+    <value>97, 17</value>
+  </data>
+  <data name="resizeCheckBox.TabIndex" type="System.Int32, mscorlib">
+    <value>6</value>
+  </data>
+  <data name="resizeCheckBox.Text" xml:space="preserve">
+    <value>Resize window</value>
+  </data>
+  <data name="&gt;&gt;resizeCheckBox.Name" xml:space="preserve">
+    <value>resizeCheckBox</value>
+  </data>
+  <data name="&gt;&gt;resizeCheckBox.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;resizeCheckBox.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;resizeCheckBox.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="windowHeight.Location" type="System.Drawing.Point, System.Drawing">
+    <value>326, 101</value>
+  </data>
+  <data name="windowHeight.Size" type="System.Drawing.Size, System.Drawing">
+    <value>90, 20</value>
+  </data>
+  <data name="windowHeight.TabIndex" type="System.Int32, mscorlib">
+    <value>9</value>
+  </data>
+  <data name="&gt;&gt;windowHeight.Name" xml:space="preserve">
+    <value>windowHeight</value>
+  </data>
+  <data name="&gt;&gt;windowHeight.Type" xml:space="preserve">
+    <value>System.Windows.Forms.NumericUpDown, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;windowHeight.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;windowHeight.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="label3.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="label3.Location" type="System.Drawing.Point, System.Drawing">
+    <value>308, 103</value>
+  </data>
+  <data name="label3.Size" type="System.Drawing.Size, System.Drawing">
+    <value>12, 13</value>
+  </data>
+  <data name="label3.TabIndex" type="System.Int32, mscorlib">
+    <value>8</value>
+  </data>
+  <data name="label3.Text" xml:space="preserve">
+    <value>x</value>
+  </data>
+  <data name="&gt;&gt;label3.Name" xml:space="preserve">
+    <value>label3</value>
+  </data>
+  <data name="&gt;&gt;label3.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;label3.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;label3.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="windowWidth.Location" type="System.Drawing.Point, System.Drawing">
+    <value>212, 101</value>
+  </data>
+  <data name="windowWidth.Size" type="System.Drawing.Size, System.Drawing">
+    <value>90, 20</value>
+  </data>
+  <data name="windowWidth.TabIndex" type="System.Int32, mscorlib">
+    <value>7</value>
+  </data>
+  <data name="&gt;&gt;windowWidth.Name" xml:space="preserve">
+    <value>windowWidth</value>
+  </data>
+  <data name="&gt;&gt;windowWidth.Type" xml:space="preserve">
+    <value>System.Windows.Forms.NumericUpDown, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;windowWidth.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;windowWidth.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
   <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
   <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
-    <value>429, 142</value>
+    <value>429, 162</value>
   </data>
   <data name="$this.Text" xml:space="preserve">
-    <value>AeroShot v1.0</value>
+    <value>AeroShot v1.1</value>
   </data>
   <data name="&gt;&gt;folderSelection.Name" xml:space="preserve">
     <value>folderSelection</value>

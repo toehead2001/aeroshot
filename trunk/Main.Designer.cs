@@ -41,6 +41,12 @@ namespace AeroShot {
 			this.folderTextBox = new System.Windows.Forms.TextBox();
 			this.bButton = new System.Windows.Forms.Button();
 			this.folderSelection = new System.Windows.Forms.FolderBrowserDialog();
+			this.resizeCheckBox = new System.Windows.Forms.CheckBox();
+			this.windowHeight = new System.Windows.Forms.NumericUpDown();
+			this.label3 = new System.Windows.Forms.Label();
+			this.windowWidth = new System.Windows.Forms.NumericUpDown();
+			((System.ComponentModel.ISupportInitialize)(this.windowHeight)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.windowWidth)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// ssButton
@@ -90,10 +96,66 @@ namespace AeroShot {
 			// 
 			resources.ApplyResources(this.folderSelection, "folderSelection");
 			// 
+			// resizeCheckBox
+			// 
+			resources.ApplyResources(this.resizeCheckBox, "resizeCheckBox");
+			this.resizeCheckBox.Name = "resizeCheckBox";
+			this.resizeCheckBox.UseVisualStyleBackColor = true;
+			this.resizeCheckBox.CheckedChanged += new System.EventHandler(this.resizeCheckBox_CheckedChanged);
+			// 
+			// windowHeight
+			// 
+			resources.ApplyResources(this.windowHeight, "windowHeight");
+			this.windowHeight.Maximum = new decimal(new int[] {
+            16777215,
+            0,
+            0,
+            0});
+			this.windowHeight.Minimum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+			this.windowHeight.Name = "windowHeight";
+			this.windowHeight.Value = new decimal(new int[] {
+            480,
+            0,
+            0,
+            0});
+			// 
+			// label3
+			// 
+			resources.ApplyResources(this.label3, "label3");
+			this.label3.Name = "label3";
+			// 
+			// windowWidth
+			// 
+			resources.ApplyResources(this.windowWidth, "windowWidth");
+			this.windowWidth.Maximum = new decimal(new int[] {
+            16777215,
+            0,
+            0,
+            0});
+			this.windowWidth.Minimum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+			this.windowWidth.Name = "windowWidth";
+			this.windowWidth.Value = new decimal(new int[] {
+            640,
+            0,
+            0,
+            0});
+			// 
 			// AeroShot
 			// 
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
 			resources.ApplyResources(this, "$this");
+			this.Controls.Add(this.windowWidth);
+			this.Controls.Add(this.label3);
+			this.Controls.Add(this.windowHeight);
+			this.Controls.Add(this.resizeCheckBox);
 			this.Controls.Add(this.folderTextBox);
 			this.Controls.Add(this.bButton);
 			this.Controls.Add(this.rButton);
@@ -106,6 +168,8 @@ namespace AeroShot {
 			this.Name = "AeroShot";
 			this.Shown += new System.EventHandler(this.AeroShot_Shown);
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.AeroShot_Closing);
+			((System.ComponentModel.ISupportInitialize)(this.windowHeight)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.windowWidth)).EndInit();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -121,6 +185,10 @@ namespace AeroShot {
 		private System.Windows.Forms.TextBox folderTextBox;
 		private System.Windows.Forms.Button bButton;
 		private System.Windows.Forms.FolderBrowserDialog folderSelection;
+		private System.Windows.Forms.CheckBox resizeCheckBox;
+		private System.Windows.Forms.NumericUpDown windowHeight;
+		private System.Windows.Forms.Label label3;
+		private System.Windows.Forms.NumericUpDown windowWidth;
 
 	}
 }
