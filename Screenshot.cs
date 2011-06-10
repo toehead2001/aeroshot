@@ -24,7 +24,6 @@ namespace AeroShot {
 	internal class Screenshot {
 		public static unsafe Bitmap GetScreenshot(IntPtr hWnd) {
 			WindowsApi.ShowWindow(hWnd, 1); // Show selected window, if minimized
-			WindowsApi.SetForegroundWindow(hWnd);
 			Thread.Sleep(200); // Wait for window to be fully visible
 
 			// Generate a rectangle with the size of all monitors combined
@@ -34,11 +33,11 @@ namespace AeroShot {
 
 			WindowsRect rct;
 
-			if (WindowsApi.DwmGetWindowAttribute(hWnd, DwmWindowAttribute.DWMWA_EXTENDED_FRAME_BOUNDS, &rct, sizeof(WindowsRect)) != 0) {
+			if (WindowsApi.DwmGetWindowAttribute(hWnd, DwmWindowAttribute.DWMWA_EXTENDED_FRAME_BOUNDS, &rct, sizeof (WindowsRect)) != 0)
 				// DwmGetWindowAttribute() failed, usually means Aero is disabled so we fall back to GetWindowRect()
 				WindowsApi.GetWindowRect(hWnd, &rct);
-			}
-			else { // DwmGetWindowAttribute() succeeded
+			else {
+				// DwmGetWindowAttribute() succeeded
 				// Add a 40px margin for window shadows. Excess transparency is trimmed out later
 				rct.Left -= 40;
 				rct.Right += 40;
@@ -61,39 +60,32 @@ namespace AeroShot {
 			var blackShot = new Bitmap(rct.Right - rct.Left, rct.Bottom - rct.Top, PixelFormat.Format32bppArgb);
 			var blackShotGraphics = Graphics.FromImage(blackShot);
 
-			var backdrop = new Backdrop();
-			backdrop.BackColor = Color.FromArgb(255, 255, 255);
-			backdrop.Width = rct.Right - rct.Left;
-			backdrop.Height = rct.Bottom - rct.Top;
+			var backdrop = new Backdrop {BackColor = Color.White, Width = rct.Right - rct.Left, Height = rct.Bottom - rct.Top, Location = new Point(rct.Left, rct.Top)};
 			backdrop.Show();
-			backdrop.Location = new Point(rct.Left, rct.Top);
 
 			WindowsApi.SetForegroundWindow(backdrop.Handle);
 			WindowsApi.SetForegroundWindow(hWnd);
-			Thread.Sleep(200);
+			Thread.Sleep(100);
 
 			// Capture screenshot with white background
-			whiteShotGraphics.CopyFromScreen(rct.Left, rct.Top, 0, 0, new Size(rct.Right - rct.Left, rct.Bottom - rct.Top),
-											 CopyPixelOperation.SourceCopy);
+			whiteShotGraphics.CopyFromScreen(rct.Left, rct.Top, 0, 0, new Size(rct.Right - rct.Left, rct.Bottom - rct.Top), CopyPixelOperation.SourceCopy);
 			whiteShotGraphics.Dispose();
 
-			backdrop.BackColor = Color.FromArgb(0, 0, 0);
-			WindowsApi.SetForegroundWindow(backdrop.Handle);
-			WindowsApi.SetForegroundWindow(hWnd);
-			Thread.Sleep(200);
+			backdrop.BackColor = Color.Black;
+			backdrop.Refresh();
+			Thread.Sleep(100);
 
 			// Capture screenshot with black background
-			blackShotGraphics.CopyFromScreen(rct.Left, rct.Top, 0, 0, new Size(rct.Right - rct.Left, rct.Bottom - rct.Top),
-											 CopyPixelOperation.SourceCopy);
+			blackShotGraphics.CopyFromScreen(rct.Left, rct.Top, 0, 0, new Size(rct.Right - rct.Left, rct.Bottom - rct.Top), CopyPixelOperation.SourceCopy);
 			blackShotGraphics.Dispose();
 
 			backdrop.Dispose();
 
 			// Returns a bitmap with transparency, calculated by differentiating the white and black screenshots
-			return DifferentiateAlpha(whiteShot, blackShot);
+			return TrimTransparency(DifferentiateAlpha(whiteShot, blackShot));
 		}
 
-		public static Bitmap TrimTransparency(Bitmap b1) {
+		private static Bitmap TrimTransparency(Bitmap b1) {
 			var sizeX = b1.Width;
 			var sizeY = b1.Height;
 			var b = new UnsafeBitmap(b1);
@@ -108,8 +100,8 @@ namespace AeroShot {
 
 			for (int x = 0, y = 0;;) {
 				p = b.GetPixel(x, y);
-				if(left == -1) {
-					if(p.Alpha != 0) {
+				if (left == -1) {
+					if (p.Alpha != 0) {
 						left = x;
 						x = 0;
 						y = 0;
@@ -172,7 +164,7 @@ namespace AeroShot {
 				}
 			}
 			b.UnlockImage();
-			if(left >= right || top >= bottom)
+			if (left >= right || top >= bottom)
 				return null;
 
 			return b1.Clone(new Rectangle(left, top, right - left, bottom - top), b1.PixelFormat);
@@ -191,15 +183,15 @@ namespace AeroShot {
 			PixelData pixelA;
 			PixelData pixelB;
 
-			for (int x = 0, y = 0; x < sizeX && y < sizeY; ) {
+			for (int x = 0, y = 0; x < sizeX && y < sizeY;) {
 				pixelA = a.GetPixel(x, y);
 				pixelB = b.GetPixel(x, y);
 
-				pixelB.Alpha = Convert.ToByte(255 - ((Abs(pixelA.Red - pixelB.Red) + Abs(pixelA.Green - pixelB.Green) + Abs(pixelA.Blue - pixelB.Blue)) / 3));
+				pixelB.Alpha = Convert.ToByte(255 - ((Abs(pixelA.Red - pixelB.Red) + Abs(pixelA.Green - pixelB.Green) + Abs(pixelA.Blue - pixelB.Blue))/3));
 
-				pixelB.Red = (byte) (pixelB.Alpha != 0 ? pixelB.Red * 255 / pixelB.Alpha : 0);
-				pixelB.Green = (byte) (pixelB.Alpha != 0 ? pixelB.Green * 255 / pixelB.Alpha : 0);
-				pixelB.Blue = (byte) (pixelB.Alpha != 0 ? pixelB.Blue * 255 / pixelB.Alpha : 0);
+				pixelB.Red = (byte) (pixelB.Alpha != 0 ? pixelB.Red*255/pixelB.Alpha : 0);
+				pixelB.Green = (byte) (pixelB.Alpha != 0 ? pixelB.Green*255/pixelB.Alpha : 0);
+				pixelB.Blue = (byte) (pixelB.Alpha != 0 ? pixelB.Blue*255/pixelB.Alpha : 0);
 
 				b.SetPixel(x, y, pixelB);
 
