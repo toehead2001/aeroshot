@@ -65,7 +65,7 @@ namespace AeroShot {
 
 			WindowsApi.SetForegroundWindow(backdrop.Handle);
 			WindowsApi.SetForegroundWindow(hWnd);
-			Thread.Sleep(100);
+			Thread.Sleep(200);
 
 			// Capture screenshot with white background
 			whiteShotGraphics.CopyFromScreen(rct.Left, rct.Top, 0, 0, new Size(rct.Right - rct.Left, rct.Bottom - rct.Top), CopyPixelOperation.SourceCopy);
@@ -73,7 +73,9 @@ namespace AeroShot {
 
 			backdrop.BackColor = Color.Black;
 			backdrop.Refresh();
-			Thread.Sleep(100);
+
+			WindowsApi.SetForegroundWindow(hWnd);
+			Thread.Sleep(200);
 
 			// Capture screenshot with black background
 			blackShotGraphics.CopyFromScreen(rct.Left, rct.Top, 0, 0, new Size(rct.Right - rct.Left, rct.Bottom - rct.Top), CopyPixelOperation.SourceCopy);
@@ -189,9 +191,9 @@ namespace AeroShot {
 
 				pixelB.Alpha = Convert.ToByte(255 - ((Abs(pixelA.Red - pixelB.Red) + Abs(pixelA.Green - pixelB.Green) + Abs(pixelA.Blue - pixelB.Blue))/3));
 
-				pixelB.Red = (byte) (pixelB.Alpha != 0 ? pixelB.Red*255/pixelB.Alpha : 0);
-				pixelB.Green = (byte) (pixelB.Alpha != 0 ? pixelB.Green*255/pixelB.Alpha : 0);
-				pixelB.Blue = (byte) (pixelB.Alpha != 0 ? pixelB.Blue*255/pixelB.Alpha : 0);
+				pixelB.Red = ToByte(pixelB.Alpha != 0 ? pixelB.Red*255/pixelB.Alpha : 0);
+				pixelB.Green = ToByte(pixelB.Alpha != 0 ? pixelB.Green * 255 / pixelB.Alpha : 0);
+				pixelB.Blue = ToByte(pixelB.Alpha != 0 ? pixelB.Blue * 255 / pixelB.Alpha : 0);
 
 				b.SetPixel(x, y, pixelB);
 
@@ -206,6 +208,10 @@ namespace AeroShot {
 			a.UnlockImage();
 			b.UnlockImage();
 			return blackBitmap;
+		}
+
+		private static byte ToByte(int i) {
+			return (byte) (i > 255 ? 255 : i);
 		}
 
 		private static int Abs(int i) {
