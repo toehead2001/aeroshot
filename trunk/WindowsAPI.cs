@@ -66,7 +66,7 @@ namespace AeroShot {
 		public static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
 
 		[DllImport("user32.dll")]
-		public static extern bool MoveWindow(IntPtr hWnd, int x, int y, int nWidth, int nHeight, bool bRepaint);
+		public static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int x, int y, int width, int height, uint uFlags);
 
 		[DllImport("user32.dll")]
 		public static extern bool GetWindowRect(IntPtr hWnd, WindowsRect* rect);
@@ -79,6 +79,9 @@ namespace AeroShot {
 
 		[DllImport("user32.dll")]
 		public static extern bool EnumWindows(CallBackPtr lpEnumFunc, IntPtr lParam);
+
+		[DllImport("user32.dll")]
+		public static extern bool IsIconic(IntPtr hWnd);
 
 		[DllImport("user32.dll")]
 		public static extern long GetWindowLong(IntPtr hWnd, int nIndex);
