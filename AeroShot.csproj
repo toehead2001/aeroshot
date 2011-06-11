@@ -39,9 +39,6 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Backdrop.cs">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="UnsafeBitmap.cs" />
     <Compile Include="Main.cs">
       <SubType>Form</SubType>

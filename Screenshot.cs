@@ -22,9 +22,9 @@ using System.Windows.Forms;
 
 namespace AeroShot {
 	internal class Screenshot {
+		private const uint SWP_NOACTIVATE = 0x0010;
 		public static unsafe Bitmap GetScreenshot(IntPtr hWnd) {
-			WindowsApi.ShowWindow(hWnd, 1); // Show selected window, if minimized
-			Thread.Sleep(200); // Wait for window to be fully visible
+			var backdrop = new Form { BackColor = Color.White, FormBorderStyle = FormBorderStyle.None, ShowInTaskbar = false };
 
 			// Generate a rectangle with the size of all monitors combined
 			var totalSize = Rectangle.Empty;
@@ -60,22 +60,16 @@ namespace AeroShot {
 			var blackShot = new Bitmap(rct.Right - rct.Left, rct.Bottom - rct.Top, PixelFormat.Format32bppArgb);
 			var blackShotGraphics = Graphics.FromImage(blackShot);
 
-			var backdrop = new Backdrop {BackColor = Color.White, Width = rct.Right - rct.Left, Height = rct.Bottom - rct.Top, Location = new Point(rct.Left, rct.Top)};
-			backdrop.Show();
-
-			WindowsApi.SetForegroundWindow(backdrop.Handle);
-			WindowsApi.SetForegroundWindow(hWnd);
-			Thread.Sleep(200);
+			WindowsApi.ShowWindow(backdrop.Handle, 4);
+			WindowsApi.SetWindowPos(backdrop.Handle, hWnd, rct.Left, rct.Top, rct.Right - rct.Left, rct.Bottom - rct.Top, SWP_NOACTIVATE);
+			Application.DoEvents();
 
 			// Capture screenshot with white background
 			whiteShotGraphics.CopyFromScreen(rct.Left, rct.Top, 0, 0, new Size(rct.Right - rct.Left, rct.Bottom - rct.Top), CopyPixelOperation.SourceCopy);
 			whiteShotGraphics.Dispose();
 
 			backdrop.BackColor = Color.Black;
-			backdrop.Refresh();
-
-			WindowsApi.SetForegroundWindow(hWnd);
-			Thread.Sleep(200);
+			Application.DoEvents();
 
 			// Capture screenshot with black background
 			blackShotGraphics.CopyFromScreen(rct.Left, rct.Top, 0, 0, new Size(rct.Right - rct.Left, rct.Bottom - rct.Top), CopyPixelOperation.SourceCopy);

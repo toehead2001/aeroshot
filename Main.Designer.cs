@@ -19,9 +19,7 @@ namespace AeroShot {
 		private System.ComponentModel.IContainer components = null;
 
 		protected override void Dispose(bool disposing) {
-			if (disposing && (components != null)) {
-				components.Dispose();
-			}
+			if (disposing && (components != null)) components.Dispose();
 			base.Dispose(disposing);
 		}
 
@@ -32,147 +30,122 @@ namespace AeroShot {
 		/// the contents of this method with the code editor.
 		/// </summary>
 		private void InitializeComponent() {
-			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AeroShot));
-			this.ssButton = new System.Windows.Forms.Button();
-			this.windowList = new System.Windows.Forms.ComboBox();
-			this.label1 = new System.Windows.Forms.Label();
-			this.label2 = new System.Windows.Forms.Label();
-			this.rButton = new System.Windows.Forms.Button();
-			this.folderTextBox = new System.Windows.Forms.TextBox();
-			this.bButton = new System.Windows.Forms.Button();
-			this.folderSelection = new System.Windows.Forms.FolderBrowserDialog();
-			this.resizeCheckBox = new System.Windows.Forms.CheckBox();
-			this.windowHeight = new System.Windows.Forms.NumericUpDown();
-			this.label3 = new System.Windows.Forms.Label();
-			this.windowWidth = new System.Windows.Forms.NumericUpDown();
-			((System.ComponentModel.ISupportInitialize)(this.windowHeight)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.windowWidth)).BeginInit();
-			this.SuspendLayout();
+			var resources = new System.ComponentModel.ComponentResourceManager(typeof (AeroShot));
+			ssButton = new System.Windows.Forms.Button();
+			windowList = new System.Windows.Forms.ComboBox();
+			label1 = new System.Windows.Forms.Label();
+			label2 = new System.Windows.Forms.Label();
+			rButton = new System.Windows.Forms.Button();
+			folderTextBox = new System.Windows.Forms.TextBox();
+			bButton = new System.Windows.Forms.Button();
+			folderSelection = new System.Windows.Forms.FolderBrowserDialog();
+			resizeCheckBox = new System.Windows.Forms.CheckBox();
+			windowHeight = new System.Windows.Forms.NumericUpDown();
+			label3 = new System.Windows.Forms.Label();
+			windowWidth = new System.Windows.Forms.NumericUpDown();
+			((System.ComponentModel.ISupportInitialize) (windowHeight)).BeginInit();
+			((System.ComponentModel.ISupportInitialize) (windowWidth)).BeginInit();
+			SuspendLayout();
 			// 
 			// ssButton
 			// 
-			resources.ApplyResources(this.ssButton, "ssButton");
-			this.ssButton.Name = "ssButton";
-			this.ssButton.UseVisualStyleBackColor = true;
-			this.ssButton.Click += new System.EventHandler(this.ssButton_Click);
+			resources.ApplyResources(ssButton, "ssButton");
+			ssButton.Name = "ssButton";
+			ssButton.UseVisualStyleBackColor = true;
+			ssButton.Click += new System.EventHandler(ssButton_Click);
 			// 
 			// windowList
 			// 
-			this.windowList.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.windowList.FormattingEnabled = true;
-			resources.ApplyResources(this.windowList, "windowList");
-			this.windowList.Name = "windowList";
+			windowList.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			windowList.FormattingEnabled = true;
+			resources.ApplyResources(windowList, "windowList");
+			windowList.Name = "windowList";
 			// 
 			// label1
 			// 
-			resources.ApplyResources(this.label1, "label1");
-			this.label1.Name = "label1";
+			resources.ApplyResources(label1, "label1");
+			label1.Name = "label1";
 			// 
 			// label2
 			// 
-			resources.ApplyResources(this.label2, "label2");
-			this.label2.Name = "label2";
+			resources.ApplyResources(label2, "label2");
+			label2.Name = "label2";
 			// 
 			// rButton
 			// 
-			resources.ApplyResources(this.rButton, "rButton");
-			this.rButton.Name = "rButton";
-			this.rButton.UseVisualStyleBackColor = true;
-			this.rButton.Click += new System.EventHandler(this.rButton_Click);
+			resources.ApplyResources(rButton, "rButton");
+			rButton.Name = "rButton";
+			rButton.UseVisualStyleBackColor = true;
+			rButton.Click += new System.EventHandler(rButton_Click);
 			// 
 			// folderTextBox
 			// 
-			resources.ApplyResources(this.folderTextBox, "folderTextBox");
-			this.folderTextBox.Name = "folderTextBox";
+			resources.ApplyResources(folderTextBox, "folderTextBox");
+			folderTextBox.Name = "folderTextBox";
 			// 
 			// bButton
 			// 
-			resources.ApplyResources(this.bButton, "bButton");
-			this.bButton.Name = "bButton";
-			this.bButton.UseVisualStyleBackColor = true;
-			this.bButton.Click += new System.EventHandler(this.bButton_Click);
+			resources.ApplyResources(bButton, "bButton");
+			bButton.Name = "bButton";
+			bButton.UseVisualStyleBackColor = true;
+			bButton.Click += new System.EventHandler(bButton_Click);
 			// 
 			// folderSelection
 			// 
-			resources.ApplyResources(this.folderSelection, "folderSelection");
+			resources.ApplyResources(folderSelection, "folderSelection");
 			// 
 			// resizeCheckBox
 			// 
-			resources.ApplyResources(this.resizeCheckBox, "resizeCheckBox");
-			this.resizeCheckBox.Name = "resizeCheckBox";
-			this.resizeCheckBox.UseVisualStyleBackColor = true;
-			this.resizeCheckBox.CheckedChanged += new System.EventHandler(this.resizeCheckBox_CheckedChanged);
+			resources.ApplyResources(resizeCheckBox, "resizeCheckBox");
+			resizeCheckBox.Name = "resizeCheckBox";
+			resizeCheckBox.UseVisualStyleBackColor = true;
+			resizeCheckBox.CheckedChanged += new System.EventHandler(resizeCheckBox_CheckedChanged);
 			// 
 			// windowHeight
 			// 
-			resources.ApplyResources(this.windowHeight, "windowHeight");
-			this.windowHeight.Maximum = new decimal(new int[] {
-            16777215,
-            0,
-            0,
-            0});
-			this.windowHeight.Minimum = new decimal(new int[] {
-            100,
-            0,
-            0,
-            0});
-			this.windowHeight.Name = "windowHeight";
-			this.windowHeight.Value = new decimal(new int[] {
-            480,
-            0,
-            0,
-            0});
+			resources.ApplyResources(windowHeight, "windowHeight");
+			windowHeight.Maximum = new decimal(new int[] {16777215, 0, 0, 0});
+			windowHeight.Minimum = new decimal(new int[] {100, 0, 0, 0});
+			windowHeight.Name = "windowHeight";
+			windowHeight.Value = new decimal(new int[] {480, 0, 0, 0});
 			// 
 			// label3
 			// 
-			resources.ApplyResources(this.label3, "label3");
-			this.label3.Name = "label3";
+			resources.ApplyResources(label3, "label3");
+			label3.Name = "label3";
 			// 
 			// windowWidth
 			// 
-			resources.ApplyResources(this.windowWidth, "windowWidth");
-			this.windowWidth.Maximum = new decimal(new int[] {
-            16777215,
-            0,
-            0,
-            0});
-			this.windowWidth.Minimum = new decimal(new int[] {
-            100,
-            0,
-            0,
-            0});
-			this.windowWidth.Name = "windowWidth";
-			this.windowWidth.Value = new decimal(new int[] {
-            640,
-            0,
-            0,
-            0});
+			resources.ApplyResources(windowWidth, "windowWidth");
+			windowWidth.Maximum = new decimal(new int[] {16777215, 0, 0, 0});
+			windowWidth.Minimum = new decimal(new int[] {100, 0, 0, 0});
+			windowWidth.Name = "windowWidth";
+			windowWidth.Value = new decimal(new int[] {640, 0, 0, 0});
 			// 
 			// AeroShot
 			// 
-			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
+			AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
 			resources.ApplyResources(this, "$this");
-			this.Controls.Add(this.windowWidth);
-			this.Controls.Add(this.label3);
-			this.Controls.Add(this.windowHeight);
-			this.Controls.Add(this.resizeCheckBox);
-			this.Controls.Add(this.folderTextBox);
-			this.Controls.Add(this.bButton);
-			this.Controls.Add(this.rButton);
-			this.Controls.Add(this.label2);
-			this.Controls.Add(this.label1);
-			this.Controls.Add(this.windowList);
-			this.Controls.Add(this.ssButton);
-			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-			this.MaximizeBox = false;
-			this.Name = "AeroShot";
-			this.Shown += new System.EventHandler(this.AeroShot_Shown);
-			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.AeroShot_Closing);
-			((System.ComponentModel.ISupportInitialize)(this.windowHeight)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.windowWidth)).EndInit();
-			this.ResumeLayout(false);
-			this.PerformLayout();
-
+			Controls.Add(windowWidth);
+			Controls.Add(label3);
+			Controls.Add(windowHeight);
+			Controls.Add(resizeCheckBox);
+			Controls.Add(folderTextBox);
+			Controls.Add(bButton);
+			Controls.Add(rButton);
+			Controls.Add(label2);
+			Controls.Add(label1);
+			Controls.Add(windowList);
+			Controls.Add(ssButton);
+			FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+			MaximizeBox = false;
+			Name = "AeroShot";
+			Shown += new System.EventHandler(AeroShot_Shown);
+			FormClosing += new System.Windows.Forms.FormClosingEventHandler(AeroShot_Closing);
+			((System.ComponentModel.ISupportInitialize) (windowHeight)).EndInit();
+			((System.ComponentModel.ISupportInitialize) (windowWidth)).EndInit();
+			ResumeLayout(false);
+			PerformLayout();
 		}
 
 		#endregion
@@ -189,7 +162,5 @@ namespace AeroShot {
 		private System.Windows.Forms.NumericUpDown windowHeight;
 		private System.Windows.Forms.Label label3;
 		private System.Windows.Forms.NumericUpDown windowWidth;
-
 	}
 }
-
