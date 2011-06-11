@@ -143,12 +143,15 @@ namespace AeroShot {
 				try {
 					if (WindowsApi.IsIconic(hWnd)) {
 						WindowsApi.ShowWindow(hWnd, 1); // Show window if minimized
-						Thread.Sleep(400); // Wait for window to be restored
+						Thread.Sleep(300); // Wait for window to be restored
 					}
 					WindowsApi.SetForegroundWindow(hWnd);
 
 					var r = new WindowsRect(0);
-					if (resizeCheckBox.Checked) ResizeWindow(hWnd, (int) windowWidth.Value, (int) windowHeight.Value, out r);
+					if (resizeCheckBox.Checked) {
+						ResizeWindow(hWnd, (int) windowWidth.Value, (int) windowHeight.Value, out r);
+						Thread.Sleep(100);
+					}
 
 					var length = WindowsApi.GetWindowTextLength(hWnd);
 					var sb = new StringBuilder(length + 1);
