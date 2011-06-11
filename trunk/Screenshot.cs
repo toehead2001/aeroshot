@@ -82,6 +82,8 @@ namespace AeroShot {
 		}
 
 		private static Bitmap TrimTransparency(Bitmap b1) {
+			if(b1 == null) return null;
+
 			var sizeX = b1.Width;
 			var sizeY = b1.Height;
 			var b = new UnsafeBitmap(b1);
@@ -167,7 +169,7 @@ namespace AeroShot {
 		}
 
 		private static Bitmap DifferentiateAlpha(Bitmap whiteBitmap, Bitmap blackBitmap) {
-			if (whiteBitmap.Width != blackBitmap.Width || whiteBitmap.Height != blackBitmap.Height)
+			if (whiteBitmap == null || blackBitmap == null || whiteBitmap.Width != blackBitmap.Width || whiteBitmap.Height != blackBitmap.Height)
 				return null;
 			var sizeX = whiteBitmap.Width;
 			var sizeY = whiteBitmap.Height;
@@ -175,6 +177,8 @@ namespace AeroShot {
 			var b = new UnsafeBitmap(blackBitmap);
 			a.LockImage();
 			b.LockImage();
+
+			var empty = true;
 
 			PixelData pixelA;
 			PixelData pixelB;
@@ -191,6 +195,9 @@ namespace AeroShot {
 
 				b.SetPixel(x, y, pixelB);
 
+				if (empty && pixelB.Alpha > 0)
+					empty = false;
+
 				if (x == sizeX - 1) {
 					y++;
 					x = 0;
@@ -201,7 +208,7 @@ namespace AeroShot {
 
 			a.UnlockImage();
 			b.UnlockImage();
-			return blackBitmap;
+			return empty ? null : blackBitmap;
 		}
 
 		private static byte ToByte(int i) {
