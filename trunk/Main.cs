@@ -25,23 +25,35 @@ using System.Windows.Forms;
 using Microsoft.Win32;
 
 namespace AeroShot {
-	public sealed partial class AeroShot : Form {
+	public sealed partial class MainForm : Form {
 		private const int GWL_STYLE = -16;
 		private const int MOD_WIN = 0x0008;
 		private const int WM_HOTKEY = 0x0312;
+		private const int WM_DWMCOMPOSITIONCHANGED = 0x031E;
 		private const long WS_CAPTION = 0x00C00000L;
 		private const long WS_VISIBLE = 0x10000000L;
 		private const long WS_SIZEBOX = 0x00040000L;
 		private const uint SWP_SHOWWINDOW = 0x0040;
 		private static int windowId;
 		private static Thread worker;
+		private static readonly SolidBrush brush = new SolidBrush(Color.FromArgb(201, 199, 200));
+		private static bool DwmComposited;
 		private readonly List<IntPtr> handleList = new List<IntPtr>();
 		private readonly RegistryKey registryKey;
 		private CallBackPtr callBackPtr;
 
-		public AeroShot() {
+		public unsafe MainForm() {
 			Icon = Icon.ExtractAssociatedIcon(Application.ExecutablePath);
 			InitializeComponent();
+
+			fixed (bool* b = &DwmComposited)
+				WindowsApi.DwmIsCompositionEnabled(b);
+
+			if (DwmComposited) {
+				ssButton.Location = new Point(ssButton.Location.X, 248);
+				var margin = new WindowsMargins(0, 0, 0, 32);
+				WindowsApi.DwmExtendFrameIntoClientArea(Handle, &margin);
+			}
 
 			windowId = GetHashCode();
 			WindowsApi.RegisterHotKey(Handle, windowId, MOD_WIN, (int) Keys.PrintScreen);
@@ -56,30 +68,67 @@ namespace AeroShot {
 			if ((value = registryKey.GetValue("WindowSize")) != null && value.GetType() == (typeof (long))) {
 				var b = new byte[8];
 				for (var i = 0; i < 8; i++) b[i] = (byte) (((long) value >> (i*8)) & 0xff);
-				windowWidth.Value = b[0] << 16 | b[1] << 8 | b[2];
-				windowHeight.Value = b[3] << 16 | b[4] << 8 | b[5];
-				resizeCheckBox.Checked = b[6] != 0 ? true : false;
+				resizeCheckBox.Checked = (b[0] & 1) == 1 ? true : false;
+				windowWidth.Value = b[1] << 16 | b[2] << 8 | b[3];
+				windowHeight.Value = b[4] << 16 | b[5] << 8 | b[6];
 			}
 
-			windowWidth.Enabled = resizeCheckBox.Checked;
-			windowHeight.Enabled = resizeCheckBox.Checked;
+			if ((value = registryKey.GetValue("Opaque")) != null && value.GetType() == (typeof (long))) {
+				var b = new byte[8];
+				for (var i = 0; i < 8; i++) b[i] = (byte) (((long) value >> (i*8)) & 0xff);
+				opaqueCheckBox.Checked = (b[0] & 1) == 1 ? true : false;
+				if ((b[0] & 2) == 2)
+					opaqueType.SelectedIndex = 0;
+				if ((b[0] & 4) == 4)
+					opaqueType.SelectedIndex = 1;
+
+				checkerValue.Value = b[1] + 2;
+
+				var hex = new StringBuilder(6);
+				hex.AppendFormat("{0:X2}", b[2]);
+				hex.AppendFormat("{0:X2}", b[3]);
+				hex.AppendFormat("{0:X2}", b[4]);
+				colorHexBox.Text = hex.ToString();
+			}
+			else opaqueType.SelectedIndex = 0;
+
+			groupBox1.Enabled = resizeCheckBox.Checked;
+			groupBox2.Enabled = opaqueCheckBox.Checked;
 		}
 
-		protected override void WndProc(ref Message m) {
+		protected override unsafe void WndProc(ref Message m) {
 			base.WndProc(ref m);
 
 			if (m.Msg == WM_HOTKEY) {
 				var f = folderTextBox.Text;
-				worker = new Thread(() => TakeScreenshot(WindowsApi.GetForegroundWindow(), f)) {ApartmentState = ApartmentState.STA, IsBackground = true};
+				var o = opaqueCheckBox.Checked ? true : false;
+				var s = (int) (opaqueType.SelectedIndex == 0 ? checkerValue.Value : 0);
+				var c = colorDialog.Color;
+				worker = new Thread(() => TakeScreenshot(WindowsApi.GetForegroundWindow(), f, o, s, c))
+				         	{ApartmentState = ApartmentState.STA, IsBackground = true};
 				worker.Start();
+			}
+			if (m.Msg == WM_DWMCOMPOSITIONCHANGED) {
+				fixed (bool* b = &DwmComposited)
+					WindowsApi.DwmIsCompositionEnabled(b);
+
+				if (DwmComposited) {
+					ssButton.Location = new Point(ssButton.Location.X, 248);
+					var margin = new WindowsMargins(0, 0, 0, 32);
+					WindowsApi.DwmExtendFrameIntoClientArea(Handle, &margin);
+				}
+				else ssButton.Location = new Point(ssButton.Location.X, 240);
 			}
 		}
 
 		private void ssButton_Click(object sender, EventArgs e) {
-			var f = folderTextBox.Text;
 			var h = handleList[windowList.SelectedIndex];
+			var f = folderTextBox.Text;
+			var o = opaqueCheckBox.Checked ? true : false;
+			var s = (int) (opaqueType.SelectedIndex == 0 ? checkerValue.Value : 0);
+			var c = colorDialog.Color;
 
-			worker = new Thread(() => TakeScreenshot(h, f)) {ApartmentState = ApartmentState.STA, IsBackground = true};
+			worker = new Thread(() => TakeScreenshot(h, f, o, s, c)) {ApartmentState = ApartmentState.STA, IsBackground = true};
 			worker.Start();
 		}
 
@@ -96,9 +145,74 @@ namespace AeroShot {
 			if (folderSelection.ShowDialog() == DialogResult.OK) folderTextBox.Text = folderSelection.SelectedPath;
 		}
 
+		private void colorDisplay_Click(object sender, EventArgs e) {
+			if (colorDialog.ShowDialog() == DialogResult.OK) {
+				colorDisplay.Color = colorDialog.Color;
+
+				var hex = new StringBuilder(6);
+				hex.AppendFormat("{0:X2}", colorDisplay.Color.R);
+				hex.AppendFormat("{0:X2}", colorDisplay.Color.G);
+				hex.AppendFormat("{0:X2}", colorDisplay.Color.B);
+				colorHexBox.Text = hex.ToString();
+			}
+		}
+
 		private void resizeCheckBox_CheckedChanged(object sender, EventArgs e) {
-			windowWidth.Enabled = resizeCheckBox.Checked;
-			windowHeight.Enabled = resizeCheckBox.Checked;
+			groupBox1.Enabled = resizeCheckBox.Checked;
+		}
+
+		private void opaqueCheckBox_CheckedChanged(object sender, EventArgs e) {
+			groupBox2.Enabled = opaqueCheckBox.Checked;
+		}
+
+		private void opaqueType_SelectedIndexChanged(object sender, EventArgs e) {
+			if (opaqueType.SelectedIndex == 0) {
+				label6.Text = "Checker size:";
+				checkerValue.Enabled = true;
+				checkerValue.Visible = true;
+				label7.Visible = true;
+
+				colorDisplay.Enabled = false;
+				colorDisplay.Visible = false;
+				colorHexBox.Enabled = false;
+				colorHexBox.Visible = false;
+				label8.Visible = false;
+			}
+			if (opaqueType.SelectedIndex == 1) {
+				label6.Text = "Color:";
+				colorDisplay.Enabled = true;
+				colorDisplay.Visible = true;
+				colorHexBox.Enabled = true;
+				colorHexBox.Visible = true;
+				label8.Visible = true;
+
+				checkerValue.Enabled = false;
+				checkerValue.Visible = false;
+				label7.Visible = false;
+			}
+		}
+
+		private void colorHexBox_TextChanged(object sender, EventArgs e) {
+			var c = new[]
+			        	{
+			        		'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F', 'a', 'b', 'c', 'd', 'e',
+			        		'f'
+			        	};
+			foreach (var v in colorHexBox.Text) {
+				var b = false;
+				foreach (var v1 in c)
+					if (v == v1) {
+						b = true;
+						break;
+					}
+				if (!b)
+					colorHexBox.Text = colorHexBox.Text.Replace(v.ToString(), string.Empty);
+			}
+
+			if (colorHexBox.TextLength != 6) return;
+
+			colorDisplay.Color = Color.FromArgb(Convert.ToInt32("FF" + colorHexBox.Text, 16));
+			colorDialog.Color = Color.FromArgb(Convert.ToInt32("FF" + colorHexBox.Text, 16));
 		}
 
 		private void AeroShot_Shown(object sender, EventArgs e) {
@@ -109,25 +223,50 @@ namespace AeroShot {
 			WindowsApi.UnregisterHotKey(Handle, windowId);
 			registryKey.SetValue("LastPath", folderTextBox.Text);
 
-
+			// Save resizing settings in an 8-byte long
 			var b = new byte[8];
-			b[2] = (byte) ((int) windowWidth.Value & 0xff);
-			b[1] = (byte) (((int) windowWidth.Value >> 8) & 0xff);
-			b[0] = (byte) (((int) windowWidth.Value >> 16) & 0xff);
+			b[0] = (byte) (resizeCheckBox.Checked ? 1 : 0);
 
-			b[5] = (byte) ((int) windowHeight.Value & 0xff);
-			b[4] = (byte) (((int) windowHeight.Value >> 8) & 0xff);
-			b[3] = (byte) (((int) windowHeight.Value >> 16) & 0xff);
+			b[3] = (byte) ((int) windowWidth.Value & 0xff);
+			b[2] = (byte) (((int) windowWidth.Value >> 8) & 0xff);
+			b[1] = (byte) (((int) windowWidth.Value >> 16) & 0xff);
 
-			b[6] = (byte) (resizeCheckBox.Checked ? 0xff : 0x00);
+			b[6] = (byte) ((int) windowHeight.Value & 0xff);
+			b[5] = (byte) (((int) windowHeight.Value >> 8) & 0xff);
+			b[4] = (byte) (((int) windowHeight.Value >> 16) & 0xff);
 
+			var data = BitConverter.ToInt64(b, 0);
+			registryKey.SetValue("WindowSize", data, RegistryValueKind.QWord);
 
-			var windowData = BitConverter.ToInt64(b, 0);
-			registryKey.SetValue("WindowSize", windowData, RegistryValueKind.QWord);
+			// Save background color settings in an 8-byte long
+			b = new byte[8];
+			b[0] = (byte) (opaqueCheckBox.Checked ? 1 : 0);
+			b[0] += (byte) Math.Pow(2, opaqueType.SelectedIndex + 1);
+
+			b[1] = (byte) (checkerValue.Value - 2);
+
+			b[2] = colorDialog.Color.R;
+			b[3] = colorDialog.Color.G;
+			b[4] = colorDialog.Color.B;
+
+			data = BitConverter.ToInt64(b, 0);
+			registryKey.SetValue("Opaque", data, RegistryValueKind.QWord);
+		}
+
+		protected override void OnPaintBackground(PaintEventArgs e) {
+			var r = e.ClipRectangle;
+			e.Graphics.FillRectangle(new SolidBrush(BackColor), r);
+
+			if (!DwmComposited) return;
+
+			r.Y = r.Bottom - 32;
+			r.Height = 32;
+			e.Graphics.FillRectangle(brush, r);
 		}
 
 		private bool ListWindows(IntPtr hWnd, int lParam) {
-			if ((WindowsApi.GetWindowLong(hWnd, GWL_STYLE) & WS_VISIBLE) == WS_VISIBLE && (WindowsApi.GetWindowLong(hWnd, GWL_STYLE) & WS_CAPTION) == WS_CAPTION) {
+			if ((WindowsApi.GetWindowLong(hWnd, GWL_STYLE) & WS_VISIBLE) == WS_VISIBLE &&
+			    (WindowsApi.GetWindowLong(hWnd, GWL_STYLE) & WS_CAPTION) == WS_CAPTION) {
 				var length = WindowsApi.GetWindowTextLength(hWnd);
 				var sb = new StringBuilder(length + 1);
 				WindowsApi.GetWindowText(hWnd, sb, sb.Capacity);
@@ -138,7 +277,7 @@ namespace AeroShot {
 			return true;
 		}
 
-		private void TakeScreenshot(IntPtr hWnd, string folder) {
+		private void TakeScreenshot(IntPtr hWnd, string folder, bool opaque, int checkerSize, Color color) {
 			if (Directory.Exists(folder))
 				try {
 					if (WindowsApi.IsIconic(hWnd)) {
@@ -174,9 +313,10 @@ namespace AeroShot {
 							if (!File.Exists(path))
 								break;
 						}
-					var s = Screenshot.GetScreenshot(hWnd);
+					var s = Screenshot.GetScreenshot(hWnd, opaque, checkerSize, color);
 					if (s == null)
-						MessageBox.Show("The screenshot taken was blank, it will not be saved.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+						MessageBox.Show("The screenshot taken was blank, it will not be saved.", "Warning", MessageBoxButtons.OK,
+						                MessageBoxIcon.Warning);
 					else {
 						s.Save(path, ImageFormat.Png);
 						s.Dispose();
@@ -187,8 +327,9 @@ namespace AeroShot {
 							WindowsApi.SetWindowPos(hWnd, (IntPtr) 0, r.Left, r.Top, r.Right - r.Left, r.Bottom - r.Top, SWP_SHOWWINDOW);
 				}
 				catch (Exception) {
-					MessageBox.Show("An error occurred while trying to take a screenshot.\r\n\r\nPlease make sure you have selected a valid window.", "Error", MessageBoxButtons.OK,
-					                MessageBoxIcon.Error);
+					MessageBox.Show(
+						"An error occurred while trying to take a screenshot.\r\n\r\nPlease make sure you have selected a valid window.",
+						"Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 				}
 			else
 				MessageBox.Show("Invalid directory chosen.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -202,12 +343,48 @@ namespace AeroShot {
 
 			WindowsRect r;
 			WindowsApi.GetWindowRect(hWnd, &r);
-			var f = Screenshot.GetScreenshot(hWnd);
+			var f = Screenshot.GetScreenshot(hWnd, false, 0, Color.Black);
 			oldRect = r;
 
-			WindowsApi.SetWindowPos(hWnd, (IntPtr) 0, r.Left, r.Top, windowWidth - (f.Width - (r.Right - r.Left)), windowHeight - (f.Height - (r.Bottom - r.Top)), SWP_SHOWWINDOW);
+			WindowsApi.SetWindowPos(hWnd, (IntPtr) 0, r.Left, r.Top, windowWidth - (f.Width - (r.Right - r.Left)),
+			                        windowHeight - (f.Height - (r.Bottom - r.Top)), SWP_SHOWWINDOW);
 
 			f.Dispose();
+		}
+	}
+
+	public class ColorDisplay : UserControl {
+		private readonly SolidBrush _border = new SolidBrush(SystemColors.ControlDark);
+		private SolidBrush _brush;
+		private Color _color = Color.Black;
+
+		public Color Color {
+			get { return _color; }
+			set {
+				if (value.R == 201 && value.G == 199 && value.B == 200)
+					_color = Color.FromArgb(200, 200, 200); // Hacky fix for the main form's transparency key
+				else
+					_color = value;
+				Refresh();
+			}
+		}
+
+		protected override void OnPaintBackground(PaintEventArgs e) {}
+
+		protected override void OnPaint(PaintEventArgs e) {
+			var rect = e.ClipRectangle;
+			rect.X = 2;
+			rect.Y = 2;
+			rect.Width -= 4;
+			rect.Height -= 4;
+
+			if (Enabled) _brush = new SolidBrush(_color);
+			else {
+				var grayScale = (byte) (((_color.R*.3) + (_color.G*.59) + (_color.B*.11)));
+				_brush = new SolidBrush(ControlPaint.Light(Color.FromArgb(grayScale, grayScale, grayScale)));
+			}
+			e.Graphics.FillRectangle(_border, e.ClipRectangle);
+			e.Graphics.FillRectangle(_brush, rect);
 		}
 	}
 }

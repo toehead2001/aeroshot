@@ -18,7 +18,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 
 [assembly: AssemblyTitle("AeroShot")]
-[assembly: AssemblyDescription("Transparent screenshot utility for Windows")]
+[assembly: AssemblyDescription("Screenshot capture utility for Windows Aero")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("AeroShot")]

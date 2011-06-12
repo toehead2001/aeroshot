@@ -42,6 +42,27 @@ namespace AeroShot {
 		}
 	}
 
+	public struct WindowsMargins {
+		public int LeftWidth;
+		public int RightWidth;
+		public int TopHeight;
+		public int BottomHeight;
+
+		public WindowsMargins(int left, int right, int top, int bottom) {
+			LeftWidth = left;
+			RightWidth = right;
+			TopHeight = top;
+			BottomHeight = bottom;
+		}
+
+		public WindowsMargins(int x) {
+			LeftWidth = x;
+			RightWidth = x;
+			TopHeight = x;
+			BottomHeight = x;
+		}
+	}
+
 	public enum DwmWindowAttribute {
 		DWMWA_NCRENDERING_ENABLED = 1,
 		DWMWA_NCRENDERING_POLICY,
@@ -66,7 +87,8 @@ namespace AeroShot {
 		public static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
 
 		[DllImport("user32.dll")]
-		public static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int x, int y, int width, int height, uint uFlags);
+		public static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int x, int y, int width, int height,
+		                                       uint uFlags);
 
 		[DllImport("user32.dll")]
 		public static extern bool GetWindowRect(IntPtr hWnd, WindowsRect* rect);
@@ -93,7 +115,14 @@ namespace AeroShot {
 		public static extern int GetWindowTextLength(IntPtr hWnd);
 
 		[DllImport("dwmapi.dll")]
-		public static extern int DwmGetWindowAttribute(IntPtr hWnd, DwmWindowAttribute dwAttribute, WindowsRect* pvAttribute, int cbAttribute);
+		public static extern int DwmGetWindowAttribute(IntPtr hWnd, DwmWindowAttribute dwAttribute, WindowsRect* pvAttribute,
+		                                               int cbAttribute);
+
+		[DllImport("dwmapi.dll")]
+		public static extern int DwmExtendFrameIntoClientArea(IntPtr hWnd, WindowsMargins* pMarInset);
+
+		[DllImport("dwmapi.dll")]
+		public static extern int DwmIsCompositionEnabled(bool* pfEnabled);
 
 		[DllImport("user32.dll")]
 		public static extern IntPtr GetForegroundWindow();

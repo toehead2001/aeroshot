@@ -23,7 +23,7 @@ namespace AeroShot {
 		private static void Main() {
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
-			Application.Run(new AeroShot());
+			Application.Run(new MainForm());
 		}
 	}
 }

@@ -48,7 +48,8 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Screenshot.cs" />
+    <Compile Include="Screenshot.cs">
+    </Compile>
     <Compile Include="WindowsAPI.cs" />
   </ItemGroup>
   <ItemGroup>
