@@ -32,13 +32,13 @@ namespace AeroShot {
 			foreach (var s in Screen.AllScreens)
 				totalSize = Rectangle.Union(totalSize, s.Bounds);
 
-			WindowsRect rct;
+			var rct = new WindowsRect();
 
 			if (
-				WindowsApi.DwmGetWindowAttribute(hWnd, DwmWindowAttribute.DWMWA_EXTENDED_FRAME_BOUNDS, &rct, sizeof (WindowsRect)) !=
+				WindowsApi.DwmGetWindowAttribute(hWnd, DwmWindowAttribute.DWMWA_EXTENDED_FRAME_BOUNDS, ref rct, sizeof (WindowsRect)) !=
 				0)
 				// DwmGetWindowAttribute() failed, usually means Aero is disabled so we fall back to GetWindowRect()
-				WindowsApi.GetWindowRect(hWnd, &rct);
+				WindowsApi.GetWindowRect(hWnd, ref rct);
 			else {
 				// DwmGetWindowAttribute() succeeded
 				// Add a 40px margin for window shadows. Excess transparency is trimmed out later
@@ -58,34 +58,24 @@ namespace AeroShot {
 			if (rct.Bottom > totalSize.Bottom)
 				rct.Bottom = totalSize.Bottom;
 
-			var whiteShot = new Bitmap(rct.Right - rct.Left, rct.Bottom - rct.Top, PixelFormat.Format32bppArgb);
-			var whiteShotGraphics = Graphics.FromImage(whiteShot);
-
 			WindowsApi.ShowWindow(backdrop.Handle, 4);
 			WindowsApi.SetWindowPos(backdrop.Handle, hWnd, rct.Left, rct.Top, rct.Right - rct.Left, rct.Bottom - rct.Top,
 			                        SWP_NOACTIVATE);
 			Application.DoEvents();
 
 			// Capture screenshot with white background
-			whiteShotGraphics.CopyFromScreen(rct.Left, rct.Top, 0, 0, new Size(rct.Right - rct.Left, rct.Bottom - rct.Top),
-			                                 CopyPixelOperation.SourceCopy);
-			whiteShotGraphics.Dispose();
+			var whiteShot = CaptureScreen(new Rectangle(rct.Left, rct.Top, rct.Right - rct.Left, rct.Bottom - rct.Top));
 
 			if (opaque && checkerSize < 2) {
 				backdrop.Dispose();
 				return TrimBitmap(whiteShot, backColor);
 			}
 
-			var blackShot = new Bitmap(rct.Right - rct.Left, rct.Bottom - rct.Top, PixelFormat.Format32bppArgb);
-			var blackShotGraphics = Graphics.FromImage(blackShot);
-
 			backdrop.BackColor = Color.Black;
 			Application.DoEvents();
 
 			// Capture screenshot with black background
-			blackShotGraphics.CopyFromScreen(rct.Left, rct.Top, 0, 0, new Size(rct.Right - rct.Left, rct.Bottom - rct.Top),
-			                                 CopyPixelOperation.SourceCopy);
-			blackShotGraphics.Dispose();
+			var blackShot = CaptureScreen(new Rectangle(rct.Left, rct.Top, rct.Right - rct.Left, rct.Bottom - rct.Top));
 
 			backdrop.Dispose();
 
@@ -107,6 +97,26 @@ namespace AeroShot {
 
 			// Returns a bitmap with transparency, calculated by differentiating the white and black screenshots
 			return transparentImage;
+		}
+
+		private static Bitmap CaptureScreen(Rectangle crop) {
+			var totalSize = Rectangle.Empty;
+
+			foreach (var s in Screen.AllScreens) totalSize = Rectangle.Union(totalSize, s.Bounds);
+
+			var hSrc = WindowsApi.CreateDC("DISPLAY", null, null, 0);
+			var hDest = WindowsApi.CreateCompatibleDC(hSrc);
+			var hBmp = WindowsApi.CreateCompatibleBitmap(hSrc, crop.Right - crop.Left, crop.Bottom - crop.Top);
+			var hOldBmp = WindowsApi.SelectObject(hDest, hBmp);
+			WindowsApi.BitBlt(hDest, 0, 0, crop.Right - crop.Left, crop.Bottom - crop.Top, hSrc, crop.Left, crop.Top,
+			                  CopyPixelOperation.SourceCopy | CopyPixelOperation.CaptureBlt);
+			var bmp = Image.FromHbitmap(hBmp);
+			WindowsApi.SelectObject(hDest, hOldBmp);
+			WindowsApi.DeleteObject(hBmp);
+			WindowsApi.DeleteDC(hDest);
+			WindowsApi.DeleteDC(hSrc);
+
+			return bmp.Clone(new Rectangle(0, 0, bmp.Width, bmp.Height), PixelFormat.Format32bppArgb);
 		}
 
 		private static Bitmap GenerateChecker(int s) {
