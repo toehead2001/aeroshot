@@ -42,17 +42,16 @@ namespace AeroShot {
 		private readonly RegistryKey registryKey;
 		private CallBackPtr callBackPtr;
 
-		public unsafe MainForm() {
+		public MainForm() {
 			Icon = Icon.ExtractAssociatedIcon(Application.ExecutablePath);
 			InitializeComponent();
 
-			fixed (bool* b = &DwmComposited)
-				WindowsApi.DwmIsCompositionEnabled(b);
+			WindowsApi.DwmIsCompositionEnabled(ref DwmComposited);
 
 			if (DwmComposited) {
 				ssButton.Location = new Point(ssButton.Location.X, 248);
 				var margin = new WindowsMargins(0, 0, 0, 32);
-				WindowsApi.DwmExtendFrameIntoClientArea(Handle, &margin);
+				WindowsApi.DwmExtendFrameIntoClientArea(Handle, ref margin);
 			}
 
 			windowId = GetHashCode();
@@ -96,7 +95,7 @@ namespace AeroShot {
 			groupBox2.Enabled = opaqueCheckBox.Checked;
 		}
 
-		protected override unsafe void WndProc(ref Message m) {
+		protected override void WndProc(ref Message m) {
 			base.WndProc(ref m);
 
 			if (m.Msg == WM_HOTKEY) {
@@ -109,13 +108,12 @@ namespace AeroShot {
 				worker.Start();
 			}
 			if (m.Msg == WM_DWMCOMPOSITIONCHANGED) {
-				fixed (bool* b = &DwmComposited)
-					WindowsApi.DwmIsCompositionEnabled(b);
+				WindowsApi.DwmIsCompositionEnabled(ref DwmComposited);
 
 				if (DwmComposited) {
 					ssButton.Location = new Point(ssButton.Location.X, 248);
 					var margin = new WindowsMargins(0, 0, 0, 32);
-					WindowsApi.DwmExtendFrameIntoClientArea(Handle, &margin);
+					WindowsApi.DwmExtendFrameIntoClientArea(Handle, ref margin);
 				}
 				else ssButton.Location = new Point(ssButton.Location.X, 240);
 			}
@@ -335,14 +333,14 @@ namespace AeroShot {
 				MessageBox.Show("Invalid directory chosen.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 		}
 
-		private static unsafe void ResizeWindow(IntPtr hWnd, int windowWidth, int windowHeight, out WindowsRect oldRect) {
+		private static void ResizeWindow(IntPtr hWnd, int windowWidth, int windowHeight, out WindowsRect oldRect) {
 			oldRect = new WindowsRect(0);
 			if ((WindowsApi.GetWindowLong(hWnd, GWL_STYLE) & WS_SIZEBOX) != WS_SIZEBOX) return;
 
 			WindowsApi.ShowWindow(hWnd, 1);
 
-			WindowsRect r;
-			WindowsApi.GetWindowRect(hWnd, &r);
+			var r = new WindowsRect();
+			WindowsApi.GetWindowRect(hWnd, ref r);
 			var f = Screenshot.GetScreenshot(hWnd, false, 0, Color.Black);
 			oldRect = r;
 

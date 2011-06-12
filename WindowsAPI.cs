@@ -15,6 +15,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
 using System;
+using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Text;
 
@@ -79,7 +80,7 @@ namespace AeroShot {
 		DWMWA_LAST
 	}
 
-	internal unsafe class WindowsApi {
+	internal class WindowsApi {
 		[DllImport("user32.dll")]
 		public static extern bool SetForegroundWindow(IntPtr hWnd);
 
@@ -91,7 +92,7 @@ namespace AeroShot {
 		                                       uint uFlags);
 
 		[DllImport("user32.dll")]
-		public static extern bool GetWindowRect(IntPtr hWnd, WindowsRect* rect);
+		public static extern bool GetWindowRect(IntPtr hWnd, ref WindowsRect rect);
 
 		[DllImport("user32.dll")]
 		public static extern bool RegisterHotKey(IntPtr hWnd, int id, int fsModifiers, int vlc);
@@ -115,14 +116,36 @@ namespace AeroShot {
 		public static extern int GetWindowTextLength(IntPtr hWnd);
 
 		[DllImport("dwmapi.dll")]
-		public static extern int DwmGetWindowAttribute(IntPtr hWnd, DwmWindowAttribute dwAttribute, WindowsRect* pvAttribute,
-		                                               int cbAttribute);
+		public static extern int DwmGetWindowAttribute(IntPtr hWnd, DwmWindowAttribute dwAttribute,
+		                                               ref WindowsRect pvAttribute, int cbAttribute);
 
 		[DllImport("dwmapi.dll")]
-		public static extern int DwmExtendFrameIntoClientArea(IntPtr hWnd, WindowsMargins* pMarInset);
+		public static extern int DwmExtendFrameIntoClientArea(IntPtr hWnd, ref WindowsMargins pMarInset);
 
 		[DllImport("dwmapi.dll")]
-		public static extern int DwmIsCompositionEnabled(bool* pfEnabled);
+		public static extern int DwmIsCompositionEnabled(ref bool pfEnabled);
+
+		[DllImport("gdi32.dll")]
+		public static extern bool BitBlt(IntPtr hdcDest, int xDest, int yDest, int wDest, int hDest, IntPtr hdcSource,
+		                                 int xSrc, int ySrc, CopyPixelOperation rop);
+
+		[DllImport("gdi32.dll")]
+		public static extern IntPtr CreateDC(string lpszDriver, string lpszDevice, string lpszOutput, int lpInitData);
+
+		[DllImport("gdi32.dll")]
+		public static extern IntPtr DeleteDC(IntPtr hDc);
+
+		[DllImport("gdi32.dll")]
+		public static extern IntPtr DeleteObject(IntPtr hDc);
+
+		[DllImport("gdi32.dll")]
+		public static extern IntPtr CreateCompatibleBitmap(IntPtr hdc, int nWidth, int nHeight);
+
+		[DllImport("gdi32.dll")]
+		public static extern IntPtr CreateCompatibleDC(IntPtr hdc);
+
+		[DllImport("gdi32.dll")]
+		public static extern IntPtr SelectObject(IntPtr hdc, IntPtr bmp);
 
 		[DllImport("user32.dll")]
 		public static extern IntPtr GetForegroundWindow();
