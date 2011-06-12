@@ -24,6 +24,13 @@ namespace AeroShot {
 		public byte Green;
 		public byte Blue;
 		public byte Alpha;
+
+		public PixelData(byte color) {
+			Red = color;
+			Green = color;
+			Blue = color;
+			Alpha = 255;
+		}
 	}
 
 	public unsafe class UnsafeBitmap {
