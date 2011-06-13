@@ -86,17 +86,12 @@ namespace AeroShot {
 		                                 int cbAttribute) {
 			var dwmDll = LoadLibrary("dwmapi.dll");
 			if (dwmDll == IntPtr.Zero) return Marshal.GetLastWin32Error();
-
 			var dwmFunction = GetProcAddress(dwmDll, "DwmGetWindowAttribute");
-			if (dwmDll == IntPtr.Zero) return Marshal.GetLastWin32Error();
-
+			if (dwmFunction == IntPtr.Zero) return Marshal.GetLastWin32Error();
 			var call =
 				(_dwmGetWindowAttribute) Marshal.GetDelegateForFunctionPointer(dwmFunction, typeof (_dwmGetWindowAttribute));
-
 			var result = call(hWnd, dwAttribute, ref pvAttribute, cbAttribute);
-
 			FreeLibrary(dwmDll);
-
 			return result;
 		}
 
@@ -104,7 +99,7 @@ namespace AeroShot {
 			var dwmDll = LoadLibrary("dwmapi.dll");
 			if (dwmDll == IntPtr.Zero) return Marshal.GetLastWin32Error();
 			var dwmFunction = GetProcAddress(dwmDll, "DwmExtendFrameIntoClientArea");
-			if (dwmDll == IntPtr.Zero) return Marshal.GetLastWin32Error();
+			if (dwmFunction == IntPtr.Zero) return Marshal.GetLastWin32Error();
 			var call =
 				(_dwmExtendFrameIntoClientArea)Marshal.GetDelegateForFunctionPointer(dwmFunction, typeof(_dwmExtendFrameIntoClientArea));
 			var result = call(hWnd, ref pMarInset);
@@ -116,7 +111,7 @@ namespace AeroShot {
 			var dwmDll = LoadLibrary("dwmapi.dll");
 			if (dwmDll == IntPtr.Zero) return Marshal.GetLastWin32Error();
 			var dwmFunction = GetProcAddress(dwmDll, "DwmIsCompositionEnabled");
-			if (dwmDll == IntPtr.Zero) return Marshal.GetLastWin32Error();
+			if (dwmFunction == IntPtr.Zero) return Marshal.GetLastWin32Error();
 			var call =
 				(_dwmIsCompositionEnabled)Marshal.GetDelegateForFunctionPointer(dwmFunction, typeof(_dwmIsCompositionEnabled));
 			var result = call(ref pfEnabled);
