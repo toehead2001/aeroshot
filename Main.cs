@@ -336,17 +336,19 @@ namespace AeroShot {
 			oldRect = new WindowsRect(0);
 			if ((WindowsApi.GetWindowLong(hWnd, GWL_STYLE) & WS_SIZEBOX) != WS_SIZEBOX) return;
 
-			WindowsApi.ShowWindow(hWnd, 1);
-
 			var r = new WindowsRect();
 			WindowsApi.GetWindowRect(hWnd, ref r);
-			var f = Screenshot.GetScreenshot(hWnd, false, 0, Color.Black);
 			oldRect = r;
 
-			WindowsApi.SetWindowPos(hWnd, (IntPtr) 0, r.Left, r.Top, windowWidth - (f.Width - (r.Right - r.Left)),
-			                        windowHeight - (f.Height - (r.Bottom - r.Top)), SWP_SHOWWINDOW);
-
-			f.Dispose();
+			if (DwmComposited) {
+				var f = Screenshot.GetScreenshot(hWnd, false, 0, Color.Black);
+				WindowsApi.SetWindowPos(hWnd, (IntPtr) 0, r.Left, r.Top, windowWidth - (f.Width - (r.Right - r.Left)),
+				                        windowHeight - (f.Height - (r.Bottom - r.Top)), SWP_SHOWWINDOW);
+				f.Dispose();
+			}
+			else {
+				WindowsApi.SetWindowPos(hWnd, (IntPtr)0, r.Left, r.Top, windowWidth, windowHeight, SWP_SHOWWINDOW);
+			}
 		}
 	}
 
