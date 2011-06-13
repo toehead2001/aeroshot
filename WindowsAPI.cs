@@ -81,7 +81,7 @@ namespace AeroShot {
 	}
 
 	internal class WindowsApi {
-		// Safe method of calling dwmapi.dll, for versions of windows lower than Vista
+		// Safe method of calling dwmapi.dll, for versions of Windows lower than Vista
 		public static int DwmGetWindowAttribute(IntPtr hWnd, DwmWindowAttribute dwAttribute, ref WindowsRect pvAttribute,
 		                                 int cbAttribute) {
 			var dwmDll = LoadLibrary("dwmapi.dll");
@@ -125,13 +125,13 @@ namespace AeroShot {
 		}
 
 		[DllImport("kernel32.dll")]
-		public static extern bool FreeLibrary(IntPtr hModule);
+		private static extern bool FreeLibrary(IntPtr hModule);
 
 		[DllImport("kernel32.dll")]
-		public static extern IntPtr LoadLibrary(string dllToLoad);
+		private static extern IntPtr LoadLibrary(string dllToLoad);
 
 		[DllImport("kernel32.dll")]
-		public static extern IntPtr GetProcAddress(IntPtr hModule, string procedureName);
+		private static extern IntPtr GetProcAddress(IntPtr hModule, string procedureName);
 
 
 
