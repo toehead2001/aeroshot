@@ -340,15 +340,13 @@ namespace AeroShot {
 			WindowsApi.GetWindowRect(hWnd, ref r);
 			oldRect = r;
 
-			if (DwmComposited) {
-				var f = Screenshot.GetScreenshot(hWnd, false, 0, Color.Black);
+			var f = Screenshot.GetScreenshot(hWnd, false, 0, Color.Black);
+			if (f != null) {
 				WindowsApi.SetWindowPos(hWnd, (IntPtr) 0, r.Left, r.Top, windowWidth - (f.Width - (r.Right - r.Left)),
 				                        windowHeight - (f.Height - (r.Bottom - r.Top)), SWP_SHOWWINDOW);
 				f.Dispose();
 			}
-			else {
-				WindowsApi.SetWindowPos(hWnd, (IntPtr)0, r.Left, r.Top, windowWidth, windowHeight, SWP_SHOWWINDOW);
-			}
+			else WindowsApi.SetWindowPos(hWnd, (IntPtr) 0, r.Left, r.Top, windowWidth, windowHeight, SWP_SHOWWINDOW);
 		}
 	}
 
