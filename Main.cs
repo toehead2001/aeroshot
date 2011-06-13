@@ -46,13 +46,12 @@ namespace AeroShot {
 			Icon = Icon.ExtractAssociatedIcon(Application.ExecutablePath);
 			InitializeComponent();
 
-			WindowsApi.DwmIsCompositionEnabled(ref DwmComposited);
-
-			if (DwmComposited) {
-				ssButton.Location = new Point(ssButton.Location.X, 248);
-				var margin = new WindowsMargins(0, 0, 0, 32);
-				WindowsApi.DwmExtendFrameIntoClientArea(Handle, ref margin);
-			}
+			if (WindowsApi.DwmIsCompositionEnabled(ref DwmComposited) == 0)
+				if (DwmComposited) {
+					ssButton.Location = new Point(ssButton.Location.X, 248);
+					var margin = new WindowsMargins(0, 0, 0, 32);
+					WindowsApi.DwmExtendFrameIntoClientArea(Handle, ref margin);
+				}
 
 			windowId = GetHashCode();
 			WindowsApi.RegisterHotKey(Handle, windowId, MOD_WIN, (int) Keys.PrintScreen);

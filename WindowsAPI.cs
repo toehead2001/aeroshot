@@ -81,6 +81,60 @@ namespace AeroShot {
 	}
 
 	internal class WindowsApi {
+		// Safe method of calling dwmapi.dll, for versions of windows lower than Vista
+		public static int DwmGetWindowAttribute(IntPtr hWnd, DwmWindowAttribute dwAttribute, ref WindowsRect pvAttribute,
+		                                 int cbAttribute) {
+			var dwmDll = LoadLibrary("dwmapi.dll");
+			if (dwmDll == IntPtr.Zero) return Marshal.GetLastWin32Error();
+
+			var dwmFunction = GetProcAddress(dwmDll, "DwmGetWindowAttribute");
+			if (dwmDll == IntPtr.Zero) return Marshal.GetLastWin32Error();
+
+			var call =
+				(_dwmGetWindowAttribute) Marshal.GetDelegateForFunctionPointer(dwmFunction, typeof (_dwmGetWindowAttribute));
+
+			var result = call(hWnd, dwAttribute, ref pvAttribute, cbAttribute);
+
+			FreeLibrary(dwmDll);
+
+			return result;
+		}
+
+		public static int DwmExtendFrameIntoClientArea(IntPtr hWnd, ref WindowsMargins pMarInset) {
+			var dwmDll = LoadLibrary("dwmapi.dll");
+			if (dwmDll == IntPtr.Zero) return Marshal.GetLastWin32Error();
+			var dwmFunction = GetProcAddress(dwmDll, "DwmExtendFrameIntoClientArea");
+			if (dwmDll == IntPtr.Zero) return Marshal.GetLastWin32Error();
+			var call =
+				(_dwmExtendFrameIntoClientArea)Marshal.GetDelegateForFunctionPointer(dwmFunction, typeof(_dwmExtendFrameIntoClientArea));
+			var result = call(hWnd, ref pMarInset);
+			FreeLibrary(dwmDll);
+			return result;
+		}
+
+		public static int DwmIsCompositionEnabled(ref bool pfEnabled) {
+			var dwmDll = LoadLibrary("dwmapi.dll");
+			if (dwmDll == IntPtr.Zero) return Marshal.GetLastWin32Error();
+			var dwmFunction = GetProcAddress(dwmDll, "DwmIsCompositionEnabled");
+			if (dwmDll == IntPtr.Zero) return Marshal.GetLastWin32Error();
+			var call =
+				(_dwmIsCompositionEnabled)Marshal.GetDelegateForFunctionPointer(dwmFunction, typeof(_dwmIsCompositionEnabled));
+			var result = call(ref pfEnabled);
+			FreeLibrary(dwmDll);
+			return result;
+		}
+
+		[DllImport("kernel32.dll")]
+		public static extern bool FreeLibrary(IntPtr hModule);
+
+		[DllImport("kernel32.dll")]
+		public static extern IntPtr LoadLibrary(string dllToLoad);
+
+		[DllImport("kernel32.dll")]
+		public static extern IntPtr GetProcAddress(IntPtr hModule, string procedureName);
+
+
+
 		[DllImport("user32.dll")]
 		public static extern bool SetForegroundWindow(IntPtr hWnd);
 
@@ -115,15 +169,10 @@ namespace AeroShot {
 		[DllImport("user32.dll")]
 		public static extern int GetWindowTextLength(IntPtr hWnd);
 
-		[DllImport("dwmapi.dll")]
-		public static extern int DwmGetWindowAttribute(IntPtr hWnd, DwmWindowAttribute dwAttribute,
-		                                               ref WindowsRect pvAttribute, int cbAttribute);
+		[DllImport("user32.dll")]
+		public static extern IntPtr GetForegroundWindow();
 
-		[DllImport("dwmapi.dll")]
-		public static extern int DwmExtendFrameIntoClientArea(IntPtr hWnd, ref WindowsMargins pMarInset);
 
-		[DllImport("dwmapi.dll")]
-		public static extern int DwmIsCompositionEnabled(ref bool pfEnabled);
 
 		[DllImport("gdi32.dll")]
 		public static extern bool BitBlt(IntPtr hdcDest, int xDest, int yDest, int wDest, int hDest, IntPtr hdcSource,
@@ -147,7 +196,16 @@ namespace AeroShot {
 		[DllImport("gdi32.dll")]
 		public static extern IntPtr SelectObject(IntPtr hdc, IntPtr bmp);
 
-		[DllImport("user32.dll")]
-		public static extern IntPtr GetForegroundWindow();
+
+
+		[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+		private delegate int _dwmExtendFrameIntoClientArea(IntPtr hWnd, ref WindowsMargins pMarInset);
+
+		[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+		private delegate int _dwmGetWindowAttribute(
+			IntPtr hWnd, DwmWindowAttribute dwAttribute, ref WindowsRect pvAttribute, int cbAttribute);
+
+		[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+		private delegate int _dwmIsCompositionEnabled(ref bool pfEnabled);
 	}
 }
