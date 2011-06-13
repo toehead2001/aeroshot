@@ -25,7 +25,7 @@ namespace AeroShot {
 
 		public static unsafe Bitmap GetScreenshot(IntPtr hWnd, bool opaque, int checkerSize, Color backColor) {
 			if (!opaque || checkerSize > 1) backColor = Color.White;
-			var backdrop = new Form {BackColor = backColor, FormBorderStyle = FormBorderStyle.None, ShowInTaskbar = false};
+			var backdrop = new Form {BackColor = backColor, FormBorderStyle = FormBorderStyle.None, ShowInTaskbar = false, Opacity = 0};
 
 			// Generate a rectangle with the size of all monitors combined
 			var totalSize = Rectangle.Empty;
@@ -61,6 +61,7 @@ namespace AeroShot {
 			WindowsApi.ShowWindow(backdrop.Handle, 4);
 			WindowsApi.SetWindowPos(backdrop.Handle, hWnd, rct.Left, rct.Top, rct.Right - rct.Left, rct.Bottom - rct.Top,
 			                        SWP_NOACTIVATE);
+			backdrop.Opacity = 1;
 			Application.DoEvents();
 
 			// Capture screenshot with white background
