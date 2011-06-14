@@ -285,7 +285,7 @@ namespace AeroShot {
 
 					var r = new WindowsRect(0);
 					if (resizeCheckBox.Checked) {
-						ResizeWindow(hWnd, (int) windowWidth.Value, (int) windowHeight.Value, out r);
+						ResizeWindow(hWnd, (int) windowWidth.Value, (int) windowHeight.Value, opaque && checkerSize < 2, color, out r);
 						Thread.Sleep(100);
 					}
 
@@ -332,7 +332,7 @@ namespace AeroShot {
 				MessageBox.Show("Invalid directory chosen.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 		}
 
-		private static void ResizeWindow(IntPtr hWnd, int windowWidth, int windowHeight, out WindowsRect oldRect) {
+		private static void ResizeWindow(IntPtr hWnd, int windowWidth, int windowHeight, bool opaque, Color color, out WindowsRect oldRect) {
 			oldRect = new WindowsRect(0);
 			if ((WindowsApi.GetWindowLong(hWnd, GWL_STYLE) & WS_SIZEBOX) != WS_SIZEBOX) return;
 
@@ -340,7 +340,7 @@ namespace AeroShot {
 			WindowsApi.GetWindowRect(hWnd, ref r);
 			oldRect = r;
 
-			var f = Screenshot.GetScreenshot(hWnd, false, 0, Color.Black);
+			var f = Screenshot.GetScreenshot(hWnd, opaque, 0, color);
 			if (f != null) {
 				WindowsApi.SetWindowPos(hWnd, (IntPtr) 0, r.Left, r.Top, windowWidth - (f.Width - (r.Right - r.Left)),
 				                        windowHeight - (f.Height - (r.Bottom - r.Top)), SWP_SHOWWINDOW);
