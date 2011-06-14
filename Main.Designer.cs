@@ -359,9 +359,9 @@ namespace AeroShot {
 			this.label3.AutoSize = true;
 			this.label3.Location = new System.Drawing.Point(6, 20);
 			this.label3.Name = "label3";
-			this.label3.Size = new System.Drawing.Size(183, 26);
+			this.label3.Size = new System.Drawing.Size(141, 26);
 			this.label3.TabIndex = 8;
-			this.label3.Text = "Sets the exact resolution screenshots\r\nare captured in.";
+			this.label3.Text = "Sets the exact resolution\r\nscreenshots are captured in.";
 			// 
 			// colorDialog
 			// 
