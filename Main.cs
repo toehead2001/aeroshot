@@ -275,6 +275,10 @@ namespace AeroShot {
 		}
 
 		private void TakeScreenshot(IntPtr hWnd, string folder, bool opaque, int checkerSize, Color color) {
+			// Hide the taskbar, just incase it gets in the way
+			WindowsApi.ShowWindow(WindowsApi.FindWindow("Button", "Start"), 0);
+			WindowsApi.ShowWindow(WindowsApi.FindWindow("Shell_TrayWnd", null), 0);
+			
 			if (Directory.Exists(folder))
 				try {
 					if (WindowsApi.IsIconic(hWnd)) {
@@ -330,6 +334,10 @@ namespace AeroShot {
 				}
 			else
 				MessageBox.Show("Invalid directory chosen.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+			// Show the taskbar again
+			WindowsApi.ShowWindow(WindowsApi.FindWindow("Button", "Start"), 1);
+			WindowsApi.ShowWindow(WindowsApi.FindWindow("Shell_TrayWnd", null), 1);
 		}
 
 		private static void ResizeWindow(IntPtr hWnd, int windowWidth, int windowHeight, bool opaque, Color color, out WindowsRect oldRect) {

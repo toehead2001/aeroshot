@@ -41,11 +41,11 @@ namespace AeroShot {
 				WindowsApi.GetWindowRect(hWnd, ref rct);
 			else {
 				// DwmGetWindowAttribute() succeeded
-				// Add a 40px margin for window shadows. Excess transparency is trimmed out later
-				rct.Left -= 40;
-				rct.Right += 40;
-				rct.Top -= 40;
-				rct.Bottom += 40;
+				// Add a 100px margin for window shadows. Excess transparency is trimmed out later
+				rct.Left -= 100;
+				rct.Right += 100;
+				rct.Top -= 100;
+				rct.Bottom += 100;
 			}
 
 			// These next 4 checks handle if the window is outside of the visible screen
