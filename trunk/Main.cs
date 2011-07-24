@@ -278,6 +278,7 @@ namespace AeroShot {
 			// Hide the taskbar, just incase it gets in the way
 			WindowsApi.ShowWindow(WindowsApi.FindWindow("Button", "Start"), 0);
 			WindowsApi.ShowWindow(WindowsApi.FindWindow("Shell_TrayWnd", null), 0);
+			Application.DoEvents();
 			
 			if (Directory.Exists(folder))
 				try {
