@@ -386,7 +386,7 @@ namespace AeroShot {
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
 			this.MaximizeBox = false;
 			this.Name = "MainForm";
-			this.Text = "AeroShot v1.1";
+			this.Text = "AeroShot v1.2";
 			this.TransparencyKey = System.Drawing.Color.FromArgb(((int)(((byte)(201)))), ((int)(((byte)(199)))), ((int)(((byte)(200)))));
 			this.Shown += new System.EventHandler(this.AeroShot_Shown);
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.AeroShot_Closing);
