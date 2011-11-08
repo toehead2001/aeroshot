@@ -38,11 +38,6 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Windows.Forms" />
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="Main.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -50,14 +45,13 @@
       <DependentUpon>Main.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Screenshot.cs">
-    </Compile>
+    <Compile Include="Screenshot.cs" />
     <Compile Include="UnsafeBitmap.cs" />
     <Compile Include="WindowsAPI.cs" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="icon.ico" />
+    <Reference Include="System" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

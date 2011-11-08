@@ -119,15 +119,6 @@ namespace AeroShot {
 			return result;
 		}
 
-		[DllImport("kernel32.dll")]
-		internal static extern bool FreeLibrary(IntPtr hModule);
-
-		[DllImport("kernel32.dll")]
-		internal static extern IntPtr LoadLibrary(string dllToLoad);
-
-		[DllImport("kernel32.dll")]
-		internal static extern IntPtr GetProcAddress(IntPtr hModule, string procedureName);
-
 		[DllImport("user32.dll")]
 		internal static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
 
@@ -192,16 +183,23 @@ namespace AeroShot {
 		[DllImport("gdi32.dll")]
 		internal static extern IntPtr SelectObject(IntPtr hdc, IntPtr bmp);
 
+		[DllImport("kernel32.dll")]
+		private static extern bool FreeLibrary(IntPtr hModule);
 
+		[DllImport("kernel32.dll")]
+		private static extern IntPtr LoadLibrary(string dllToLoad);
+
+		[DllImport("kernel32.dll")]
+		private static extern IntPtr GetProcAddress(IntPtr hModule, string procedureName);
 
 		[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-		internal delegate int _dwmExtendFrameIntoClientArea(IntPtr hWnd, ref WindowsMargins pMarInset);
+		private delegate int _dwmExtendFrameIntoClientArea(IntPtr hWnd, ref WindowsMargins pMarInset);
 
 		[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-		internal delegate int _dwmGetWindowAttribute(
+		private delegate int _dwmGetWindowAttribute(
 			IntPtr hWnd, DwmWindowAttribute dwAttribute, ref WindowsRect pvAttribute, int cbAttribute);
 
 		[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-		internal delegate int _dwmIsCompositionEnabled(ref bool pfEnabled);
+		private delegate int _dwmIsCompositionEnabled(ref bool pfEnabled);
 	}
 }
