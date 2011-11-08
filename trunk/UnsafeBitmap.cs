@@ -19,13 +19,13 @@ using System.Drawing;
 using System.Drawing.Imaging;
 
 namespace AeroShot {
-	public struct PixelData {
-		public byte Red;
-		public byte Green;
-		public byte Blue;
-		public byte Alpha;
+	internal struct PixelData {
+		internal byte Red;
+		internal byte Green;
+		internal byte Blue;
+		internal byte Alpha;
 
-		public PixelData(byte color) {
+		internal PixelData(byte color) {
 			Red = color;
 			Green = color;
 			Blue = color;
@@ -33,18 +33,18 @@ namespace AeroShot {
 		}
 	}
 
-	public unsafe class UnsafeBitmap {
+	internal unsafe class UnsafeBitmap {
 		private readonly Bitmap _inputBitmap;
 		private BitmapData _bitmapData;
 		private Byte* _pBase = null;
 		private PixelData* _pixelData = null;
 		private int _width;
 
-		public UnsafeBitmap(Bitmap inputBitmap) {
+		internal UnsafeBitmap(Bitmap inputBitmap) {
 			_inputBitmap = inputBitmap;
 		}
 
-		public void LockImage() {
+		internal void LockImage() {
 			var bounds = new Rectangle(Point.Empty, _inputBitmap.Size);
 
 			_width = bounds.Width*sizeof (PixelData);
@@ -55,12 +55,12 @@ namespace AeroShot {
 			_pBase = (Byte*) _bitmapData.Scan0.ToPointer();
 		}
 
-		public PixelData GetPixel(int x, int y) {
+		internal PixelData GetPixel(int x, int y) {
 			_pixelData = (PixelData*) (_pBase + y*_width + x*sizeof (PixelData));
 			return *_pixelData;
 		}
 
-		public void SetPixel(int x, int y, PixelData p) {
+		internal void SetPixel(int x, int y, PixelData p) {
 			var data = (PixelData*) (_pBase + y*_width + x*sizeof (PixelData));
 			data->Red = p.Red;
 			data->Green = p.Green;
@@ -68,7 +68,7 @@ namespace AeroShot {
 			data->Alpha = p.Alpha;
 		}
 
-		public void UnlockImage() {
+		internal void UnlockImage() {
 			_inputBitmap.UnlockBits(_bitmapData);
 			_bitmapData = null;
 			_pBase = null;

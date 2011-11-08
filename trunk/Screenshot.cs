@@ -20,10 +20,10 @@ using System.Drawing.Imaging;
 using System.Windows.Forms;
 
 namespace AeroShot {
-	internal class Screenshot {
+	internal static class Screenshot {
 		private const uint SWP_NOACTIVATE = 0x0010;
 
-		public static unsafe Bitmap GetScreenshot(IntPtr hWnd, bool opaque, int checkerSize, Color backColor) {
+		internal static unsafe Bitmap GetScreenshot(IntPtr hWnd, bool opaque, int checkerSize, Color backColor) {
 			if (!opaque || checkerSize > 1) backColor = Color.White;
 			var backdrop = new Form {BackColor = backColor, FormBorderStyle = FormBorderStyle.None, ShowInTaskbar = false, Opacity = 0};
 
