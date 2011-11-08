@@ -25,10 +25,10 @@ namespace AeroShot {
 		internal byte Blue;
 		internal byte Alpha;
 
-		internal PixelData(byte color) {
-			Red = color;
-			Green = color;
-			Blue = color;
+		internal void SetAll(byte b) {
+			Red = b;
+			Green = b;
+			Blue = b;
 			Alpha = 255;
 		}
 	}
@@ -55,17 +55,8 @@ namespace AeroShot {
 			_pBase = (Byte*) _bitmapData.Scan0.ToPointer();
 		}
 
-		internal PixelData GetPixel(int x, int y) {
-			_pixelData = (PixelData*) (_pBase + y*_width + x*sizeof (PixelData));
-			return *_pixelData;
-		}
-
-		internal void SetPixel(int x, int y, PixelData p) {
-			var data = (PixelData*) (_pBase + y*_width + x*sizeof (PixelData));
-			data->Red = p.Red;
-			data->Green = p.Green;
-			data->Blue = p.Blue;
-			data->Alpha = p.Alpha;
+		internal PixelData* GetPixel(int x, int y) {
+			return (PixelData*) (_pBase + y*_width + x*sizeof (PixelData));
 		}
 
 		internal void UnlockImage() {
