@@ -37,7 +37,6 @@ namespace AeroShot {
 		private readonly Bitmap _inputBitmap;
 		private BitmapData _bitmapData;
 		private Byte* _pBase = null;
-		private PixelData* _pixelData = null;
 		private int _width;
 
 		internal UnsafeBitmap(Bitmap inputBitmap) {
