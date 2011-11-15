@@ -18,8 +18,6 @@ using System.Drawing;
 
 namespace AeroShot {
 	sealed partial class MainForm {
-		private readonly System.ComponentModel.IContainer components;
-
 		private System.Windows.Forms.Button bButton;
 		private System.Windows.Forms.NumericUpDown checkerValue;
 		private System.Windows.Forms.ColorDialog colorDialog;
@@ -36,6 +34,7 @@ namespace AeroShot {
 		private System.Windows.Forms.Label label5;
 		private System.Windows.Forms.Label label6;
 		private System.Windows.Forms.Label label7;
+		private System.Windows.Forms.Label label8;
 		private System.Windows.Forms.CheckBox opaqueCheckBox;
 		private System.Windows.Forms.ComboBox opaqueType;
 		private System.Windows.Forms.Button rButton;
@@ -44,11 +43,6 @@ namespace AeroShot {
 		private System.Windows.Forms.NumericUpDown windowHeight;
 		private System.Windows.Forms.ComboBox windowList;
 		private System.Windows.Forms.NumericUpDown windowWidth;
-
-		protected override void Dispose(bool disposing) {
-			if (disposing && (components != null)) components.Dispose();
-			base.Dispose(disposing);
-		}
 
 		#region Windows Form Designer generated code
 
@@ -386,7 +380,7 @@ namespace AeroShot {
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
 			this.MaximizeBox = false;
 			this.Name = "MainForm";
-			this.Text = "AeroShot v1.2";
+			this.Text = "AeroShot 1.2.1";
 			this.TransparencyKey = System.Drawing.Color.FromArgb(((int)(((byte)(201)))), ((int)(((byte)(199)))), ((int)(((byte)(200)))));
 			this.Shown += new System.EventHandler(this.AeroShot_Shown);
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.AeroShot_Closing);
@@ -399,11 +393,7 @@ namespace AeroShot {
 			this.groupBox1.PerformLayout();
 			this.ResumeLayout(false);
 			this.PerformLayout();
-
 		}
-
 		#endregion
-
-		private System.Windows.Forms.Label label8;
 	}
 }

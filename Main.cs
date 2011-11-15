@@ -66,7 +66,7 @@ namespace AeroShot {
 			if ((value = registryKey.GetValue("WindowSize")) != null && value.GetType() == (typeof (long))) {
 				var b = new byte[8];
 				for (var i = 0; i < 8; i++) b[i] = (byte) (((long) value >> (i*8)) & 0xff);
-				resizeCheckBox.Checked = (b[0] & 1) == 1 ? true : false;
+				resizeCheckBox.Checked = (b[0] & 1) == 1;
 				windowWidth.Value = b[1] << 16 | b[2] << 8 | b[3];
 				windowHeight.Value = b[4] << 16 | b[5] << 8 | b[6];
 			}
@@ -74,7 +74,7 @@ namespace AeroShot {
 			if ((value = registryKey.GetValue("Opaque")) != null && value.GetType() == (typeof (long))) {
 				var b = new byte[8];
 				for (var i = 0; i < 8; i++) b[i] = (byte) (((long) value >> (i*8)) & 0xff);
-				opaqueCheckBox.Checked = (b[0] & 1) == 1 ? true : false;
+				opaqueCheckBox.Checked = (b[0] & 1) == 1;
 				if ((b[0] & 2) == 2)
 					opaqueType.SelectedIndex = 0;
 				if ((b[0] & 4) == 4)
@@ -99,7 +99,7 @@ namespace AeroShot {
 
 			if (m.Msg == WM_HOTKEY) {
 				var f = folderTextBox.Text;
-				var o = opaqueCheckBox.Checked ? true : false;
+				var o = opaqueCheckBox.Checked;
 				var s = (int) (opaqueType.SelectedIndex == 0 ? checkerValue.Value : 0);
 				var c = colorDialog.Color;
 				worker = new Thread(() => TakeScreenshot(WindowsApi.GetForegroundWindow(), f, o, s, c))
@@ -121,7 +121,7 @@ namespace AeroShot {
 		private void ssButton_Click(object sender, EventArgs e) {
 			var h = handleList[windowList.SelectedIndex];
 			var f = folderTextBox.Text;
-			var o = opaqueCheckBox.Checked ? true : false;
+			var o = opaqueCheckBox.Checked;
 			var s = (int) (opaqueType.SelectedIndex == 0 ? checkerValue.Value : 0);
 			var c = colorDialog.Color;
 
@@ -133,7 +133,7 @@ namespace AeroShot {
 			handleList.Clear();
 			windowList.Items.Clear();
 
-			callBackPtr = new CallBackPtr(ListWindows);
+			callBackPtr = ListWindows;
 			WindowsApi.EnumWindows(callBackPtr, (IntPtr) 0);
 			windowList.SelectedIndex = 0;
 		}
