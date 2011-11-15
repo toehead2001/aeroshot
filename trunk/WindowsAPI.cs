@@ -23,17 +23,10 @@ namespace AeroShot {
 	internal delegate bool CallBackPtr(IntPtr hwnd, int lParam);
 
 	internal struct WindowsRect {
-		public int Left;
-		public int Top;
-		public int Right;
-		public int Bottom;
-
-		internal WindowsRect(int l, int t, int r, int b) {
-			Left = l;
-			Top = t;
-			Right = r;
-			Bottom = b;
-		}
+		internal int Left;
+		internal int Top;
+		internal int Right;
+		internal int Bottom;
 
 		internal WindowsRect(int x) {
 			Left = x;
@@ -54,13 +47,6 @@ namespace AeroShot {
 			RightWidth = right;
 			TopHeight = top;
 			BottomHeight = bottom;
-		}
-
-		internal WindowsMargins(int x) {
-			LeftWidth = x;
-			RightWidth = x;
-			TopHeight = x;
-			BottomHeight = x;
 		}
 	}
 
