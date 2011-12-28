@@ -383,6 +383,7 @@ namespace AeroShot {
 			this.Name = "MainForm";
 			this.Text = "AeroShot 1.2.1";
 			this.Paint += new System.Windows.Forms.PaintEventHandler(this.OnPaint);
+			this.SizeChanged += new System.EventHandler(this.FormSizeChange);
 			this.Shown += new System.EventHandler(this.FormShown);
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormClose);
 			((System.ComponentModel.ISupportInitialize)(this.windowHeight)).EndInit();

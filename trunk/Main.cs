@@ -99,27 +99,32 @@ namespace AeroShot {
 
 		private void ScreenshotButtonPlaceholderMouseEnter(object sender, EventArgs e) {
 			ssButtonImage = Resources.capture_hover;
-			Refresh();
+			Invalidate();
+			Update();
 		}
 
 		private void ScreenshotButtonPlaceholderMouseDown(object sender, MouseEventArgs e) {
 			ssButtonImage = Resources.capture_press;
-			Refresh();
+			Invalidate();
+			Update();
 		}
 
 		private void ScreenshotButtonPlaceholderMouseLeave(object sender, EventArgs e) {
 			ssButtonImage = Resources.capture;
-			Refresh();
+			Invalidate();
+			Update();
 		}
 
 		private void ScreenshotButtonPlaceholderMouseUp(object sender, MouseEventArgs e) {
 			if (e.X < 0 || e.Y < 0 || e.X > ssButton.Size.Width || e.Y > ssButton.Size.Height) {
 				ssButtonImage = Resources.capture;
-				Refresh();
+				Invalidate();
+				Update();
 				return;
 			}
 			ssButtonImage = Resources.capture_hover;
-			Refresh();
+			Invalidate();
+			Update();
 
 			var h = handleList[windowList.SelectedIndex];
 			var f = folderTextBox.Text;
@@ -249,6 +254,12 @@ namespace AeroShot {
 
 			data = BitConverter.ToInt64(b, 0);
 			registryKey.SetValue("Opaque", data, RegistryValueKind.QWord);
+		}
+		private void FormSizeChange(object sender, EventArgs e) {
+			if (WindowState == FormWindowState.Normal) {
+				Invalidate();
+				Update();
+			}
 		}
 
 		private void OnPaint(object sender, PaintEventArgs e) {
@@ -422,7 +433,8 @@ namespace AeroShot {
 			get { return _color; }
 			set {
 				_color = value;
-				Refresh();
+				Invalidate();
+				Update();
 			}
 		}
 
