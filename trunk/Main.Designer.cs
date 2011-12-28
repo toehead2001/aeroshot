@@ -38,8 +38,8 @@ namespace AeroShot {
 		private System.Windows.Forms.CheckBox opaqueCheckBox;
 		private System.Windows.Forms.ComboBox opaqueType;
 		private System.Windows.Forms.Button rButton;
+		private System.Windows.Forms.Panel ssButton;
 		private System.Windows.Forms.CheckBox resizeCheckBox;
-		private System.Windows.Forms.Button ssButton;
 		private System.Windows.Forms.NumericUpDown windowHeight;
 		private System.Windows.Forms.ComboBox windowList;
 		private System.Windows.Forms.NumericUpDown windowWidth;
@@ -51,7 +51,6 @@ namespace AeroShot {
 		/// the contents of this method with the code editor.
 		/// </summary>
 		private void InitializeComponent() {
-			this.ssButton = new System.Windows.Forms.Button();
 			this.windowList = new System.Windows.Forms.ComboBox();
 			this.label1 = new System.Windows.Forms.Label();
 			this.label2 = new System.Windows.Forms.Label();
@@ -76,23 +75,13 @@ namespace AeroShot {
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
 			this.label3 = new System.Windows.Forms.Label();
 			this.colorDialog = new System.Windows.Forms.ColorDialog();
+			this.ssButton = new System.Windows.Forms.Panel();
 			((System.ComponentModel.ISupportInitialize)(this.windowHeight)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.windowWidth)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.checkerValue)).BeginInit();
 			this.groupBox2.SuspendLayout();
 			this.groupBox1.SuspendLayout();
 			this.SuspendLayout();
-			// 
-			// ssButton
-			// 
-			this.ssButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.ssButton.Location = new System.Drawing.Point(12, 240);
-			this.ssButton.Name = "ssButton";
-			this.ssButton.Size = new System.Drawing.Size(405, 23);
-			this.ssButton.TabIndex = 22;
-			this.ssButton.Text = "Take Screenshot";
-			this.ssButton.UseVisualStyleBackColor = true;
-			this.ssButton.Click += new System.EventHandler(this.ssButton_Click);
 			// 
 			// windowList
 			// 
@@ -129,7 +118,7 @@ namespace AeroShot {
 			this.rButton.TabIndex = 2;
 			this.rButton.Text = "Refresh List";
 			this.rButton.UseVisualStyleBackColor = true;
-			this.rButton.Click += new System.EventHandler(this.rButton_Click);
+			this.rButton.Click += new System.EventHandler(this.RefreshButtonClick);
 			// 
 			// folderTextBox
 			// 
@@ -146,7 +135,7 @@ namespace AeroShot {
 			this.bButton.TabIndex = 5;
 			this.bButton.Text = "Browse";
 			this.bButton.UseVisualStyleBackColor = true;
-			this.bButton.Click += new System.EventHandler(this.bButton_Click);
+			this.bButton.Click += new System.EventHandler(this.BrowseButtonClick);
 			// 
 			// folderSelection
 			// 
@@ -158,11 +147,11 @@ namespace AeroShot {
 			this.resizeCheckBox.AutoSize = true;
 			this.resizeCheckBox.Location = new System.Drawing.Point(19, 97);
 			this.resizeCheckBox.Name = "resizeCheckBox";
-			this.resizeCheckBox.Size = new System.Drawing.Size(97, 17);
+			this.resizeCheckBox.Size = new System.Drawing.Size(96, 17);
 			this.resizeCheckBox.TabIndex = 6;
 			this.resizeCheckBox.Text = "Resize window";
 			this.resizeCheckBox.UseVisualStyleBackColor = true;
-			this.resizeCheckBox.CheckedChanged += new System.EventHandler(this.resizeCheckBox_CheckedChanged);
+			this.resizeCheckBox.CheckedChanged += new System.EventHandler(this.ResizeCheckboxStateChange);
 			// 
 			// windowHeight
 			// 
@@ -222,11 +211,11 @@ namespace AeroShot {
 			this.opaqueCheckBox.AutoSize = true;
 			this.opaqueCheckBox.Location = new System.Drawing.Point(19, 158);
 			this.opaqueCheckBox.Name = "opaqueCheckBox";
-			this.opaqueCheckBox.Size = new System.Drawing.Size(124, 17);
+			this.opaqueCheckBox.Size = new System.Drawing.Size(123, 17);
 			this.opaqueCheckBox.TabIndex = 12;
 			this.opaqueCheckBox.Text = "Opaque background";
 			this.opaqueCheckBox.UseVisualStyleBackColor = true;
-			this.opaqueCheckBox.CheckedChanged += new System.EventHandler(this.opaqueCheckBox_CheckedChanged);
+			this.opaqueCheckBox.CheckedChanged += new System.EventHandler(this.OpaqueCheckboxStateChange);
 			// 
 			// opaqueType
 			// 
@@ -239,7 +228,7 @@ namespace AeroShot {
 			this.opaqueType.Name = "opaqueType";
 			this.opaqueType.Size = new System.Drawing.Size(204, 21);
 			this.opaqueType.TabIndex = 15;
-			this.opaqueType.SelectedIndexChanged += new System.EventHandler(this.opaqueType_SelectedIndexChanged);
+			this.opaqueType.SelectedIndexChanged += new System.EventHandler(this.OpaqueTypeItemChange);
 			// 
 			// label6
 			// 
@@ -297,7 +286,7 @@ namespace AeroShot {
 			this.colorHexBox.Size = new System.Drawing.Size(56, 20);
 			this.colorHexBox.TabIndex = 20;
 			this.colorHexBox.Text = "FFFFFF";
-			this.colorHexBox.TextChanged += new System.EventHandler(this.colorHexBox_TextChanged);
+			this.colorHexBox.TextChanged += new System.EventHandler(this.ColorTextboxTextChange);
 			// 
 			// colorDisplay
 			// 
@@ -306,7 +295,7 @@ namespace AeroShot {
 			this.colorDisplay.Name = "colorDisplay";
 			this.colorDisplay.Size = new System.Drawing.Size(72, 19);
 			this.colorDisplay.TabIndex = 21;
-			this.colorDisplay.Click += new System.EventHandler(this.colorDisplay_Click);
+			this.colorDisplay.Click += new System.EventHandler(this.ColorDisplayClick);
 			// 
 			// label7
 			// 
@@ -362,10 +351,22 @@ namespace AeroShot {
 			this.colorDialog.Color = System.Drawing.Color.White;
 			this.colorDialog.FullOpen = true;
 			// 
+			// ssButton
+			// 
+			this.ssButton.BackColor = System.Drawing.Color.Transparent;
+			this.ssButton.Location = new System.Drawing.Point(115, 240);
+			this.ssButton.Name = "ssButton";
+			this.ssButton.Size = new System.Drawing.Size(200, 30);
+			this.ssButton.TabIndex = 14;
+			this.ssButton.MouseLeave += new System.EventHandler(this.ScreenshotButtonPlaceholderMouseLeave);
+			this.ssButton.MouseDown += new System.Windows.Forms.MouseEventHandler(this.ScreenshotButtonPlaceholderMouseDown);
+			this.ssButton.MouseUp += new System.Windows.Forms.MouseEventHandler(this.ScreenshotButtonPlaceholderMouseUp);
+			this.ssButton.MouseEnter += new System.EventHandler(this.ScreenshotButtonPlaceholderMouseEnter);
+			// 
 			// MainForm
 			// 
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-			this.ClientSize = new System.Drawing.Size(429, 272);
+			this.ClientSize = new System.Drawing.Size(430, 275);
 			this.Controls.Add(this.resizeCheckBox);
 			this.Controls.Add(this.opaqueCheckBox);
 			this.Controls.Add(this.folderTextBox);
@@ -374,16 +375,16 @@ namespace AeroShot {
 			this.Controls.Add(this.label2);
 			this.Controls.Add(this.label1);
 			this.Controls.Add(this.windowList);
-			this.Controls.Add(this.ssButton);
 			this.Controls.Add(this.groupBox2);
 			this.Controls.Add(this.groupBox1);
+			this.Controls.Add(this.ssButton);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
 			this.MaximizeBox = false;
 			this.Name = "MainForm";
 			this.Text = "AeroShot 1.2.1";
-			this.TransparencyKey = System.Drawing.Color.FromArgb(((int)(((byte)(201)))), ((int)(((byte)(199)))), ((int)(((byte)(200)))));
-			this.Shown += new System.EventHandler(this.AeroShot_Shown);
-			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.AeroShot_Closing);
+			this.Paint += new System.Windows.Forms.PaintEventHandler(this.OnPaint);
+			this.Shown += new System.EventHandler(this.FormShown);
+			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormClose);
 			((System.ComponentModel.ISupportInitialize)(this.windowHeight)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.windowWidth)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.checkerValue)).EndInit();
@@ -393,6 +394,7 @@ namespace AeroShot {
 			this.groupBox1.PerformLayout();
 			this.ResumeLayout(false);
 			this.PerformLayout();
+
 		}
 		#endregion
 	}
