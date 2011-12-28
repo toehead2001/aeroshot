@@ -17,8 +17,10 @@
 using System;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.Runtime.InteropServices;
 
 namespace AeroShot {
+	[StructLayout(LayoutKind.Sequential)]
 	internal struct PixelData {
 		internal byte Red;
 		internal byte Green;

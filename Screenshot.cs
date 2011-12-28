@@ -23,9 +23,10 @@ namespace AeroShot {
 	internal static class Screenshot {
 		private const uint SWP_NOACTIVATE = 0x0010;
 
-		internal unsafe static Bitmap GetScreenshot(IntPtr hWnd, bool opaque, int checkerSize, Color backColor) {
+		internal static unsafe Bitmap GetScreenshot(IntPtr hWnd, bool opaque, int checkerSize, Color backColor) {
 			if (!opaque || checkerSize > 1) backColor = Color.White;
-			var backdrop = new Form {BackColor = backColor, FormBorderStyle = FormBorderStyle.None, ShowInTaskbar = false, Opacity = 0};
+			var backdrop = new Form
+			               {BackColor = backColor, FormBorderStyle = FormBorderStyle.None, ShowInTaskbar = false, Opacity = 0};
 
 			// Generate a rectangle with the size of all monitors combined
 			var totalSize = Rectangle.Empty;
@@ -120,7 +121,7 @@ namespace AeroShot {
 			return bmp.Clone(new Rectangle(0, 0, bmp.Width, bmp.Height), PixelFormat.Format32bppArgb);
 		}
 
-		private unsafe static Bitmap GenerateChecker(int s) {
+		private static unsafe Bitmap GenerateChecker(int s) {
 			var b1 = new Bitmap(s*2, s*2, PixelFormat.Format32bppRgb);
 			var b = new UnsafeBitmap(b1);
 			b.LockImage();
@@ -129,7 +130,7 @@ namespace AeroShot {
 				pixel = b.GetPixel(x, y);
 				if ((x >= 0 && x <= s - 1) && (y >= 0 && y <= s - 1))
 					pixel->SetAll(255);
-				if ((x >= s && x <= s * 2 - 1) && (y >= 0 && y <= s - 1))
+				if ((x >= s && x <= s*2 - 1) && (y >= 0 && y <= s - 1))
 					pixel->SetAll(200);
 				if ((x >= 0 && x <= s - 1) && (y >= s && y <= s*2 - 1))
 					pixel->SetAll(200);
@@ -146,7 +147,7 @@ namespace AeroShot {
 			return b1;
 		}
 
-		private unsafe static Bitmap TrimBitmap(Bitmap b1, Color trimColor) {
+		private static unsafe Bitmap TrimBitmap(Bitmap b1, Color trimColor) {
 			if (b1 == null) return null;
 
 			var sizeX = b1.Width;
@@ -164,7 +165,8 @@ namespace AeroShot {
 			for (int x = 0, y = 0;;) {
 				pixel = b.GetPixel(x, y);
 				if (left == -1) {
-					if ((trimColor.A == 0 && pixel->Alpha != 0) || (trimColor.R != pixel->Red & trimColor.G != pixel->Green & trimColor.B != pixel->Blue)) {
+					if ((trimColor.A == 0 && pixel->Alpha != 0) ||
+					    (trimColor.R != pixel->Red & trimColor.G != pixel->Green & trimColor.B != pixel->Blue)) {
 						left = x;
 						x = 0;
 						y = 0;
@@ -173,14 +175,14 @@ namespace AeroShot {
 					if (y == sizeY - 1) {
 						x++;
 						y = 0;
-					}
-					else
+					} else
 						y++;
 
 					continue;
 				}
 				if (top == -1) {
-					if ((trimColor.A == 0 && pixel->Alpha != 0) || (trimColor.R != pixel->Red & trimColor.G != pixel->Green & trimColor.B != pixel->Blue)) {
+					if ((trimColor.A == 0 && pixel->Alpha != 0) ||
+					    (trimColor.R != pixel->Red & trimColor.G != pixel->Green & trimColor.B != pixel->Blue)) {
 						top = y;
 						x = sizeX - 1;
 						y = 0;
@@ -189,14 +191,14 @@ namespace AeroShot {
 					if (x == sizeX - 1) {
 						y++;
 						x = 0;
-					}
-					else
+					} else
 						x++;
 
 					continue;
 				}
 				if (right == -1) {
-					if ((trimColor.A == 0 && pixel->Alpha != 0) || (trimColor.R != pixel->Red & trimColor.G != pixel->Green & trimColor.B != pixel->Blue)) {
+					if ((trimColor.A == 0 && pixel->Alpha != 0) ||
+					    (trimColor.R != pixel->Red & trimColor.G != pixel->Green & trimColor.B != pixel->Blue)) {
 						right = x + 1;
 						x = 0;
 						y = sizeY - 1;
@@ -205,22 +207,21 @@ namespace AeroShot {
 					if (y == sizeY - 1) {
 						x--;
 						y = 0;
-					}
-					else
+					} else
 						y++;
 
 					continue;
 				}
 				if (bottom == -1) {
-					if ((trimColor.A == 0 && pixel->Alpha != 0) || (trimColor.R != pixel->Red & trimColor.G != pixel->Green & trimColor.B != pixel->Blue)) {
+					if ((trimColor.A == 0 && pixel->Alpha != 0) ||
+					    (trimColor.R != pixel->Red & trimColor.G != pixel->Green & trimColor.B != pixel->Blue)) {
 						bottom = y + 1;
 						break;
 					}
 					if (x == sizeX - 1) {
 						y--;
 						x = 0;
-					}
-					else
+					} else
 						x++;
 
 					continue;
@@ -233,7 +234,7 @@ namespace AeroShot {
 			return b1.Clone(new Rectangle(left, top, right - left, bottom - top), b1.PixelFormat);
 		}
 
-		private unsafe static Bitmap DifferentiateAlpha(Bitmap whiteBitmap, Bitmap blackBitmap) {
+		private static unsafe Bitmap DifferentiateAlpha(Bitmap whiteBitmap, Bitmap blackBitmap) {
 			if (whiteBitmap == null || blackBitmap == null || whiteBitmap.Width != blackBitmap.Width ||
 			    whiteBitmap.Height != blackBitmap.Height)
 				return null;
@@ -255,12 +256,12 @@ namespace AeroShot {
 
 				pixelB->Alpha =
 					Convert.ToByte(255 -
-								   ((Abs(pixelA->Red - pixelB->Red) + Abs(pixelA->Green - pixelB->Green) + Abs(pixelA->Blue - pixelB->Blue)) /
-					                3));
+					               ((Abs(pixelA->Red - pixelB->Red) + Abs(pixelA->Green - pixelB->Green) +
+					                 Abs(pixelA->Blue - pixelB->Blue))/3));
 
-				pixelB->Red = ToByte(pixelB->Alpha != 0 ? pixelB->Red * 255 / pixelB->Alpha : 0);
-				pixelB->Green = ToByte(pixelB->Alpha != 0 ? pixelB->Green * 255 / pixelB->Alpha : 0);
-				pixelB->Blue = ToByte(pixelB->Alpha != 0 ? pixelB->Blue * 255 / pixelB->Alpha : 0);
+				pixelB->Red = ToByte(pixelB->Alpha != 0 ? pixelB->Red*255/pixelB->Alpha : 0);
+				pixelB->Green = ToByte(pixelB->Alpha != 0 ? pixelB->Green*255/pixelB->Alpha : 0);
+				pixelB->Blue = ToByte(pixelB->Alpha != 0 ? pixelB->Blue*255/pixelB->Alpha : 0);
 
 				if (empty && pixelB->Alpha > 0)
 					empty = false;

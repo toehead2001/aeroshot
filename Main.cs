@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
@@ -36,20 +37,21 @@ namespace AeroShot {
 		private const uint SWP_SHOWWINDOW = 0x0040;
 		private static int windowId;
 		private static Thread worker;
-		private static readonly SolidBrush brush = new SolidBrush(Color.FromArgb(201, 199, 200));
 		private static bool DwmComposited;
 		private readonly List<IntPtr> handleList = new List<IntPtr>();
 		private readonly RegistryKey registryKey;
 		private CallBackPtr callBackPtr;
+		private Image ssButtonImage;
 
 		public MainForm() {
+			DoubleBuffered = true;
 			Icon = Icon.ExtractAssociatedIcon(Application.ExecutablePath);
 			InitializeComponent();
 
 			if (WindowsApi.DwmIsCompositionEnabled(ref DwmComposited) == 0)
 				if (DwmComposited) {
-					ssButton.Location = new Point(ssButton.Location.X, 248);
-					var margin = new WindowsMargins(0, 0, 0, 32);
+					ssButton.Location = new Point(ssButton.Location.X, 245);
+					var margin = new WindowsMargins(0, 0, 0, 35);
 					WindowsApi.DwmExtendFrameIntoClientArea(Handle, ref margin);
 				}
 
@@ -87,49 +89,50 @@ namespace AeroShot {
 				hex.AppendFormat("{0:X2}", b[3]);
 				hex.AppendFormat("{0:X2}", b[4]);
 				colorHexBox.Text = hex.ToString();
-			}
-			else opaqueType.SelectedIndex = 0;
+			} else opaqueType.SelectedIndex = 0;
 
 			groupBox1.Enabled = resizeCheckBox.Checked;
 			groupBox2.Enabled = opaqueCheckBox.Checked;
+
+			ssButtonImage = Resources.capture;
 		}
 
-		protected override void WndProc(ref Message m) {
-			base.WndProc(ref m);
-
-			if (m.Msg == WM_HOTKEY) {
-				var f = folderTextBox.Text;
-				var o = opaqueCheckBox.Checked;
-				var s = (int) (opaqueType.SelectedIndex == 0 ? checkerValue.Value : 0);
-				var c = colorDialog.Color;
-				worker = new Thread(() => TakeScreenshot(WindowsApi.GetForegroundWindow(), f, o, s, c))
-				         	{ApartmentState = ApartmentState.STA, IsBackground = true};
-				worker.Start();
-			}
-			if (m.Msg == WM_DWMCOMPOSITIONCHANGED) {
-				WindowsApi.DwmIsCompositionEnabled(ref DwmComposited);
-
-				if (DwmComposited) {
-					ssButton.Location = new Point(ssButton.Location.X, 248);
-					var margin = new WindowsMargins(0, 0, 0, 32);
-					WindowsApi.DwmExtendFrameIntoClientArea(Handle, ref margin);
-				}
-				else ssButton.Location = new Point(ssButton.Location.X, 240);
-			}
+		private void ScreenshotButtonPlaceholderMouseEnter(object sender, EventArgs e) {
+			ssButtonImage = Resources.capture_hover;
+			Refresh();
 		}
 
-		private void ssButton_Click(object sender, EventArgs e) {
+		private void ScreenshotButtonPlaceholderMouseDown(object sender, MouseEventArgs e) {
+			ssButtonImage = Resources.capture_press;
+			Refresh();
+		}
+
+		private void ScreenshotButtonPlaceholderMouseLeave(object sender, EventArgs e) {
+			ssButtonImage = Resources.capture;
+			Refresh();
+		}
+
+		private void ScreenshotButtonPlaceholderMouseUp(object sender, MouseEventArgs e) {
+			if (e.X < 0 || e.Y < 0 || e.X > ssButton.Size.Width || e.Y > ssButton.Size.Height) {
+				ssButtonImage = Resources.capture;
+				Refresh();
+				return;
+			}
+			ssButtonImage = Resources.capture_hover;
+			Refresh();
+
 			var h = handleList[windowList.SelectedIndex];
 			var f = folderTextBox.Text;
 			var o = opaqueCheckBox.Checked;
-			var s = (int) (opaqueType.SelectedIndex == 0 ? checkerValue.Value : 0);
+			var s = (int)(opaqueType.SelectedIndex == 0 ? checkerValue.Value : 0);
 			var c = colorDialog.Color;
 
-			worker = new Thread(() => TakeScreenshot(h, f, o, s, c)) {ApartmentState = ApartmentState.STA, IsBackground = true};
+			worker = new Thread(() => TakeScreenshot(h, f, o, s, c)) { IsBackground = true };
+			worker.SetApartmentState(ApartmentState.STA);
 			worker.Start();
 		}
 
-		private void rButton_Click(object sender, EventArgs e) {
+		private void RefreshButtonClick(object sender, EventArgs e) {
 			handleList.Clear();
 			windowList.Items.Clear();
 
@@ -138,11 +141,11 @@ namespace AeroShot {
 			windowList.SelectedIndex = 0;
 		}
 
-		private void bButton_Click(object sender, EventArgs e) {
+		private void BrowseButtonClick(object sender, EventArgs e) {
 			if (folderSelection.ShowDialog() == DialogResult.OK) folderTextBox.Text = folderSelection.SelectedPath;
 		}
 
-		private void colorDisplay_Click(object sender, EventArgs e) {
+		private void ColorDisplayClick(object sender, EventArgs e) {
 			if (colorDialog.ShowDialog() == DialogResult.OK) {
 				colorDisplay.Color = colorDialog.Color;
 
@@ -154,15 +157,15 @@ namespace AeroShot {
 			}
 		}
 
-		private void resizeCheckBox_CheckedChanged(object sender, EventArgs e) {
+		private void ResizeCheckboxStateChange(object sender, EventArgs e) {
 			groupBox1.Enabled = resizeCheckBox.Checked;
 		}
 
-		private void opaqueCheckBox_CheckedChanged(object sender, EventArgs e) {
+		private void OpaqueCheckboxStateChange(object sender, EventArgs e) {
 			groupBox2.Enabled = opaqueCheckBox.Checked;
 		}
 
-		private void opaqueType_SelectedIndexChanged(object sender, EventArgs e) {
+		private void OpaqueTypeItemChange(object sender, EventArgs e) {
 			if (opaqueType.SelectedIndex == 0) {
 				label6.Text = "Checker size:";
 				checkerValue.Enabled = true;
@@ -189,12 +192,10 @@ namespace AeroShot {
 			}
 		}
 
-		private void colorHexBox_TextChanged(object sender, EventArgs e) {
-			var c = new[]
-			        	{
-			        		'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F', 'a', 'b', 'c', 'd', 'e',
-			        		'f'
-			        	};
+		private void ColorTextboxTextChange(object sender, EventArgs e) {
+			var c = new[] {
+			              	'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F', 'a', 'b', 'c', 'd', 'e', 'f'
+			              };
 			foreach (var v in colorHexBox.Text) {
 				var b = false;
 				foreach (var v1 in c)
@@ -212,11 +213,11 @@ namespace AeroShot {
 			colorDialog.Color = Color.FromArgb(Convert.ToInt32("FF" + colorHexBox.Text, 16));
 		}
 
-		private void AeroShot_Shown(object sender, EventArgs e) {
-			rButton_Click(null, null);
+		private void FormShown(object sender, EventArgs e) {
+			RefreshButtonClick(null, null);
 		}
 
-		private void AeroShot_Closing(object sender, FormClosingEventArgs e) {
+		private void FormClose(object sender, FormClosingEventArgs e) {
 			WindowsApi.UnregisterHotKey(Handle, windowId);
 			registryKey.SetValue("LastPath", folderTextBox.Text);
 
@@ -250,15 +251,58 @@ namespace AeroShot {
 			registryKey.SetValue("Opaque", data, RegistryValueKind.QWord);
 		}
 
-		protected override void OnPaintBackground(PaintEventArgs e) {
-			var r = e.ClipRectangle;
-			e.Graphics.FillRectangle(new SolidBrush(BackColor), r);
+		private void OnPaint(object sender, PaintEventArgs e) {
+			if (DwmComposited) {
+				var rc = new Rectangle(0, ClientSize.Height - 35, ClientSize.Width, 35);
+				var destdc = e.Graphics.GetHdc();
+				var memdc = WindowsApi.CreateCompatibleDC(destdc);
+				var bitmapOld = IntPtr.Zero;
+				var dib = new BitmapInfo {
+				                         	biHeight = -(rc.Bottom - rc.Top),
+				                         	biWidth = rc.Right - rc.Left,
+				                         	biPlanes = 1,
+				                         	biSize = Marshal.SizeOf(typeof (BitmapInfo)),
+				                         	biBitCount = 32,
+				                         	biCompression = 0
+				                         };
+				if (WindowsApi.SaveDC(memdc) != 0) {
+					IntPtr tmp;
+					var bitmap = WindowsApi.CreateDIBSection(memdc, ref dib, 0, out tmp, IntPtr.Zero, 0);
+					if (!(bitmap == IntPtr.Zero)) {
+						bitmapOld = WindowsApi.SelectObject(memdc, bitmap);
+						WindowsApi.BitBlt(destdc, rc.Left, rc.Top, rc.Right - rc.Left, rc.Bottom - rc.Top, memdc, 0, 0,
+						                  CopyPixelOperation.SourceCopy);
+					}
+					WindowsApi.SelectObject(memdc, bitmapOld);
+					WindowsApi.DeleteObject(bitmap);
+					WindowsApi.DeleteDC(memdc);
+				}
+				e.Graphics.ReleaseHdc(destdc);
+			}
+			e.Graphics.DrawImage(ssButtonImage, new Rectangle(ssButton.Location, ssButton.Size));
+		}
 
-			if (!DwmComposited) return;
+		protected override void WndProc(ref Message m) {
+			base.WndProc(ref m);
 
-			r.Y = r.Bottom - 32;
-			r.Height = 32;
-			e.Graphics.FillRectangle(brush, r);
+			if (m.Msg == WM_HOTKEY) {
+				var f = folderTextBox.Text;
+				var o = opaqueCheckBox.Checked;
+				var s = (int)(opaqueType.SelectedIndex == 0 ? checkerValue.Value : 0);
+				var c = colorDialog.Color;
+				worker = new Thread(() => TakeScreenshot(WindowsApi.GetForegroundWindow(), f, o, s, c)) { IsBackground = true };
+				worker.SetApartmentState(ApartmentState.STA);
+				worker.Start();
+			}
+			if (m.Msg == WM_DWMCOMPOSITIONCHANGED) {
+				WindowsApi.DwmIsCompositionEnabled(ref DwmComposited);
+
+				if (DwmComposited) {
+					ssButton.Location = new Point(ssButton.Location.X, 245);
+					var margin = new WindowsMargins(0, 0, 0, 35);
+					WindowsApi.DwmExtendFrameIntoClientArea(Handle, ref margin);
+				} else ssButton.Location = new Point(ssButton.Location.X, 240);
+			}
 		}
 
 		private bool ListWindows(IntPtr hWnd, int lParam) {
@@ -275,13 +319,17 @@ namespace AeroShot {
 		}
 
 		private void TakeScreenshot(IntPtr hWnd, string folder, bool opaque, int checkerSize, Color color) {
-			// Hide the taskbar, just incase it gets in the way
-			WindowsApi.ShowWindow(WindowsApi.FindWindow("Button", "Start"), 0);
-			WindowsApi.ShowWindow(WindowsApi.FindWindow("Shell_TrayWnd", null), 0);
-			Application.DoEvents();
-			
+			var start = WindowsApi.FindWindow("Button", "Start");
+			var taskbar = WindowsApi.FindWindow("Shell_TrayWnd", null);
 			if (Directory.Exists(folder))
 				try {
+					// Hide the taskbar, just incase it gets in the way
+					if (hWnd != start && hWnd != taskbar) {
+						WindowsApi.ShowWindow(start, 0);
+						WindowsApi.ShowWindow(taskbar, 0);
+						Application.DoEvents();
+					}
+
 					if (WindowsApi.IsIconic(hWnd)) {
 						WindowsApi.ShowWindow(hWnd, 1); // Show window if minimized
 						Thread.Sleep(300); // Wait for window to be restored
@@ -316,6 +364,13 @@ namespace AeroShot {
 								break;
 						}
 					var s = Screenshot.GetScreenshot(hWnd, opaque, checkerSize, color);
+
+					// Show the taskbar again
+					if (hWnd != start && hWnd != taskbar) {
+						WindowsApi.ShowWindow(start, 1);
+						WindowsApi.ShowWindow(taskbar, 1);
+					}
+
 					if (s == null)
 						MessageBox.Show("The screenshot taken was blank, it will not be saved.", "Warning", MessageBoxButtons.OK,
 						                MessageBoxIcon.Warning);
@@ -327,21 +382,21 @@ namespace AeroShot {
 					if (resizeCheckBox.Checked)
 						if ((WindowsApi.GetWindowLong(hWnd, GWL_STYLE) & WS_SIZEBOX) == WS_SIZEBOX)
 							WindowsApi.SetWindowPos(hWnd, (IntPtr) 0, r.Left, r.Top, r.Right - r.Left, r.Bottom - r.Top, SWP_SHOWWINDOW);
-				}
-				catch (Exception) {
+				} catch (Exception) {
+					if (hWnd != start && hWnd != taskbar) {
+						WindowsApi.ShowWindow(start, 1);
+						WindowsApi.ShowWindow(taskbar, 1);
+					}
 					MessageBox.Show(
 						"An error occurred while trying to take a screenshot.\r\n\r\nPlease make sure you have selected a valid window.",
 						"Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 				}
 			else
 				MessageBox.Show("Invalid directory chosen.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-
-			// Show the taskbar again
-			WindowsApi.ShowWindow(WindowsApi.FindWindow("Button", "Start"), 1);
-			WindowsApi.ShowWindow(WindowsApi.FindWindow("Shell_TrayWnd", null), 1);
 		}
 
-		private static void ResizeWindow(IntPtr hWnd, int windowWidth, int windowHeight, bool opaque, Color color, out WindowsRect oldRect) {
+		private static void ResizeWindow(IntPtr hWnd, int windowWidth, int windowHeight, bool opaque, Color color,
+		                                 out WindowsRect oldRect) {
 			oldRect = new WindowsRect(0);
 			if ((WindowsApi.GetWindowLong(hWnd, GWL_STYLE) & WS_SIZEBOX) != WS_SIZEBOX) return;
 
@@ -354,12 +409,11 @@ namespace AeroShot {
 				WindowsApi.SetWindowPos(hWnd, (IntPtr) 0, r.Left, r.Top, windowWidth - (f.Width - (r.Right - r.Left)),
 				                        windowHeight - (f.Height - (r.Bottom - r.Top)), SWP_SHOWWINDOW);
 				f.Dispose();
-			}
-			else WindowsApi.SetWindowPos(hWnd, (IntPtr) 0, r.Left, r.Top, windowWidth, windowHeight, SWP_SHOWWINDOW);
+			} else WindowsApi.SetWindowPos(hWnd, (IntPtr) 0, r.Left, r.Top, windowWidth, windowHeight, SWP_SHOWWINDOW);
 		}
 	}
 
-	public class ColorDisplay : UserControl {
+	internal class ColorDisplay : UserControl {
 		private readonly SolidBrush _border = new SolidBrush(SystemColors.ControlDark);
 		private SolidBrush _brush;
 		private Color _color = Color.Black;
@@ -367,10 +421,7 @@ namespace AeroShot {
 		public Color Color {
 			get { return _color; }
 			set {
-				if (value.R == 201 && value.G == 199 && value.B == 200)
-					_color = Color.FromArgb(200, 200, 200); // Hacky fix for the main form's transparency key
-				else
-					_color = value;
+				_color = value;
 				Refresh();
 			}
 		}
