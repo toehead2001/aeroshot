@@ -29,12 +29,12 @@ namespace AeroShot {
 		private System.Windows.Forms.GroupBox groupBox2;
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.Label label2;
-		private System.Windows.Forms.Label label3;
+		private System.Windows.Forms.Label labelResize;
+		private System.Windows.Forms.Label labelX;
+		private System.Windows.Forms.Label labelOpaque;
 		private System.Windows.Forms.Label label4;
-		private System.Windows.Forms.Label label5;
-		private System.Windows.Forms.Label label6;
 		private System.Windows.Forms.Label label7;
-		private System.Windows.Forms.Label label8;
+		private System.Windows.Forms.Label labelHash;
 		private System.Windows.Forms.CheckBox opaqueCheckBox;
 		private System.Windows.Forms.ComboBox opaqueType;
 		private System.Windows.Forms.Button rButton;
@@ -60,22 +60,25 @@ namespace AeroShot {
 			this.folderSelection = new System.Windows.Forms.FolderBrowserDialog();
 			this.resizeCheckBox = new System.Windows.Forms.CheckBox();
 			this.windowHeight = new System.Windows.Forms.NumericUpDown();
-			this.label4 = new System.Windows.Forms.Label();
+			this.labelX = new System.Windows.Forms.Label();
 			this.windowWidth = new System.Windows.Forms.NumericUpDown();
 			this.opaqueCheckBox = new System.Windows.Forms.CheckBox();
 			this.opaqueType = new System.Windows.Forms.ComboBox();
-			this.label6 = new System.Windows.Forms.Label();
+			this.label4 = new System.Windows.Forms.Label();
 			this.checkerValue = new System.Windows.Forms.NumericUpDown();
 			this.groupBox2 = new System.Windows.Forms.GroupBox();
 			this.colorHexBox = new System.Windows.Forms.TextBox();
 			this.colorDisplay = new AeroShot.ColorDisplay();
 			this.label7 = new System.Windows.Forms.Label();
-			this.label5 = new System.Windows.Forms.Label();
-			this.label8 = new System.Windows.Forms.Label();
+			this.labelOpaque = new System.Windows.Forms.Label();
+			this.labelHash = new System.Windows.Forms.Label();
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
-			this.label3 = new System.Windows.Forms.Label();
+			this.labelResize = new System.Windows.Forms.Label();
 			this.colorDialog = new System.Windows.Forms.ColorDialog();
 			this.ssButton = new System.Windows.Forms.Panel();
+			this.diskButton = new System.Windows.Forms.RadioButton();
+			this.label3 = new System.Windows.Forms.Label();
+			this.clipboardButton = new System.Windows.Forms.RadioButton();
 			((System.ComponentModel.ISupportInitialize)(this.windowHeight)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.windowWidth)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.checkerValue)).BeginInit();
@@ -95,6 +98,7 @@ namespace AeroShot {
 			// label1
 			// 
 			this.label1.AutoSize = true;
+			this.label1.BackColor = System.Drawing.Color.Transparent;
 			this.label1.Location = new System.Drawing.Point(9, 9);
 			this.label1.Name = "label1";
 			this.label1.Size = new System.Drawing.Size(130, 13);
@@ -104,11 +108,12 @@ namespace AeroShot {
 			// label2
 			// 
 			this.label2.AutoSize = true;
+			this.label2.BackColor = System.Drawing.Color.Transparent;
 			this.label2.Location = new System.Drawing.Point(9, 54);
 			this.label2.Name = "label2";
-			this.label2.Size = new System.Drawing.Size(107, 13);
+			this.label2.Size = new System.Drawing.Size(104, 13);
 			this.label2.TabIndex = 3;
-			this.label2.Text = "Save screenshots to:";
+			this.label2.Text = "Save screenshots to";
 			// 
 			// rButton
 			// 
@@ -145,12 +150,13 @@ namespace AeroShot {
 			// resizeCheckBox
 			// 
 			this.resizeCheckBox.AutoSize = true;
+			this.resizeCheckBox.BackColor = System.Drawing.Color.Transparent;
 			this.resizeCheckBox.Location = new System.Drawing.Point(19, 97);
 			this.resizeCheckBox.Name = "resizeCheckBox";
-			this.resizeCheckBox.Size = new System.Drawing.Size(96, 17);
+			this.resizeCheckBox.Size = new System.Drawing.Size(97, 17);
 			this.resizeCheckBox.TabIndex = 6;
 			this.resizeCheckBox.Text = "Resize window";
-			this.resizeCheckBox.UseVisualStyleBackColor = true;
+			this.resizeCheckBox.UseVisualStyleBackColor = false;
 			this.resizeCheckBox.CheckedChanged += new System.EventHandler(this.ResizeCheckboxStateChange);
 			// 
 			// windowHeight
@@ -175,14 +181,14 @@ namespace AeroShot {
             0,
             0});
 			// 
-			// label4
+			// labelX
 			// 
-			this.label4.AutoSize = true;
-			this.label4.Location = new System.Drawing.Point(291, 27);
-			this.label4.Name = "label4";
-			this.label4.Size = new System.Drawing.Size(12, 13);
-			this.label4.TabIndex = 10;
-			this.label4.Text = "x";
+			this.labelX.AutoSize = true;
+			this.labelX.Location = new System.Drawing.Point(291, 27);
+			this.labelX.Name = "labelX";
+			this.labelX.Size = new System.Drawing.Size(12, 13);
+			this.labelX.TabIndex = 10;
+			this.labelX.Text = "x";
 			// 
 			// windowWidth
 			// 
@@ -209,12 +215,13 @@ namespace AeroShot {
 			// opaqueCheckBox
 			// 
 			this.opaqueCheckBox.AutoSize = true;
+			this.opaqueCheckBox.BackColor = System.Drawing.Color.Transparent;
 			this.opaqueCheckBox.Location = new System.Drawing.Point(19, 158);
 			this.opaqueCheckBox.Name = "opaqueCheckBox";
-			this.opaqueCheckBox.Size = new System.Drawing.Size(123, 17);
+			this.opaqueCheckBox.Size = new System.Drawing.Size(124, 17);
 			this.opaqueCheckBox.TabIndex = 12;
 			this.opaqueCheckBox.Text = "Opaque background";
-			this.opaqueCheckBox.UseVisualStyleBackColor = true;
+			this.opaqueCheckBox.UseVisualStyleBackColor = false;
 			this.opaqueCheckBox.CheckedChanged += new System.EventHandler(this.OpaqueCheckboxStateChange);
 			// 
 			// opaqueType
@@ -230,14 +237,15 @@ namespace AeroShot {
 			this.opaqueType.TabIndex = 15;
 			this.opaqueType.SelectedIndexChanged += new System.EventHandler(this.OpaqueTypeItemChange);
 			// 
-			// label6
+			// label4
 			// 
-			this.label6.AutoSize = true;
-			this.label6.Location = new System.Drawing.Point(192, 48);
-			this.label6.Name = "label6";
-			this.label6.Size = new System.Drawing.Size(29, 13);
-			this.label6.TabIndex = 16;
-			this.label6.Text = "VAR";
+			this.label4.AutoSize = true;
+			this.label4.BackColor = System.Drawing.Color.Transparent;
+			this.label4.Location = new System.Drawing.Point(192, 48);
+			this.label4.Name = "label4";
+			this.label4.Size = new System.Drawing.Size(29, 13);
+			this.label4.TabIndex = 16;
+			this.label4.Text = "VAR";
 			// 
 			// checkerValue
 			// 
@@ -266,11 +274,11 @@ namespace AeroShot {
 			this.groupBox2.Controls.Add(this.colorHexBox);
 			this.groupBox2.Controls.Add(this.colorDisplay);
 			this.groupBox2.Controls.Add(this.label7);
-			this.groupBox2.Controls.Add(this.label6);
+			this.groupBox2.Controls.Add(this.label4);
 			this.groupBox2.Controls.Add(this.checkerValue);
 			this.groupBox2.Controls.Add(this.opaqueType);
-			this.groupBox2.Controls.Add(this.label5);
-			this.groupBox2.Controls.Add(this.label8);
+			this.groupBox2.Controls.Add(this.labelOpaque);
+			this.groupBox2.Controls.Add(this.labelHash);
 			this.groupBox2.Location = new System.Drawing.Point(12, 158);
 			this.groupBox2.Name = "groupBox2";
 			this.groupBox2.Size = new System.Drawing.Size(405, 76);
@@ -306,45 +314,46 @@ namespace AeroShot {
 			this.label7.TabIndex = 18;
 			this.label7.Text = "px";
 			// 
-			// label5
+			// labelOpaque
 			// 
-			this.label5.AutoSize = true;
-			this.label5.Location = new System.Drawing.Point(6, 20);
-			this.label5.Name = "label5";
-			this.label5.Size = new System.Drawing.Size(153, 39);
-			this.label5.TabIndex = 14;
-			this.label5.Text = "Screenshots are saved with an\r\nopaque background, rather\r\nthan a transparent one." +
+			this.labelOpaque.AutoSize = true;
+			this.labelOpaque.Location = new System.Drawing.Point(6, 20);
+			this.labelOpaque.Name = "labelOpaque";
+			this.labelOpaque.Size = new System.Drawing.Size(153, 39);
+			this.labelOpaque.TabIndex = 14;
+			this.labelOpaque.Text = "Screenshots are saved with an\r\nopaque background, rather\r\nthan a transparent one." +
 				"";
 			// 
-			// label8
+			// labelHash
 			// 
-			this.label8.AutoSize = true;
-			this.label8.Location = new System.Drawing.Point(250, 48);
-			this.label8.Name = "label8";
-			this.label8.Size = new System.Drawing.Size(14, 13);
-			this.label8.TabIndex = 19;
-			this.label8.Text = "#";
+			this.labelHash.AutoSize = true;
+			this.labelHash.BackColor = System.Drawing.Color.Transparent;
+			this.labelHash.Location = new System.Drawing.Point(250, 48);
+			this.labelHash.Name = "labelHash";
+			this.labelHash.Size = new System.Drawing.Size(14, 13);
+			this.labelHash.TabIndex = 19;
+			this.labelHash.Text = "#";
 			// 
 			// groupBox1
 			// 
-			this.groupBox1.Controls.Add(this.label3);
+			this.groupBox1.Controls.Add(this.labelResize);
 			this.groupBox1.Controls.Add(this.windowHeight);
 			this.groupBox1.Controls.Add(this.windowWidth);
-			this.groupBox1.Controls.Add(this.label4);
+			this.groupBox1.Controls.Add(this.labelX);
 			this.groupBox1.Location = new System.Drawing.Point(12, 97);
 			this.groupBox1.Name = "groupBox1";
 			this.groupBox1.Size = new System.Drawing.Size(405, 55);
 			this.groupBox1.TabIndex = 7;
 			this.groupBox1.TabStop = false;
 			// 
-			// label3
+			// labelResize
 			// 
-			this.label3.AutoSize = true;
-			this.label3.Location = new System.Drawing.Point(6, 20);
-			this.label3.Name = "label3";
-			this.label3.Size = new System.Drawing.Size(141, 26);
-			this.label3.TabIndex = 8;
-			this.label3.Text = "Sets the exact resolution\r\nscreenshots are captured in.";
+			this.labelResize.AutoSize = true;
+			this.labelResize.Location = new System.Drawing.Point(6, 20);
+			this.labelResize.Name = "labelResize";
+			this.labelResize.Size = new System.Drawing.Size(141, 26);
+			this.labelResize.TabIndex = 8;
+			this.labelResize.Text = "Sets the exact resolution\r\nscreenshots are captured in.";
 			// 
 			// colorDialog
 			// 
@@ -363,10 +372,49 @@ namespace AeroShot {
 			this.ssButton.MouseUp += new System.Windows.Forms.MouseEventHandler(this.ScreenshotButtonPlaceholderMouseUp);
 			this.ssButton.MouseEnter += new System.EventHandler(this.ScreenshotButtonPlaceholderMouseEnter);
 			// 
+			// diskButton
+			// 
+			this.diskButton.AutoSize = true;
+			this.diskButton.BackColor = System.Drawing.Color.Transparent;
+			this.diskButton.Location = new System.Drawing.Point(114, 52);
+			this.diskButton.Name = "diskButton";
+			this.diskButton.Size = new System.Drawing.Size(44, 17);
+			this.diskButton.TabIndex = 15;
+			this.diskButton.TabStop = true;
+			this.diskButton.Text = "disk";
+			this.diskButton.UseVisualStyleBackColor = false;
+			this.diskButton.CheckedChanged += new System.EventHandler(this.DiskButtonStateChange);
+			// 
+			// label3
+			// 
+			this.label3.AutoSize = true;
+			this.label3.BackColor = System.Drawing.Color.Transparent;
+			this.label3.Location = new System.Drawing.Point(154, 54);
+			this.label3.Name = "label3";
+			this.label3.Size = new System.Drawing.Size(16, 13);
+			this.label3.TabIndex = 3;
+			this.label3.Text = "or";
+			// 
+			// clipboardButton
+			// 
+			this.clipboardButton.AutoSize = true;
+			this.clipboardButton.BackColor = System.Drawing.Color.Transparent;
+			this.clipboardButton.Location = new System.Drawing.Point(173, 52);
+			this.clipboardButton.Name = "clipboardButton";
+			this.clipboardButton.Size = new System.Drawing.Size(68, 17);
+			this.clipboardButton.TabIndex = 15;
+			this.clipboardButton.TabStop = true;
+			this.clipboardButton.Text = "clipboard";
+			this.clipboardButton.UseVisualStyleBackColor = false;
+			this.clipboardButton.CheckedChanged += new System.EventHandler(this.ClipboardButtonStateChange);
+			// 
 			// MainForm
 			// 
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
 			this.ClientSize = new System.Drawing.Size(430, 275);
+			this.Controls.Add(this.label3);
+			this.Controls.Add(this.clipboardButton);
+			this.Controls.Add(this.diskButton);
 			this.Controls.Add(this.resizeCheckBox);
 			this.Controls.Add(this.opaqueCheckBox);
 			this.Controls.Add(this.folderTextBox);
@@ -398,5 +446,9 @@ namespace AeroShot {
 
 		}
 		#endregion
+
+		private System.Windows.Forms.RadioButton diskButton;
+		private System.Windows.Forms.Label label3;
+		private System.Windows.Forms.RadioButton clipboardButton;
 	}
 }
