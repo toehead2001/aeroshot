@@ -499,7 +499,7 @@ namespace AeroShot {
 		}
 	}
 
-	internal class ColorDisplay : UserControl {
+	public class ColorDisplay : UserControl {
 		private readonly SolidBrush _border = new SolidBrush(SystemColors.ControlDark);
 		private SolidBrush _brush;
 		private Color _color = Color.Black;
@@ -532,8 +532,8 @@ namespace AeroShot {
 		}
 	}
 
-	internal class Placeholder : Control {
-		internal Placeholder() {
+	public class Placeholder : Control {
+		public Placeholder() {
 			SetStyle(ControlStyles.SupportsTransparentBackColor, true);
 		}
 	}
