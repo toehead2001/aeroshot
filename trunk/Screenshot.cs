@@ -87,7 +87,7 @@ namespace AeroShot {
 			blackShot.Dispose();
 
 			if (opaque && checkerSize > 1) {
-				var final = new Bitmap(transparentImage.Width, transparentImage.Height, PixelFormat.Format32bppRgb);
+				var final = new Bitmap(transparentImage.Width, transparentImage.Height, PixelFormat.Format24bppRgb);
 				var finalGraphics = Graphics.FromImage(final);
 				var brush = new TextureBrush(GenerateChecker(checkerSize));
 				finalGraphics.FillRectangle(brush, finalGraphics.ClipBounds);
@@ -118,11 +118,11 @@ namespace AeroShot {
 			WindowsApi.DeleteDC(hDest);
 			WindowsApi.DeleteDC(hSrc);
 
-			return bmp.Clone(new Rectangle(0, 0, bmp.Width, bmp.Height), PixelFormat.Format32bppArgb);
+			return bmp.Clone(new Rectangle(0, 0, bmp.Width, bmp.Height), PixelFormat.Format24bppRgb);
 		}
 
 		private static unsafe Bitmap GenerateChecker(int s) {
-			var b1 = new Bitmap(s*2, s*2, PixelFormat.Format32bppRgb);
+			var b1 = new Bitmap(s*2, s*2, PixelFormat.Format24bppRgb);
 			var b = new UnsafeBitmap(b1);
 			b.LockImage();
 			PixelData* pixel;
@@ -240,30 +240,31 @@ namespace AeroShot {
 				return null;
 			var sizeX = whiteBitmap.Width;
 			var sizeY = whiteBitmap.Height;
+			var final = new Bitmap(sizeX, sizeY, PixelFormat.Format32bppArgb);
 			var a = new UnsafeBitmap(whiteBitmap);
 			var b = new UnsafeBitmap(blackBitmap);
+			var f = new UnsafeBitmap(final);
 			a.LockImage();
 			b.LockImage();
+			f.LockImage();
 
 			var empty = true;
 
-			PixelData* pixelA;
-			PixelData* pixelB;
-
 			for (int x = 0, y = 0; x < sizeX && y < sizeY;) {
-				pixelA = a.GetPixel(x, y);
-				pixelB = b.GetPixel(x, y);
+				var pixelA = a.GetPixel(x, y);
+				var pixelB = b.GetPixel(x, y);
+				var pixelF = f.GetPixel(x, y);
 
-				pixelB->Alpha =
+				pixelF->Alpha =
 					Convert.ToByte(255 -
 					               ((Abs(pixelA->Red - pixelB->Red) + Abs(pixelA->Green - pixelB->Green) +
 					                 Abs(pixelA->Blue - pixelB->Blue))/3));
 
-				pixelB->Red = ToByte(pixelB->Alpha != 0 ? pixelB->Red*255/pixelB->Alpha : 0);
-				pixelB->Green = ToByte(pixelB->Alpha != 0 ? pixelB->Green*255/pixelB->Alpha : 0);
-				pixelB->Blue = ToByte(pixelB->Alpha != 0 ? pixelB->Blue*255/pixelB->Alpha : 0);
+				pixelF->Red = ToByte(pixelF->Alpha != 0 ? pixelB->Red*255/pixelF->Alpha : 0);
+				pixelF->Green = ToByte(pixelF->Alpha != 0 ? pixelB->Green*255/pixelF->Alpha : 0);
+				pixelF->Blue = ToByte(pixelF->Alpha != 0 ? pixelB->Blue*255/pixelF->Alpha : 0);
 
-				if (empty && pixelB->Alpha > 0)
+				if (empty && pixelF->Alpha > 0)
 					empty = false;
 
 				if (x == sizeX - 1) {
@@ -276,7 +277,8 @@ namespace AeroShot {
 
 			a.UnlockImage();
 			b.UnlockImage();
-			return empty ? null : blackBitmap;
+			f.UnlockImage();
+			return empty ? null : final;
 		}
 
 		private static byte ToByte(int i) {

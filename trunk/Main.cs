@@ -60,9 +60,15 @@ namespace AeroShot {
 
 			object value;
 			registryKey = Registry.CurrentUser.CreateSubKey(@"Software\AeroShot");
-			if ((value = registryKey.GetValue("LastPath")) != null && value.GetType() == (typeof (string)))
-				folderTextBox.Text = (string) value;
-			else
+			if ((value = registryKey.GetValue("LastPath")) != null && value.GetType() == (typeof(string))) {
+				if (((string)value).Substring(0, 1) == "*") {
+					folderTextBox.Text = ((string) value).Substring(1);
+					clipboardButton.Checked = true;
+				} else {
+					folderTextBox.Text = (string)value;
+					diskButton.Checked = true;
+				}
+			} else
 				folderTextBox.Text = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
 
 			if ((value = registryKey.GetValue("WindowSize")) != null && value.GetType() == (typeof (long))) {
@@ -128,11 +134,12 @@ namespace AeroShot {
 
 			var h = handleList[windowList.SelectedIndex];
 			var f = folderTextBox.Text;
+			var b = clipboardButton.Checked;
 			var o = opaqueCheckBox.Checked;
 			var s = (int)(opaqueType.SelectedIndex == 0 ? checkerValue.Value : 0);
 			var c = colorDialog.Color;
 
-			worker = new Thread(() => TakeScreenshot(h, f, o, s, c)) { IsBackground = true };
+			worker = new Thread(() => TakeScreenshot(h, f, b, o, s, c)) { IsBackground = true };
 			worker.SetApartmentState(ApartmentState.STA);
 			worker.Start();
 		}
@@ -169,10 +176,22 @@ namespace AeroShot {
 		private void OpaqueCheckboxStateChange(object sender, EventArgs e) {
 			groupBox2.Enabled = opaqueCheckBox.Checked;
 		}
+		private void ClipboardButtonStateChange(object sender, EventArgs e) {
+			if (!clipboardButton.Checked) return;
+			diskButton.Checked = false;
+			folderTextBox.Enabled = false;
+			bButton.Enabled = false;
+		}
 
+		private void DiskButtonStateChange(object sender, EventArgs e) {
+			if (!diskButton.Checked) return;
+			clipboardButton.Checked = false;
+			folderTextBox.Enabled = true;
+			bButton.Enabled = true;
+		}
 		private void OpaqueTypeItemChange(object sender, EventArgs e) {
 			if (opaqueType.SelectedIndex == 0) {
-				label6.Text = "Checker size:";
+				label4.Text = "Checker size:";
 				checkerValue.Enabled = true;
 				checkerValue.Visible = true;
 				label7.Visible = true;
@@ -181,15 +200,15 @@ namespace AeroShot {
 				colorDisplay.Visible = false;
 				colorHexBox.Enabled = false;
 				colorHexBox.Visible = false;
-				label8.Visible = false;
+				labelHash.Visible = false;
 			}
 			if (opaqueType.SelectedIndex == 1) {
-				label6.Text = "Color:";
+				label4.Text = "Color:";
 				colorDisplay.Enabled = true;
 				colorDisplay.Visible = true;
 				colorHexBox.Enabled = true;
 				colorHexBox.Visible = true;
-				label8.Visible = true;
+				labelHash.Visible = true;
 
 				checkerValue.Enabled = false;
 				checkerValue.Visible = false;
@@ -224,7 +243,10 @@ namespace AeroShot {
 
 		private void FormClose(object sender, FormClosingEventArgs e) {
 			WindowsApi.UnregisterHotKey(Handle, windowId);
-			registryKey.SetValue("LastPath", folderTextBox.Text);
+			if(clipboardButton.Checked)
+				registryKey.SetValue("LastPath", "*" + folderTextBox.Text);	
+			else
+				registryKey.SetValue("LastPath",folderTextBox.Text);
 
 			// Save resizing settings in an 8-byte long
 			var b = new byte[8];
@@ -298,10 +320,11 @@ namespace AeroShot {
 
 			if (m.Msg == WM_HOTKEY) {
 				var f = folderTextBox.Text;
+				var b = clipboardButton.Checked;
 				var o = opaqueCheckBox.Checked;
 				var s = (int)(opaqueType.SelectedIndex == 0 ? checkerValue.Value : 0);
 				var c = colorDialog.Color;
-				worker = new Thread(() => TakeScreenshot(WindowsApi.GetForegroundWindow(), f, o, s, c)) { IsBackground = true };
+				worker = new Thread(() => TakeScreenshot(WindowsApi.GetForegroundWindow(), f, b, o, s, c)) { IsBackground = true };
 				worker.SetApartmentState(ApartmentState.STA);
 				worker.Start();
 			}
@@ -329,7 +352,7 @@ namespace AeroShot {
 			return true;
 		}
 
-		private void TakeScreenshot(IntPtr hWnd, string folder, bool opaque, int checkerSize, Color color) {
+		private void TakeScreenshot(IntPtr hWnd, string folder, bool clipboard, bool opaque, int checkerSize, Color color) {
 			var start = WindowsApi.FindWindow("Button", "Start");
 			var taskbar = WindowsApi.FindWindow("Shell_TrayWnd", null);
 			if (Directory.Exists(folder))
@@ -342,8 +365,11 @@ namespace AeroShot {
 					}
 
 					if (WindowsApi.IsIconic(hWnd)) {
-						WindowsApi.ShowWindow(hWnd, 1); // Show window if minimized
+						WindowsApi.ShowWindow(hWnd, 1);
 						Thread.Sleep(300); // Wait for window to be restored
+					} else {
+						WindowsApi.ShowWindow(hWnd, 1);
+						Thread.Sleep(100);
 					}
 					WindowsApi.SetForegroundWindow(hWnd);
 
@@ -362,18 +388,6 @@ namespace AeroShot {
 					foreach (var inv in Path.GetInvalidFileNameChars())
 						name = name.Replace(inv.ToString(), string.Empty);
 
-					name = name.Trim();
-					if (name == string.Empty)
-						name = "AeroShot";
-
-					var path = folder + Path.DirectorySeparatorChar + name + ".png";
-
-					if (File.Exists(path))
-						for (var i = 1; i < 9999; i++) {
-							path = folder + Path.DirectorySeparatorChar + name + " " + i + ".png";
-							if (!File.Exists(path))
-								break;
-						}
 					var s = Screenshot.GetScreenshot(hWnd, opaque, checkerSize, color);
 
 					// Show the taskbar again
@@ -386,7 +400,41 @@ namespace AeroShot {
 						MessageBox.Show("The screenshot taken was blank, it will not be saved.", "Warning", MessageBoxButtons.OK,
 						                MessageBoxIcon.Warning);
 					else {
-						s.Save(path, ImageFormat.Png);
+						if(clipboard && opaque) {
+							// Screenshot is already opaque, don't need to modify it
+							Clipboard.SetImage(s);
+						}
+						else if(clipboard) {
+							var whiteS = new Bitmap(s.Width, s.Height, PixelFormat.Format24bppRgb);
+							using (var graphics = Graphics.FromImage(whiteS)) {
+								graphics.Clear(Color.White);
+								graphics.DrawImage(s, 0, 0, s.Width, s.Height);
+							}
+							using (var stream = new MemoryStream()) {
+								// Save screenshot in clipboard as PNG which some applications support (eg. Microsoft Office)
+								s.Save(stream, ImageFormat.Png);
+								var data = new DataObject("PNG", stream);
+
+								// Add fallback for applications that don't support PNG from clipboard (eg. Photoshop or Paint)
+								data.SetData(DataFormats.Bitmap, whiteS);
+								Clipboard.Clear();
+								Clipboard.SetDataObject(data, true);
+							}
+							whiteS.Dispose();
+						} else {
+							name = name.Trim();
+							if (name == string.Empty)
+								name = "AeroShot";
+							var path = folder + Path.DirectorySeparatorChar + name + ".png";
+
+							if (File.Exists(path))
+								for (var i = 1; i < 9999; i++) {
+									path = folder + Path.DirectorySeparatorChar + name + " " + i + ".png";
+									if (!File.Exists(path))
+										break;
+								}
+							s.Save(path, ImageFormat.Png);
+						}
 						s.Dispose();
 					}
 
