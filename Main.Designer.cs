@@ -35,11 +35,11 @@ namespace AeroShot {
 		private System.Windows.Forms.Label label4;
 		private System.Windows.Forms.Label label7;
 		private System.Windows.Forms.Label labelHash;
-		private System.Windows.Forms.CheckBox opaqueCheckBox;
+		private System.Windows.Forms.CheckBox opaqueCheckbox;
 		private System.Windows.Forms.ComboBox opaqueType;
 		private System.Windows.Forms.Button rButton;
 		private System.Windows.Forms.Panel ssButton;
-		private System.Windows.Forms.CheckBox resizeCheckBox;
+		private System.Windows.Forms.CheckBox resizeCheckbox;
 		private System.Windows.Forms.NumericUpDown windowHeight;
 		private System.Windows.Forms.ComboBox windowList;
 		private System.Windows.Forms.NumericUpDown windowWidth;
@@ -58,11 +58,11 @@ namespace AeroShot {
 			this.folderTextBox = new System.Windows.Forms.TextBox();
 			this.bButton = new System.Windows.Forms.Button();
 			this.folderSelection = new System.Windows.Forms.FolderBrowserDialog();
-			this.resizeCheckBox = new System.Windows.Forms.CheckBox();
+			this.resizeCheckbox = new System.Windows.Forms.CheckBox();
 			this.windowHeight = new System.Windows.Forms.NumericUpDown();
 			this.labelX = new System.Windows.Forms.Label();
 			this.windowWidth = new System.Windows.Forms.NumericUpDown();
-			this.opaqueCheckBox = new System.Windows.Forms.CheckBox();
+			this.opaqueCheckbox = new System.Windows.Forms.CheckBox();
 			this.opaqueType = new System.Windows.Forms.ComboBox();
 			this.label4 = new System.Windows.Forms.Label();
 			this.checkerValue = new System.Windows.Forms.NumericUpDown();
@@ -79,11 +79,15 @@ namespace AeroShot {
 			this.diskButton = new System.Windows.Forms.RadioButton();
 			this.label3 = new System.Windows.Forms.Label();
 			this.clipboardButton = new System.Windows.Forms.RadioButton();
+			this.mouseCheckbox = new System.Windows.Forms.CheckBox();
+			this.groupBox3 = new System.Windows.Forms.GroupBox();
+			this.labelMouse = new System.Windows.Forms.Label();
 			((System.ComponentModel.ISupportInitialize)(this.windowHeight)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.windowWidth)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.checkerValue)).BeginInit();
 			this.groupBox2.SuspendLayout();
 			this.groupBox1.SuspendLayout();
+			this.groupBox3.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// windowList
@@ -147,17 +151,17 @@ namespace AeroShot {
 			this.folderSelection.Description = "Please select the folder you wish screenshots to be saved to.\r\nFilenames are dete" +
 				"rmined by the title of the window you are capturing.";
 			// 
-			// resizeCheckBox
+			// resizeCheckbox
 			// 
-			this.resizeCheckBox.AutoSize = true;
-			this.resizeCheckBox.BackColor = System.Drawing.Color.Transparent;
-			this.resizeCheckBox.Location = new System.Drawing.Point(19, 97);
-			this.resizeCheckBox.Name = "resizeCheckBox";
-			this.resizeCheckBox.Size = new System.Drawing.Size(97, 17);
-			this.resizeCheckBox.TabIndex = 6;
-			this.resizeCheckBox.Text = "Resize window";
-			this.resizeCheckBox.UseVisualStyleBackColor = false;
-			this.resizeCheckBox.CheckedChanged += new System.EventHandler(this.ResizeCheckboxStateChange);
+			this.resizeCheckbox.AutoSize = true;
+			this.resizeCheckbox.BackColor = System.Drawing.Color.Transparent;
+			this.resizeCheckbox.Location = new System.Drawing.Point(19, 97);
+			this.resizeCheckbox.Name = "resizeCheckbox";
+			this.resizeCheckbox.Size = new System.Drawing.Size(96, 17);
+			this.resizeCheckbox.TabIndex = 6;
+			this.resizeCheckbox.Text = "Resize window";
+			this.resizeCheckbox.UseVisualStyleBackColor = false;
+			this.resizeCheckbox.CheckedChanged += new System.EventHandler(this.ResizeCheckboxStateChange);
 			// 
 			// windowHeight
 			// 
@@ -212,17 +216,17 @@ namespace AeroShot {
             0,
             0});
 			// 
-			// opaqueCheckBox
+			// opaqueCheckbox
 			// 
-			this.opaqueCheckBox.AutoSize = true;
-			this.opaqueCheckBox.BackColor = System.Drawing.Color.Transparent;
-			this.opaqueCheckBox.Location = new System.Drawing.Point(19, 158);
-			this.opaqueCheckBox.Name = "opaqueCheckBox";
-			this.opaqueCheckBox.Size = new System.Drawing.Size(124, 17);
-			this.opaqueCheckBox.TabIndex = 12;
-			this.opaqueCheckBox.Text = "Opaque background";
-			this.opaqueCheckBox.UseVisualStyleBackColor = false;
-			this.opaqueCheckBox.CheckedChanged += new System.EventHandler(this.OpaqueCheckboxStateChange);
+			this.opaqueCheckbox.AutoSize = true;
+			this.opaqueCheckbox.BackColor = System.Drawing.Color.Transparent;
+			this.opaqueCheckbox.Location = new System.Drawing.Point(19, 158);
+			this.opaqueCheckbox.Name = "opaqueCheckbox";
+			this.opaqueCheckbox.Size = new System.Drawing.Size(123, 17);
+			this.opaqueCheckbox.TabIndex = 12;
+			this.opaqueCheckbox.Text = "Opaque background";
+			this.opaqueCheckbox.UseVisualStyleBackColor = false;
+			this.opaqueCheckbox.CheckedChanged += new System.EventHandler(this.OpaqueCheckboxStateChange);
 			// 
 			// opaqueType
 			// 
@@ -363,7 +367,7 @@ namespace AeroShot {
 			// ssButton
 			// 
 			this.ssButton.BackColor = System.Drawing.Color.Transparent;
-			this.ssButton.Location = new System.Drawing.Point(115, 240);
+			this.ssButton.Location = new System.Drawing.Point(115, 305);
 			this.ssButton.Name = "ssButton";
 			this.ssButton.Size = new System.Drawing.Size(200, 30);
 			this.ssButton.TabIndex = 14;
@@ -378,7 +382,7 @@ namespace AeroShot {
 			this.diskButton.BackColor = System.Drawing.Color.Transparent;
 			this.diskButton.Location = new System.Drawing.Point(114, 52);
 			this.diskButton.Name = "diskButton";
-			this.diskButton.Size = new System.Drawing.Size(44, 17);
+			this.diskButton.Size = new System.Drawing.Size(43, 17);
 			this.diskButton.TabIndex = 15;
 			this.diskButton.TabStop = true;
 			this.diskButton.Text = "disk";
@@ -401,31 +405,63 @@ namespace AeroShot {
 			this.clipboardButton.BackColor = System.Drawing.Color.Transparent;
 			this.clipboardButton.Location = new System.Drawing.Point(173, 52);
 			this.clipboardButton.Name = "clipboardButton";
-			this.clipboardButton.Size = new System.Drawing.Size(68, 17);
+			this.clipboardButton.Size = new System.Drawing.Size(67, 17);
 			this.clipboardButton.TabIndex = 15;
 			this.clipboardButton.TabStop = true;
 			this.clipboardButton.Text = "clipboard";
 			this.clipboardButton.UseVisualStyleBackColor = false;
 			this.clipboardButton.CheckedChanged += new System.EventHandler(this.ClipboardButtonStateChange);
 			// 
+			// mouseCheckbox
+			// 
+			this.mouseCheckbox.AutoSize = true;
+			this.mouseCheckbox.Location = new System.Drawing.Point(19, 240);
+			this.mouseCheckbox.Name = "mouseCheckbox";
+			this.mouseCheckbox.Size = new System.Drawing.Size(131, 17);
+			this.mouseCheckbox.TabIndex = 16;
+			this.mouseCheckbox.Text = "Capture mouse pointer";
+			this.mouseCheckbox.UseVisualStyleBackColor = true;
+			this.mouseCheckbox.CheckedChanged += new System.EventHandler(this.MouseCheckboxStateChange);
+			// 
+			// groupBox3
+			// 
+			this.groupBox3.Controls.Add(this.labelMouse);
+			this.groupBox3.Location = new System.Drawing.Point(12, 240);
+			this.groupBox3.Name = "groupBox3";
+			this.groupBox3.Size = new System.Drawing.Size(405, 55);
+			this.groupBox3.TabIndex = 17;
+			this.groupBox3.TabStop = false;
+			// 
+			// labelMouse
+			// 
+			this.labelMouse.AutoSize = true;
+			this.labelMouse.Location = new System.Drawing.Point(6, 20);
+			this.labelMouse.Name = "labelMouse";
+			this.labelMouse.Size = new System.Drawing.Size(343, 26);
+			this.labelMouse.TabIndex = 0;
+			this.labelMouse.Text = "The system mouse pointer will be preserved in screenshots when the Windows\r\nKe" +
+				"y + Print Screen key combination is used to capture.";
+			// 
 			// MainForm
 			// 
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-			this.ClientSize = new System.Drawing.Size(430, 275);
-			this.Controls.Add(this.label3);
-			this.Controls.Add(this.clipboardButton);
-			this.Controls.Add(this.diskButton);
-			this.Controls.Add(this.resizeCheckBox);
-			this.Controls.Add(this.opaqueCheckBox);
+			this.ClientSize = new System.Drawing.Size(430, 340);
+			this.Controls.Add(this.ssButton);
+			this.Controls.Add(this.resizeCheckbox);
+			this.Controls.Add(this.opaqueCheckbox);
+			this.Controls.Add(this.mouseCheckbox);
 			this.Controls.Add(this.folderTextBox);
 			this.Controls.Add(this.bButton);
 			this.Controls.Add(this.rButton);
-			this.Controls.Add(this.label2);
 			this.Controls.Add(this.label1);
+			this.Controls.Add(this.label2);
+			this.Controls.Add(this.label3);
+			this.Controls.Add(this.clipboardButton);
+			this.Controls.Add(this.diskButton);
 			this.Controls.Add(this.windowList);
-			this.Controls.Add(this.groupBox2);
 			this.Controls.Add(this.groupBox1);
-			this.Controls.Add(this.ssButton);
+			this.Controls.Add(this.groupBox2);
+			this.Controls.Add(this.groupBox3);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
 			this.MaximizeBox = false;
 			this.Name = "MainForm";
@@ -441,6 +477,8 @@ namespace AeroShot {
 			this.groupBox2.PerformLayout();
 			this.groupBox1.ResumeLayout(false);
 			this.groupBox1.PerformLayout();
+			this.groupBox3.ResumeLayout(false);
+			this.groupBox3.PerformLayout();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -450,5 +488,8 @@ namespace AeroShot {
 		private System.Windows.Forms.RadioButton diskButton;
 		private System.Windows.Forms.Label label3;
 		private System.Windows.Forms.RadioButton clipboardButton;
+		private System.Windows.Forms.CheckBox mouseCheckbox;
+		private System.Windows.Forms.GroupBox groupBox3;
+		private System.Windows.Forms.Label labelMouse;
 	}
 }
