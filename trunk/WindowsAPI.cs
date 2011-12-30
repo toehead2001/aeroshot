@@ -67,6 +67,29 @@ namespace AeroShot {
 		public Int32 biClrImportant;
 	}
 
+	[StructLayout(LayoutKind.Sequential)]
+	internal struct IconInfoStruct {
+		internal bool fIcon;
+		internal Int32 xHotspot;
+		internal Int32 yHotspot;
+		internal IntPtr hbmMask;
+		internal IntPtr hbmColor;
+	}
+
+	[StructLayout(LayoutKind.Sequential)]
+	internal struct CursorInfoStruct {
+		internal Int32 cbSize;
+		internal Int32 flags;
+		internal IntPtr hCursor;
+		internal PointStruct ptScreenPos;
+	}
+
+	[StructLayout(LayoutKind.Sequential)]
+	internal struct PointStruct {
+		internal int x;
+		internal int y;
+	}
+
 	internal enum DwmWindowAttribute {
 		DWMWA_NCRENDERING_ENABLED = 1,
 		DWMWA_NCRENDERING_POLICY,
@@ -163,6 +186,17 @@ namespace AeroShot {
 		[DllImport("user32.dll")]
 		internal static extern IntPtr GetForegroundWindow();
 
+		[DllImport("user32.dll")]
+		public static extern bool GetCursorInfo(out CursorInfoStruct pci);
+
+		[DllImport("user32.dll")]
+		public static extern IntPtr DestroyIcon(IntPtr hIcon);
+
+		[DllImport("user32.dll")]
+		public static extern IntPtr CopyIcon(IntPtr hIcon);
+
+		[DllImport("user32.dll")]
+		public static extern bool GetIconInfo(IntPtr hIcon, out IconInfoStruct piconinfo);
 
 		[DllImport("gdi32.dll")]
 		internal static extern bool BitBlt(IntPtr hdcDest, int xDest, int yDest, int wDest, int hDest, IntPtr hdcSource,
@@ -201,7 +235,6 @@ namespace AeroShot {
 
 		[DllImport("kernel32.dll")]
 		private static extern IntPtr GetProcAddress(IntPtr hModule, string procedureName);
-
 
 		[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
 		private delegate int DwmExtendFrameIntoClientAreaDelegate(IntPtr hWnd, ref WindowsMargins pMarInset);

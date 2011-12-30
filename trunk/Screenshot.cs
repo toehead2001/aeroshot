@@ -17,13 +17,14 @@
 using System;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
 namespace AeroShot {
 	internal static class Screenshot {
 		private const uint SWP_NOACTIVATE = 0x0010;
 
-		internal static unsafe Bitmap GetScreenshot(IntPtr hWnd, bool opaque, int checkerSize, Color backColor) {
+		internal static unsafe Bitmap GetScreenshot(IntPtr hWnd, bool opaque, bool cursor, int checkerSize, Color backColor) {
 			if (!opaque || checkerSize > 1) backColor = Color.White;
 			var backdrop = new Form
 			               {BackColor = backColor, FormBorderStyle = FormBorderStyle.None, ShowInTaskbar = false, Opacity = 0};
@@ -70,7 +71,11 @@ namespace AeroShot {
 
 			if (opaque && checkerSize < 2) {
 				backdrop.Dispose();
-				return TrimBitmap(whiteShot, backColor);
+				if (cursor)
+					DrawSystemCursor(whiteShot, new Point(rct.Left, rct.Top));
+				var final = TrimBitmap(whiteShot, backColor);
+				whiteShot.Dispose();
+				return final;
 			}
 
 			backdrop.BackColor = Color.Black;
@@ -81,7 +86,10 @@ namespace AeroShot {
 
 			backdrop.Dispose();
 
-			var transparentImage = TrimBitmap(DifferentiateAlpha(whiteShot, blackShot), Color.FromArgb(0, 0, 0, 0));
+			var transparentImage = DifferentiateAlpha(whiteShot, blackShot);
+			if (cursor)
+				DrawSystemCursor(transparentImage, new Point(rct.Left, rct.Top));
+			transparentImage = TrimBitmap(transparentImage, Color.FromArgb(0, 0, 0, 0));
 
 			whiteShot.Dispose();
 			blackShot.Dispose();
@@ -96,9 +104,30 @@ namespace AeroShot {
 				transparentImage.Dispose();
 				return final;
 			}
-
 			// Returns a bitmap with transparency, calculated by differentiating the white and black screenshots
 			return transparentImage;
+		}
+
+		private static void DrawSystemCursor(Bitmap windowImage, Point offsetLocation) {
+			var ci = new CursorInfoStruct();
+			ci.cbSize = Marshal.SizeOf(ci);
+			if (WindowsApi.GetCursorInfo(out ci)) {
+				if (ci.flags == 1) {
+					var hicon = WindowsApi.CopyIcon(ci.hCursor);
+					IconInfoStruct icInfo;
+					if (WindowsApi.GetIconInfo(hicon, out icInfo)) {
+						var loc = new Point(ci.ptScreenPos.x - offsetLocation.X - icInfo.xHotspot, ci.ptScreenPos.y - offsetLocation.Y - icInfo.yHotspot);
+						var ic = Icon.FromHandle(hicon);
+						var bmp = ic.ToBitmap();
+
+						var g = Graphics.FromImage(windowImage);
+						g.DrawImage(bmp, new Rectangle(loc, bmp.Size));
+						g.Dispose();
+						WindowsApi.DestroyIcon(hicon);
+						bmp.Dispose();
+					}
+				}
+			}
 		}
 
 		private static Bitmap CaptureScreen(Rectangle crop) {
@@ -231,7 +260,9 @@ namespace AeroShot {
 			if (left >= right || top >= bottom)
 				return null;
 
-			return b1.Clone(new Rectangle(left, top, right - left, bottom - top), b1.PixelFormat);
+			var final = b1.Clone(new Rectangle(left, top, right - left, bottom - top), b1.PixelFormat);
+			b1.Dispose();
+			return final;
 		}
 
 		private static unsafe Bitmap DifferentiateAlpha(Bitmap whiteBitmap, Bitmap blackBitmap) {
