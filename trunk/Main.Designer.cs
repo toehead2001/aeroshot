@@ -97,6 +97,22 @@ namespace AeroShot {
 			this.groupBox3.SuspendLayout();
 			this.SuspendLayout();
 			// 
+			// ssButton
+			// 
+			this.ssButton.BackColor = System.Drawing.Color.Transparent;
+			this.ssButton.Location = new System.Drawing.Point(115, 305);
+			this.ssButton.Name = "ssButton";
+			this.ssButton.Size = new System.Drawing.Size(200, 30);
+			this.ssButton.TabIndex = 28;
+			this.ssButton.MouseLeave += new System.EventHandler(this.ScreenshotButtonPlaceholderMouseLeave);
+			this.ssButton.Leave += new System.EventHandler(this.ScreenshotButtonPlaceholderLeave);
+			this.ssButton.KeyUp += new System.Windows.Forms.KeyEventHandler(this.ScreenshotButtonPlaceholderKeyUp);
+			this.ssButton.MouseDown += new System.Windows.Forms.MouseEventHandler(this.ScreenshotButtonPlaceholderMouseDown);
+			this.ssButton.Enter += new System.EventHandler(this.ScreenshotButtonPlaceholderEnter);
+			this.ssButton.MouseUp += new System.Windows.Forms.MouseEventHandler(this.ScreenshotButtonPlaceholderMouseUp);
+			this.ssButton.MouseEnter += new System.EventHandler(this.ScreenshotButtonPlaceholderMouseEnter);
+			this.ssButton.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ScreenshotButtonPlaceholderKeyDown);
+			// 
 			// windowList
 			// 
 			this.windowList.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
@@ -328,6 +344,7 @@ namespace AeroShot {
 			// labelOpaque
 			// 
 			this.labelOpaque.AutoSize = true;
+			this.labelOpaque.BackColor = System.Drawing.Color.Transparent;
 			this.labelOpaque.Location = new System.Drawing.Point(6, 20);
 			this.labelOpaque.Name = "labelOpaque";
 			this.labelOpaque.Size = new System.Drawing.Size(153, 39);
@@ -360,11 +377,13 @@ namespace AeroShot {
 			// labelResize
 			// 
 			this.labelResize.AutoSize = true;
+			this.labelResize.BackColor = System.Drawing.Color.Transparent;
 			this.labelResize.Location = new System.Drawing.Point(6, 20);
 			this.labelResize.Name = "labelResize";
-			this.labelResize.Size = new System.Drawing.Size(141, 26);
+			this.labelResize.Size = new System.Drawing.Size(212, 26);
 			this.labelResize.TabIndex = 11;
-			this.labelResize.Text = "Sets the exact resolution\r\nscreenshots are captured in.";
+			this.labelResize.Text = "Sets the exact resolution screenshots are\r\ncaptured in, if the window supports re" +
+				"sizing.";
 			// 
 			// colorDialog
 			// 
@@ -410,12 +429,13 @@ namespace AeroShot {
 			// mouseCheckbox
 			// 
 			this.mouseCheckbox.AutoSize = true;
+			this.mouseCheckbox.BackColor = System.Drawing.Color.Transparent;
 			this.mouseCheckbox.Location = new System.Drawing.Point(19, 240);
 			this.mouseCheckbox.Name = "mouseCheckbox";
 			this.mouseCheckbox.Size = new System.Drawing.Size(131, 17);
 			this.mouseCheckbox.TabIndex = 25;
 			this.mouseCheckbox.Text = "Capture mouse pointer";
-			this.mouseCheckbox.UseVisualStyleBackColor = true;
+			this.mouseCheckbox.UseVisualStyleBackColor = false;
 			this.mouseCheckbox.CheckedChanged += new System.EventHandler(this.MouseCheckboxStateChange);
 			// 
 			// groupBox3
@@ -430,28 +450,13 @@ namespace AeroShot {
 			// labelMouse
 			// 
 			this.labelMouse.AutoSize = true;
+			this.labelMouse.BackColor = System.Drawing.Color.Transparent;
 			this.labelMouse.Location = new System.Drawing.Point(6, 20);
 			this.labelMouse.Name = "labelMouse";
 			this.labelMouse.Size = new System.Drawing.Size(377, 26);
 			this.labelMouse.TabIndex = 27;
 			this.labelMouse.Text = "The system mouse pointer will be preserved in screenshots when the Windows\r\nKey +" +
 				" Print Screen key combination is used to capture.";
-			// 
-			// ssButton
-			// 
-			this.ssButton.BackColor = System.Drawing.Color.Transparent;
-			this.ssButton.Location = new System.Drawing.Point(115, 305);
-			this.ssButton.Name = "ssButton";
-			this.ssButton.Size = new System.Drawing.Size(200, 30);
-			this.ssButton.TabIndex = 28;
-			this.ssButton.KeyDown += new KeyEventHandler(this.ScreenshotButtonPlaceholderKeyDown);
-			this.ssButton.KeyUp += new KeyEventHandler(this.ScreenshotButtonPlaceholderKeyUp);
-			this.ssButton.MouseLeave += new System.EventHandler(this.ScreenshotButtonPlaceholderMouseLeave);
-			this.ssButton.Leave += new System.EventHandler(this.ScreenshotButtonPlaceholderLeave);
-			this.ssButton.MouseDown += new System.Windows.Forms.MouseEventHandler(this.ScreenshotButtonPlaceholderMouseDown);
-			this.ssButton.Enter += new System.EventHandler(this.ScreenshotButtonPlaceholderEnter);
-			this.ssButton.MouseUp += new System.Windows.Forms.MouseEventHandler(this.ScreenshotButtonPlaceholderMouseUp);
-			this.ssButton.MouseEnter += new System.EventHandler(this.ScreenshotButtonPlaceholderMouseEnter);
 			// 
 			// MainForm
 			// 
