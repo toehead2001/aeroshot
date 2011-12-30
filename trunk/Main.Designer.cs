@@ -481,7 +481,7 @@ namespace AeroShot {
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
 			this.MaximizeBox = false;
 			this.Name = "MainForm";
-			this.Text = "AeroShot 1.2.1";
+			this.Text = "AeroShot 1.3";
 			this.Paint += new System.Windows.Forms.PaintEventHandler(this.OnPaint);
 			this.SizeChanged += new System.EventHandler(this.FormSizeChange);
 			this.Shown += new System.EventHandler(this.FormShown);
