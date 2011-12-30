@@ -126,7 +126,7 @@ namespace AeroShot {
 		}
 
 		private void ScreenshotButtonPlaceholderMouseUp(object sender, MouseEventArgs e) {
-			if (e.X < 0 || e.Y < 0 || e.X > ssButton.Size.Width || e.Y > ssButton.Size.Height) {
+			if (e != null && (e.X < 0 || e.Y < 0 || e.X > ssButton.Size.Width || e.Y > ssButton.Size.Height)) {
 				ssButtonImage = Resources.capture;
 				Invalidate();
 				Update();
@@ -146,6 +146,24 @@ namespace AeroShot {
 			worker = new Thread(() => TakeScreenshot(h, f, b, false, o, s, c)) { IsBackground = true };
 			worker.SetApartmentState(ApartmentState.STA);
 			worker.Start();
+		}
+
+		private void ScreenshotButtonPlaceholderKeyDown(object sender, KeyEventArgs e) {
+			if (e.KeyCode == Keys.Space || e.KeyCode == Keys.Enter)
+				ScreenshotButtonPlaceholderMouseDown(null, null);
+		}
+
+		private void ScreenshotButtonPlaceholderKeyUp(object sender, KeyEventArgs e) {
+			if(e.KeyCode == Keys.Space || e.KeyCode == Keys.Enter)
+				ScreenshotButtonPlaceholderMouseUp(null, null);
+		}
+
+		private void ScreenshotButtonPlaceholderEnter(object sender, EventArgs e) {
+			ScreenshotButtonPlaceholderMouseEnter(null, null);
+		}
+
+		private void ScreenshotButtonPlaceholderLeave(object sender, EventArgs e) {
+			ScreenshotButtonPlaceholderMouseLeave(null, null);
 		}
 
 		private void RefreshButtonClick(object sender, EventArgs e) {
@@ -201,7 +219,7 @@ namespace AeroShot {
 				label4.Text = "Checker size:";
 				checkerValue.Enabled = true;
 				checkerValue.Visible = true;
-				label7.Visible = true;
+				label5.Visible = true;
 
 				colorDisplay.Enabled = false;
 				colorDisplay.Visible = false;
@@ -219,7 +237,7 @@ namespace AeroShot {
 
 				checkerValue.Enabled = false;
 				checkerValue.Visible = false;
-				label7.Visible = false;
+				label5.Visible = false;
 			}
 		}
 
@@ -511,6 +529,12 @@ namespace AeroShot {
 			}
 			e.Graphics.FillRectangle(_border, e.ClipRectangle);
 			e.Graphics.FillRectangle(_brush, rect);
+		}
+	}
+
+	internal class Placeholder : Control {
+		internal Placeholder() {
+			SetStyle(ControlStyles.SupportsTransparentBackColor, true);
 		}
 	}
 }
