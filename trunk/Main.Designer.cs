@@ -21,9 +21,9 @@ namespace AeroShot {
 	sealed partial class MainForm {
 		private System.Windows.Forms.Button bButton;
 		private System.Windows.Forms.NumericUpDown checkerValue;
-		private System.Windows.Forms.ColorDialog colorDialog;
-		private AeroShot.ColorDisplay colorDisplay;
-		private System.Windows.Forms.TextBox colorHexBox;
+		private System.Windows.Forms.ColorDialog colourDialog;
+		private AeroShot.ColourDisplay colourDisplay;
+		private System.Windows.Forms.TextBox colourHexBox;
 		private System.Windows.Forms.FolderBrowserDialog folderSelection;
 		private System.Windows.Forms.TextBox folderTextBox;
 		private System.Windows.Forms.GroupBox groupBox1;
@@ -75,14 +75,14 @@ namespace AeroShot {
 			this.label4 = new System.Windows.Forms.Label();
 			this.checkerValue = new System.Windows.Forms.NumericUpDown();
 			this.groupBox2 = new System.Windows.Forms.GroupBox();
-			this.colorHexBox = new System.Windows.Forms.TextBox();
-			this.colorDisplay = new AeroShot.ColorDisplay();
+			this.colourHexBox = new System.Windows.Forms.TextBox();
+			this.colourDisplay = new AeroShot.ColourDisplay();
 			this.label5 = new System.Windows.Forms.Label();
 			this.labelOpaque = new System.Windows.Forms.Label();
 			this.labelHash = new System.Windows.Forms.Label();
 			this.groupBox1 = new System.Windows.Forms.GroupBox();
 			this.labelResize = new System.Windows.Forms.Label();
-			this.colorDialog = new System.Windows.Forms.ColorDialog();
+			this.colourDialog = new System.Windows.Forms.ColorDialog();
 			this.diskButton = new System.Windows.Forms.RadioButton();
 			this.label3 = new System.Windows.Forms.Label();
 			this.clipboardButton = new System.Windows.Forms.RadioButton();
@@ -180,7 +180,7 @@ namespace AeroShot {
 			this.resizeCheckbox.BackColor = System.Drawing.Color.Transparent;
 			this.resizeCheckbox.Location = new System.Drawing.Point(19, 97);
 			this.resizeCheckbox.Name = "resizeCheckbox";
-			this.resizeCheckbox.Size = new System.Drawing.Size(96, 17);
+			this.resizeCheckbox.Size = new System.Drawing.Size(97, 17);
 			this.resizeCheckbox.TabIndex = 9;
 			this.resizeCheckbox.Text = "Resize window";
 			this.resizeCheckbox.UseVisualStyleBackColor = false;
@@ -245,7 +245,7 @@ namespace AeroShot {
 			this.opaqueCheckbox.BackColor = System.Drawing.Color.Transparent;
 			this.opaqueCheckbox.Location = new System.Drawing.Point(19, 158);
 			this.opaqueCheckbox.Name = "opaqueCheckbox";
-			this.opaqueCheckbox.Size = new System.Drawing.Size(123, 17);
+			this.opaqueCheckbox.Size = new System.Drawing.Size(124, 17);
 			this.opaqueCheckbox.TabIndex = 15;
 			this.opaqueCheckbox.Text = "Opaque background";
 			this.opaqueCheckbox.UseVisualStyleBackColor = false;
@@ -257,7 +257,7 @@ namespace AeroShot {
 			this.opaqueType.FormattingEnabled = true;
 			this.opaqueType.Items.AddRange(new object[] {
             "Checkerboard",
-            "Solid color"});
+            "Solid colour"});
 			this.opaqueType.Location = new System.Drawing.Point(195, 19);
 			this.opaqueType.Name = "opaqueType";
 			this.opaqueType.Size = new System.Drawing.Size(204, 21);
@@ -298,8 +298,8 @@ namespace AeroShot {
 			// 
 			// groupBox2
 			// 
-			this.groupBox2.Controls.Add(this.colorHexBox);
-			this.groupBox2.Controls.Add(this.colorDisplay);
+			this.groupBox2.Controls.Add(this.colourHexBox);
+			this.groupBox2.Controls.Add(this.colourDisplay);
 			this.groupBox2.Controls.Add(this.label5);
 			this.groupBox2.Controls.Add(this.label4);
 			this.groupBox2.Controls.Add(this.checkerValue);
@@ -312,25 +312,25 @@ namespace AeroShot {
 			this.groupBox2.TabIndex = 16;
 			this.groupBox2.TabStop = false;
 			// 
-			// colorHexBox
+			// colourHexBox
 			// 
-			this.colorHexBox.Font = new System.Drawing.Font("Lucida Console", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.colorHexBox.Location = new System.Drawing.Point(265, 46);
-			this.colorHexBox.MaxLength = 6;
-			this.colorHexBox.Name = "colorHexBox";
-			this.colorHexBox.Size = new System.Drawing.Size(56, 20);
-			this.colorHexBox.TabIndex = 21;
-			this.colorHexBox.Text = "FFFFFF";
-			this.colorHexBox.TextChanged += new System.EventHandler(this.ColorTextboxTextChange);
+			this.colourHexBox.Font = new System.Drawing.Font("Lucida Console", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.colourHexBox.Location = new System.Drawing.Point(265, 46);
+			this.colourHexBox.MaxLength = 6;
+			this.colourHexBox.Name = "colourHexBox";
+			this.colourHexBox.Size = new System.Drawing.Size(56, 20);
+			this.colourHexBox.TabIndex = 21;
+			this.colourHexBox.Text = "FFFFFF";
+			this.colourHexBox.TextChanged += new System.EventHandler(this.ColourTextboxTextChange);
 			// 
-			// colorDisplay
+			// colourDisplay
 			// 
-			this.colorDisplay.Color = System.Drawing.Color.White;
-			this.colorDisplay.Location = new System.Drawing.Point(327, 46);
-			this.colorDisplay.Name = "colorDisplay";
-			this.colorDisplay.Size = new System.Drawing.Size(72, 19);
-			this.colorDisplay.TabIndex = 22;
-			this.colorDisplay.Click += new System.EventHandler(this.ColorDisplayClick);
+			this.colourDisplay.Color = System.Drawing.Color.White;
+			this.colourDisplay.Location = new System.Drawing.Point(327, 46);
+			this.colourDisplay.Name = "colourDisplay";
+			this.colourDisplay.Size = new System.Drawing.Size(72, 19);
+			this.colourDisplay.TabIndex = 22;
+			this.colourDisplay.Click += new System.EventHandler(this.ColourDisplayClick);
 			// 
 			// label5
 			// 
@@ -385,10 +385,10 @@ namespace AeroShot {
 			this.labelResize.Text = "Sets the exact resolution screenshots are\r\ncaptured in, if the window supports re" +
 				"sizing.";
 			// 
-			// colorDialog
+			// colourDialog
 			// 
-			this.colorDialog.Color = System.Drawing.Color.White;
-			this.colorDialog.FullOpen = true;
+			this.colourDialog.Color = System.Drawing.Color.White;
+			this.colourDialog.FullOpen = true;
 			// 
 			// diskButton
 			// 
@@ -396,7 +396,7 @@ namespace AeroShot {
 			this.diskButton.BackColor = System.Drawing.Color.Transparent;
 			this.diskButton.Location = new System.Drawing.Point(114, 52);
 			this.diskButton.Name = "diskButton";
-			this.diskButton.Size = new System.Drawing.Size(43, 17);
+			this.diskButton.Size = new System.Drawing.Size(44, 17);
 			this.diskButton.TabIndex = 4;
 			this.diskButton.TabStop = true;
 			this.diskButton.Text = "disk";
@@ -419,7 +419,7 @@ namespace AeroShot {
 			this.clipboardButton.BackColor = System.Drawing.Color.Transparent;
 			this.clipboardButton.Location = new System.Drawing.Point(173, 52);
 			this.clipboardButton.Name = "clipboardButton";
-			this.clipboardButton.Size = new System.Drawing.Size(67, 17);
+			this.clipboardButton.Size = new System.Drawing.Size(68, 17);
 			this.clipboardButton.TabIndex = 6;
 			this.clipboardButton.TabStop = true;
 			this.clipboardButton.Text = "clipboard";
@@ -432,7 +432,7 @@ namespace AeroShot {
 			this.mouseCheckbox.BackColor = System.Drawing.Color.Transparent;
 			this.mouseCheckbox.Location = new System.Drawing.Point(19, 240);
 			this.mouseCheckbox.Name = "mouseCheckbox";
-			this.mouseCheckbox.Size = new System.Drawing.Size(131, 17);
+			this.mouseCheckbox.Size = new System.Drawing.Size(132, 17);
 			this.mouseCheckbox.TabIndex = 25;
 			this.mouseCheckbox.Text = "Capture mouse pointer";
 			this.mouseCheckbox.UseVisualStyleBackColor = false;
@@ -453,10 +453,10 @@ namespace AeroShot {
 			this.labelMouse.BackColor = System.Drawing.Color.Transparent;
 			this.labelMouse.Location = new System.Drawing.Point(6, 20);
 			this.labelMouse.Name = "labelMouse";
-			this.labelMouse.Size = new System.Drawing.Size(377, 26);
+			this.labelMouse.Size = new System.Drawing.Size(378, 26);
 			this.labelMouse.TabIndex = 27;
-			this.labelMouse.Text = "The system mouse pointer will be preserved in screenshots when the Windows\r\nKey +" +
-				" Print Screen key combination is used to capture.";
+			this.labelMouse.Text = "The system mouse pointer will be preserved in screenshots when the Alt + Print\r\nS" +
+				"creen key combination is used to capture.";
 			// 
 			// MainForm
 			// 

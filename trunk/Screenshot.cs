@@ -17,17 +17,172 @@
 using System;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.IO;
 using System.Runtime.InteropServices;
+using System.Text;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace AeroShot {
+	internal struct ScreenshotTask {
+		public enum BackgroundType {
+			Transparent,
+			Checkerboard,
+			SolidColour
+		}
+
+		public BackgroundType Background;
+		public Color BackgroundColour;
+		public bool CaptureMouse;
+		public int CheckerboardSize;
+		public string DiskSaveDirectory;
+		public bool DoResize;
+		public int ResizeX;
+		public int ResizeY;
+		public bool ClipboardNotDisk;
+		public IntPtr WindowHandle;
+
+		public ScreenshotTask(IntPtr window, bool clipboard, string file, bool resize, int resizeX, int resizeY,
+		                      BackgroundType backType, Color backColour, int checkerSize, bool mouse) {
+			WindowHandle = window;
+			ClipboardNotDisk = clipboard;
+			DiskSaveDirectory = file;
+			DoResize = resize;
+			ResizeX = resizeX;
+			ResizeY = resizeY;
+			Background = backType;
+			BackgroundColour = backColour;
+			CheckerboardSize = checkerSize;
+			CaptureMouse = mouse;
+		}
+	}
+
 	internal static class Screenshot {
 		private const uint SWP_NOACTIVATE = 0x0010;
+		private const int GWL_STYLE = -16;
+		private const long WS_SIZEBOX = 0x00040000L;
+		private const uint SWP_SHOWWINDOW = 0x0040;
 
-		internal static unsafe Bitmap GetScreenshot(IntPtr hWnd, bool opaque, bool cursor, int checkerSize, Color backColor) {
-			if (!opaque || checkerSize > 1) backColor = Color.White;
-			var backdrop = new Form
-			               {BackColor = backColor, FormBorderStyle = FormBorderStyle.None, ShowInTaskbar = false, Opacity = 0};
+		internal static void CaptureWindow(ref ScreenshotTask data) {
+			var start = WindowsApi.FindWindow("Button", "Start");
+			var taskbar = WindowsApi.FindWindow("Shell_TrayWnd", null);
+			if (data.ClipboardNotDisk || Directory.Exists(data.DiskSaveDirectory))
+				try {
+					// Hide the taskbar, just incase it gets in the way
+					if (data.WindowHandle != start && data.WindowHandle != taskbar) {
+						WindowsApi.ShowWindow(start, 0);
+						WindowsApi.ShowWindow(taskbar, 0);
+						Application.DoEvents();
+					}
+					if (WindowsApi.IsIconic(data.WindowHandle)) {
+						WindowsApi.ShowWindow(data.WindowHandle, 1);
+						Thread.Sleep(300); // Wait for window to be restored
+					} else {
+						WindowsApi.ShowWindow(data.WindowHandle, 5);
+						Thread.Sleep(100);
+					}
+					WindowsApi.SetForegroundWindow(data.WindowHandle);
+
+					var r = new WindowsRect(0);
+					if (data.DoResize) {
+						SmartResizeWindow(ref data, out r);
+						Thread.Sleep(100);
+					}
+
+					var length = WindowsApi.GetWindowTextLength(data.WindowHandle);
+					var sb = new StringBuilder(length + 1);
+					WindowsApi.GetWindowText(data.WindowHandle, sb, sb.Capacity);
+
+					var name = sb.ToString();
+
+					foreach (var inv in Path.GetInvalidFileNameChars())
+						name = name.Replace(inv.ToString(), string.Empty);
+
+					var s = CaptureCompositeScreenshot(ref data);
+
+					// Show the taskbar again
+					if (data.WindowHandle != start && data.WindowHandle != taskbar) {
+						WindowsApi.ShowWindow(start, 1);
+						WindowsApi.ShowWindow(taskbar, 1);
+					}
+
+					if (s == null)
+						MessageBox.Show("The screenshot taken was blank, it will not be saved.", "Warning", MessageBoxButtons.OK,
+										MessageBoxIcon.Warning);
+					else {
+						if (data.ClipboardNotDisk && data.Background != ScreenshotTask.BackgroundType.Transparent) {
+							// Screenshot is already opaque, don't need to modify it
+							Clipboard.SetImage(s);
+						} else if (data.ClipboardNotDisk) {
+							var whiteS = new Bitmap(s.Width, s.Height, PixelFormat.Format24bppRgb);
+							using (var graphics = Graphics.FromImage(whiteS)) {
+								graphics.Clear(Color.White);
+								graphics.DrawImage(s, 0, 0, s.Width, s.Height);
+							}
+							using (var stream = new MemoryStream()) {
+								// Save screenshot in clipboard as PNG which some applications support (eg. Microsoft Office)
+								s.Save(stream, ImageFormat.Png);
+								var pngClipboardData = new DataObject("PNG", stream);
+
+								// Add fallback for applications that don't support PNG from clipboard (eg. Photoshop or Paint)
+								pngClipboardData.SetData(DataFormats.Bitmap, whiteS);
+								Clipboard.Clear();
+								Clipboard.SetDataObject(data, true);
+							}
+							whiteS.Dispose();
+						} else {
+							name = name.Trim();
+							if (name == string.Empty)
+								name = "AeroShot";
+							var path = Path.Combine(data.DiskSaveDirectory, name + ".png");
+
+							if (File.Exists(path))
+								for (var i = 1; i < 9999; i++) {
+									path = Path.Combine(data.DiskSaveDirectory, name + " " + i + ".png");
+									if (!File.Exists(path))
+										break;
+								}
+							s.Save(path, ImageFormat.Png);
+						}
+						s.Dispose();
+					}
+
+					if (data.DoResize)
+						if ((WindowsApi.GetWindowLong(data.WindowHandle, GWL_STYLE) & WS_SIZEBOX) == WS_SIZEBOX)
+							WindowsApi.SetWindowPos(data.WindowHandle, (IntPtr)0, r.Left, r.Top, r.Right - r.Left, r.Bottom - r.Top, SWP_SHOWWINDOW);
+				} catch (Exception) {
+					if (data.WindowHandle != start && data.WindowHandle != taskbar) {
+						WindowsApi.ShowWindow(start, 1);
+						WindowsApi.ShowWindow(taskbar, 1);
+					}
+					MessageBox.Show(
+						"An error occurred while trying to take a screenshot.\r\n\r\nPlease make sure you have selected a valid window.",
+						"Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				} else
+				MessageBox.Show("Invalid directory chosen.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+		}
+
+		private static void SmartResizeWindow(ref ScreenshotTask data, out WindowsRect oldWindowSize) {
+			oldWindowSize = new WindowsRect(0);
+			if ((WindowsApi.GetWindowLong(data.WindowHandle, GWL_STYLE) & WS_SIZEBOX) != WS_SIZEBOX) return;
+
+			var r = new WindowsRect();
+			WindowsApi.GetWindowRect(data.WindowHandle, ref r);
+			oldWindowSize = r;
+
+			var f = CaptureCompositeScreenshot(ref data);
+			if (f != null) {
+				WindowsApi.SetWindowPos(data.WindowHandle, (IntPtr)0, r.Left, r.Top, data.ResizeX - (f.Width - (r.Right - r.Left)),
+										data.ResizeY - (f.Height - (r.Bottom - r.Top)), SWP_SHOWWINDOW);
+				f.Dispose();
+			} else WindowsApi.SetWindowPos(data.WindowHandle, (IntPtr)0, r.Left, r.Top, data.ResizeX, data.ResizeY, SWP_SHOWWINDOW);
+		}
+
+		private static unsafe Bitmap CaptureCompositeScreenshot(ref ScreenshotTask data) {
+			var tmpColour = data.BackgroundColour;
+			if (data.Background == ScreenshotTask.BackgroundType.Transparent || data.Background == ScreenshotTask.BackgroundType.Checkerboard)
+				tmpColour = Color.White;
+			var backdrop = new Form { BackColor = tmpColour, FormBorderStyle = FormBorderStyle.None, ShowInTaskbar = false, Opacity = 0 };
 
 			// Generate a rectangle with the size of all monitors combined
 			var totalSize = Rectangle.Empty;
@@ -37,10 +192,10 @@ namespace AeroShot {
 			var rct = new WindowsRect();
 
 			if (
-				WindowsApi.DwmGetWindowAttribute(hWnd, DwmWindowAttribute.DWMWA_EXTENDED_FRAME_BOUNDS, ref rct, sizeof (WindowsRect)) !=
+				WindowsApi.DwmGetWindowAttribute(data.WindowHandle, DwmWindowAttribute.DWMWA_EXTENDED_FRAME_BOUNDS, ref rct, sizeof(WindowsRect)) !=
 				0)
 				// DwmGetWindowAttribute() failed, usually means Aero is disabled so we fall back to GetWindowRect()
-				WindowsApi.GetWindowRect(hWnd, ref rct);
+				WindowsApi.GetWindowRect(data.WindowHandle, ref rct);
 			else {
 				// DwmGetWindowAttribute() succeeded
 				// Add a 100px margin for window shadows. Excess transparency is trimmed out later
@@ -61,19 +216,19 @@ namespace AeroShot {
 				rct.Bottom = totalSize.Bottom;
 
 			WindowsApi.ShowWindow(backdrop.Handle, 4);
-			WindowsApi.SetWindowPos(backdrop.Handle, hWnd, rct.Left, rct.Top, rct.Right - rct.Left, rct.Bottom - rct.Top,
+			WindowsApi.SetWindowPos(backdrop.Handle, data.WindowHandle, rct.Left, rct.Top, rct.Right - rct.Left, rct.Bottom - rct.Top,
 			                        SWP_NOACTIVATE);
 			backdrop.Opacity = 1;
 			Application.DoEvents();
 
 			// Capture screenshot with white background
-			var whiteShot = CaptureScreen(new Rectangle(rct.Left, rct.Top, rct.Right - rct.Left, rct.Bottom - rct.Top));
+			var whiteShot = CaptureScreenRegion(new Rectangle(rct.Left, rct.Top, rct.Right - rct.Left, rct.Bottom - rct.Top));
 
-			if (opaque && checkerSize < 2) {
+			if (data.Background == ScreenshotTask.BackgroundType.SolidColour) {
 				backdrop.Dispose();
-				if (cursor)
-					DrawSystemCursor(whiteShot, new Point(rct.Left, rct.Top));
-				var final = TrimBitmap(whiteShot, backColor);
+				if (data.CaptureMouse)
+					DrawCursorToBitmap(whiteShot, new Point(rct.Left, rct.Top));
+				var final = CropEmptyEdges(whiteShot, tmpColour);
 				whiteShot.Dispose();
 				return final;
 			}
@@ -82,22 +237,22 @@ namespace AeroShot {
 			Application.DoEvents();
 
 			// Capture screenshot with black background
-			var blackShot = CaptureScreen(new Rectangle(rct.Left, rct.Top, rct.Right - rct.Left, rct.Bottom - rct.Top));
+			var blackShot = CaptureScreenRegion(new Rectangle(rct.Left, rct.Top, rct.Right - rct.Left, rct.Bottom - rct.Top));
 
 			backdrop.Dispose();
 
 			var transparentImage = DifferentiateAlpha(whiteShot, blackShot);
-			if (cursor)
-				DrawSystemCursor(transparentImage, new Point(rct.Left, rct.Top));
-			transparentImage = TrimBitmap(transparentImage, Color.FromArgb(0, 0, 0, 0));
+			if (data.CaptureMouse)
+				DrawCursorToBitmap(transparentImage, new Point(rct.Left, rct.Top));
+			transparentImage = CropEmptyEdges(transparentImage, Color.FromArgb(0, 0, 0, 0));
 
 			whiteShot.Dispose();
 			blackShot.Dispose();
 
-			if (opaque && checkerSize > 1) {
+			if (data.Background == ScreenshotTask.BackgroundType.Checkerboard) {
 				var final = new Bitmap(transparentImage.Width, transparentImage.Height, PixelFormat.Format24bppRgb);
 				var finalGraphics = Graphics.FromImage(final);
-				var brush = new TextureBrush(GenerateChecker(checkerSize));
+				var brush = new TextureBrush(GenerateChecker(data.CheckerboardSize));
 				finalGraphics.FillRectangle(brush, finalGraphics.ClipBounds);
 				finalGraphics.DrawImageUnscaled(transparentImage, 0, 0);
 				finalGraphics.Dispose();
@@ -108,15 +263,16 @@ namespace AeroShot {
 			return transparentImage;
 		}
 
-		private static void DrawSystemCursor(Bitmap windowImage, Point offsetLocation) {
+		private static void DrawCursorToBitmap(Bitmap windowImage, Point offsetLocation) {
 			var ci = new CursorInfoStruct();
 			ci.cbSize = Marshal.SizeOf(ci);
-			if (WindowsApi.GetCursorInfo(out ci)) {
+			if (WindowsApi.GetCursorInfo(out ci))
 				if (ci.flags == 1) {
 					var hicon = WindowsApi.CopyIcon(ci.hCursor);
 					IconInfoStruct icInfo;
 					if (WindowsApi.GetIconInfo(hicon, out icInfo)) {
-						var loc = new Point(ci.ptScreenPos.x - offsetLocation.X - icInfo.xHotspot, ci.ptScreenPos.y - offsetLocation.Y - icInfo.yHotspot);
+						var loc = new Point(ci.ptScreenPos.x - offsetLocation.X - icInfo.xHotspot,
+						                    ci.ptScreenPos.y - offsetLocation.Y - icInfo.yHotspot);
 						var ic = Icon.FromHandle(hicon);
 						var bmp = ic.ToBitmap();
 
@@ -127,10 +283,9 @@ namespace AeroShot {
 						bmp.Dispose();
 					}
 				}
-			}
 		}
 
-		private static Bitmap CaptureScreen(Rectangle crop) {
+		private static Bitmap CaptureScreenRegion(Rectangle crop) {
 			var totalSize = Rectangle.Empty;
 
 			foreach (var s in Screen.AllScreens) totalSize = Rectangle.Union(totalSize, s.Bounds);
@@ -176,7 +331,7 @@ namespace AeroShot {
 			return b1;
 		}
 
-		private static unsafe Bitmap TrimBitmap(Bitmap b1, Color trimColor) {
+		private static unsafe Bitmap CropEmptyEdges(Bitmap b1, Color trimColour) {
 			if (b1 == null) return null;
 
 			var sizeX = b1.Width;
@@ -194,8 +349,8 @@ namespace AeroShot {
 			for (int x = 0, y = 0;;) {
 				pixel = b.GetPixel(x, y);
 				if (left == -1) {
-					if ((trimColor.A == 0 && pixel->Alpha != 0) ||
-					    (trimColor.R != pixel->Red & trimColor.G != pixel->Green & trimColor.B != pixel->Blue)) {
+					if ((trimColour.A == 0 && pixel->Alpha != 0) ||
+					    (trimColour.R != pixel->Red & trimColour.G != pixel->Green & trimColour.B != pixel->Blue)) {
 						left = x;
 						x = 0;
 						y = 0;
@@ -210,8 +365,8 @@ namespace AeroShot {
 					continue;
 				}
 				if (top == -1) {
-					if ((trimColor.A == 0 && pixel->Alpha != 0) ||
-					    (trimColor.R != pixel->Red & trimColor.G != pixel->Green & trimColor.B != pixel->Blue)) {
+					if ((trimColour.A == 0 && pixel->Alpha != 0) ||
+					    (trimColour.R != pixel->Red & trimColour.G != pixel->Green & trimColour.B != pixel->Blue)) {
 						top = y;
 						x = sizeX - 1;
 						y = 0;
@@ -226,8 +381,8 @@ namespace AeroShot {
 					continue;
 				}
 				if (right == -1) {
-					if ((trimColor.A == 0 && pixel->Alpha != 0) ||
-					    (trimColor.R != pixel->Red & trimColor.G != pixel->Green & trimColor.B != pixel->Blue)) {
+					if ((trimColour.A == 0 && pixel->Alpha != 0) ||
+					    (trimColour.R != pixel->Red & trimColour.G != pixel->Green & trimColour.B != pixel->Blue)) {
 						right = x + 1;
 						x = 0;
 						y = sizeY - 1;
@@ -242,8 +397,8 @@ namespace AeroShot {
 					continue;
 				}
 				if (bottom == -1) {
-					if ((trimColor.A == 0 && pixel->Alpha != 0) ||
-					    (trimColor.R != pixel->Red & trimColor.G != pixel->Green & trimColor.B != pixel->Blue)) {
+					if ((trimColour.A == 0 && pixel->Alpha != 0) ||
+					    (trimColour.R != pixel->Red & trimColour.G != pixel->Green & trimColour.B != pixel->Blue)) {
 						bottom = y + 1;
 						break;
 					}
