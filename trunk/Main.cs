@@ -16,7 +16,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -30,12 +29,11 @@ namespace AeroShot {
 		private const int WM_DWMCOMPOSITIONCHANGED = 0x031E;
 		private const long WS_CAPTION = 0x00C00000L;
 		private const long WS_VISIBLE = 0x10000000L;
-		private const uint WM_KEYUP = 0x0101;
-		private const uint WM_SYSKEYUP = 0x0105;
+		private const int WM_HOTKEY = 0x0312;
+		private const int MOD_ALT = 0x0001;
 		private static bool DwmComposited;
-		private readonly HookProc hProc;
+		private readonly int windowId;
 		private readonly List<IntPtr> handleList = new List<IntPtr>();
-		private readonly IntPtr hookPtr;
 		private readonly RegistryKey registryKey;
 		private CallBackPtr callBackPtr;
 		private Image ssButtonImage;
@@ -53,11 +51,8 @@ namespace AeroShot {
 					WindowsApi.DwmExtendFrameIntoClientArea(Handle, ref margin);
 				}
 
-			hProc = OnHotkeyPress;
-			using (var p = Process.GetCurrentProcess())
-			using (var m = p.MainModule)
-				hookPtr = WindowsApi.SetWindowsHookEx(HookType.WH_KEYBOARD_LL, hProc, WindowsApi.GetModuleHandle(m.ModuleName), 0);
-
+			windowId = GetHashCode();
+			WindowsApi.RegisterHotKey(Handle, windowId, MOD_ALT, (int)Keys.PrintScreen);
 
 			object value;
 			registryKey = Registry.CurrentUser.CreateSubKey(@"Software\AeroShot");
@@ -264,7 +259,7 @@ namespace AeroShot {
 		}
 
 		private void FormClose(object sender, FormClosingEventArgs e) {
-			WindowsApi.UnhookWindowsHookEx(hookPtr);
+			WindowsApi.UnregisterHotKey(Handle, windowId);
 			if (clipboardButton.Checked)
 				registryKey.SetValue("LastPath", "*" + folderTextBox.Text);
 			else
@@ -343,6 +338,12 @@ namespace AeroShot {
 		protected override void WndProc(ref Message m) {
 			base.WndProc(ref m);
 
+			if (m.Msg == WM_HOTKEY) {
+				var info = GetParamteresFromUI(true);
+				worker = new Thread(() => Screenshot.CaptureWindow(ref info)) { IsBackground = true };
+				worker.SetApartmentState(ApartmentState.STA);
+				worker.Start();
+			}
 			if (m.Msg == WM_DWMCOMPOSITIONCHANGED) {
 				WindowsApi.DwmIsCompositionEnabled(ref DwmComposited);
 
@@ -366,29 +367,6 @@ namespace AeroShot {
 				                   clipboardButton.Checked, folderTextBox.Text, resizeCheckbox.Checked, (int) windowWidth.Value,
 				                   (int) windowHeight.Value, type, colourDialog.Color, (int) checkerValue.Value,
 				                   mouseCheckbox.Checked);
-		}
-
-		private IntPtr OnHotkeyPress(int code, IntPtr wParam, IntPtr lParam) {
-			if (code != 0 || !(wParam == (IntPtr) WM_KEYUP || wParam == (IntPtr) WM_SYSKEYUP))
-				return WindowsApi.CallNextHookEx(hookPtr, code, wParam, lParam);
-
-			var key = (HookKeyStruct) Marshal.PtrToStructure(lParam, typeof (HookKeyStruct));
-
-			// Check if the Alt modifier key is also pressed, but not Ctrl or WinKey
-			var notAlt = (WindowsApi.GetAsyncKeyState(Keys.LMenu) & 1) == (WindowsApi.GetAsyncKeyState(Keys.RMenu) & 1) ||
-			             ((WindowsApi.GetAsyncKeyState(Keys.LControlKey) & 1) != 0) ||
-			             ((WindowsApi.GetAsyncKeyState(Keys.RControlKey) & 1) != 0) ||
-			             ((WindowsApi.GetAsyncKeyState(Keys.LWin) & 1) != 0) ||
-			             ((WindowsApi.GetAsyncKeyState(Keys.RWin) & 1) != 0);
-
-			if (key.vkCode != (Keys.PrintScreen & Keys.KeyCode) || notAlt)
-				return WindowsApi.CallNextHookEx(hookPtr, code, wParam, lParam);
-
-			var info = GetParamteresFromUI(true);
-			worker = new Thread(() => Screenshot.CaptureWindow(ref info)) {IsBackground = true};
-			worker.SetApartmentState(ApartmentState.STA);
-			worker.Start();
-			return (IntPtr) 1;
 		}
 
 		private bool ListWindows(IntPtr hWnd, int lParam) {
