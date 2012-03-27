@@ -23,8 +23,6 @@ using System.Windows.Forms;
 namespace AeroShot {
 	internal delegate bool CallBackPtr(IntPtr hwnd, int lParam);
 
-	internal delegate IntPtr HookProc(int code, IntPtr wParam, IntPtr lParam);
-
 	[StructLayout(LayoutKind.Sequential)]
 	internal struct WindowsRect {
 		internal int Left;
@@ -53,33 +51,6 @@ namespace AeroShot {
 			TopHeight = top;
 			BottomHeight = bottom;
 		}
-	}
-
-	public enum HookType {
-		WH_JOURNALRECORD = 0,
-		WH_JOURNALPLAYBACK = 1,
-		WH_KEYBOARD = 2,
-		WH_GETMESSAGE = 3,
-		WH_CALLWNDPROC = 4,
-		WH_CBT = 5,
-		WH_SYSMSGFILTER = 6,
-		WH_MOUSE = 7,
-		WH_HARDWARE = 8,
-		WH_DEBUG = 9,
-		WH_SHELL = 10,
-		WH_FOREGROUNDIDLE = 11,
-		WH_CALLWNDPROCRET = 12,
-		WH_KEYBOARD_LL = 13,
-		WH_MOUSE_LL = 14
-	}
-
-	[StructLayout(LayoutKind.Sequential)]
-	internal struct HookKeyStruct {
-		public Keys vkCode;
-		public uint scanCode;
-		public uint flags;
-		public uint time;
-		public IntPtr dwExtraInfo;
 	}
 
 	[StructLayout(LayoutKind.Sequential)]
@@ -195,15 +166,6 @@ namespace AeroShot {
 		internal static extern bool GetWindowRect(IntPtr hWnd, ref WindowsRect rect);
 
 		[DllImport("user32.dll")]
-		internal static extern IntPtr SetWindowsHookEx(HookType hookType, HookProc lpfn, IntPtr hMod, uint dwThreadId);
-
-		[DllImport("user32.dll")]
-		internal static extern bool UnhookWindowsHookEx(IntPtr hhk);
-
-		[DllImport("user32.dll")]
-		internal static extern IntPtr CallNextHookEx(IntPtr hhk, int nCode, IntPtr wParam, IntPtr lParam);
-
-		[DllImport("user32.dll")]
 		internal static extern bool EnumWindows(CallBackPtr lpEnumFunc, IntPtr lParam);
 
 		[DllImport("user32.dll")]
@@ -234,7 +196,10 @@ namespace AeroShot {
 		public static extern bool GetIconInfo(IntPtr hIcon, out IconInfoStruct piconinfo);
 
 		[DllImport("user32.dll")]
-		public static extern short GetAsyncKeyState(Keys key);
+		internal static extern bool RegisterHotKey(IntPtr hWnd, int id, int fsModifiers, int vlc);
+
+		[DllImport("user32.dll")]
+		internal static extern bool UnregisterHotKey(IntPtr hWnd, int id);
 
 		[DllImport("gdi32.dll")]
 		internal static extern bool BitBlt(IntPtr hdcDest, int xDest, int yDest, int wDest, int hDest, IntPtr hdcSource,
@@ -264,9 +229,6 @@ namespace AeroShot {
 
 		[DllImport("gdi32.dll")]
 		internal static extern IntPtr SelectObject(IntPtr hdc, IntPtr bmp);
-
-		[DllImport("kernel32.dll")]
-		internal static extern IntPtr GetModuleHandle(string name);
 
 		[DllImport("kernel32.dll")]
 		private static extern bool FreeLibrary(IntPtr hModule);
