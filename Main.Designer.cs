@@ -58,7 +58,6 @@ namespace AeroShot {
 		/// the contents of this method with the code editor.
 		/// </summary>
 		private void InitializeComponent() {
-			this.ssButton = new AeroShot.Placeholder();
 			this.windowList = new System.Windows.Forms.ComboBox();
 			this.label1 = new System.Windows.Forms.Label();
 			this.label2 = new System.Windows.Forms.Label();
@@ -76,7 +75,6 @@ namespace AeroShot {
 			this.checkerValue = new System.Windows.Forms.NumericUpDown();
 			this.groupBox2 = new System.Windows.Forms.GroupBox();
 			this.colourHexBox = new System.Windows.Forms.TextBox();
-			this.colourDisplay = new AeroShot.ColourDisplay();
 			this.label5 = new System.Windows.Forms.Label();
 			this.labelOpaque = new System.Windows.Forms.Label();
 			this.labelHash = new System.Windows.Forms.Label();
@@ -89,6 +87,8 @@ namespace AeroShot {
 			this.mouseCheckbox = new System.Windows.Forms.CheckBox();
 			this.groupBox3 = new System.Windows.Forms.GroupBox();
 			this.labelMouse = new System.Windows.Forms.Label();
+			this.ssButton = new AeroShot.Placeholder();
+			this.colourDisplay = new AeroShot.ColourDisplay();
 			((System.ComponentModel.ISupportInitialize)(this.windowHeight)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.windowWidth)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.checkerValue)).BeginInit();
@@ -97,25 +97,10 @@ namespace AeroShot {
 			this.groupBox3.SuspendLayout();
 			this.SuspendLayout();
 			// 
-			// ssButton
-			// 
-			this.ssButton.BackColor = System.Drawing.Color.Transparent;
-			this.ssButton.Location = new System.Drawing.Point(115, 305);
-			this.ssButton.Name = "ssButton";
-			this.ssButton.Size = new System.Drawing.Size(200, 30);
-			this.ssButton.TabIndex = 28;
-			this.ssButton.MouseLeave += new System.EventHandler(this.ScreenshotButtonPlaceholderMouseLeave);
-			this.ssButton.Leave += new System.EventHandler(this.ScreenshotButtonPlaceholderLeave);
-			this.ssButton.KeyUp += new System.Windows.Forms.KeyEventHandler(this.ScreenshotButtonPlaceholderKeyUp);
-			this.ssButton.MouseDown += new System.Windows.Forms.MouseEventHandler(this.ScreenshotButtonPlaceholderMouseDown);
-			this.ssButton.Enter += new System.EventHandler(this.ScreenshotButtonPlaceholderEnter);
-			this.ssButton.MouseUp += new System.Windows.Forms.MouseEventHandler(this.ScreenshotButtonPlaceholderMouseUp);
-			this.ssButton.MouseEnter += new System.EventHandler(this.ScreenshotButtonPlaceholderMouseEnter);
-			this.ssButton.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ScreenshotButtonPlaceholderKeyDown);
-			// 
 			// windowList
 			// 
 			this.windowList.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.windowList.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.windowList.FormattingEnabled = true;
 			this.windowList.Location = new System.Drawing.Point(12, 25);
 			this.windowList.Name = "windowList";
@@ -126,24 +111,27 @@ namespace AeroShot {
 			// 
 			this.label1.AutoSize = true;
 			this.label1.BackColor = System.Drawing.Color.Transparent;
+			this.label1.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.label1.Location = new System.Drawing.Point(9, 9);
 			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(130, 13);
+			this.label1.Size = new System.Drawing.Size(395, 13);
 			this.label1.TabIndex = 0;
-			this.label1.Text = "Select window to capture:";
+			this.label1.Text = "Select window to capture, or press Alt + Print Screen over an active window";
 			// 
 			// label2
 			// 
 			this.label2.AutoSize = true;
 			this.label2.BackColor = System.Drawing.Color.Transparent;
+			this.label2.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.label2.Location = new System.Drawing.Point(9, 54);
 			this.label2.Name = "label2";
-			this.label2.Size = new System.Drawing.Size(104, 13);
+			this.label2.Size = new System.Drawing.Size(108, 13);
 			this.label2.TabIndex = 3;
 			this.label2.Text = "Save screenshots to";
 			// 
 			// rButton
 			// 
+			this.rButton.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.rButton.Location = new System.Drawing.Point(327, 23);
 			this.rButton.Name = "rButton";
 			this.rButton.Size = new System.Drawing.Size(90, 23);
@@ -154,13 +142,15 @@ namespace AeroShot {
 			// 
 			// folderTextBox
 			// 
+			this.folderTextBox.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.folderTextBox.Location = new System.Drawing.Point(12, 70);
 			this.folderTextBox.Name = "folderTextBox";
-			this.folderTextBox.Size = new System.Drawing.Size(309, 20);
+			this.folderTextBox.Size = new System.Drawing.Size(309, 22);
 			this.folderTextBox.TabIndex = 7;
 			// 
 			// bButton
 			// 
+			this.bButton.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.bButton.Location = new System.Drawing.Point(327, 68);
 			this.bButton.Name = "bButton";
 			this.bButton.Size = new System.Drawing.Size(90, 23);
@@ -178,9 +168,10 @@ namespace AeroShot {
 			// 
 			this.resizeCheckbox.AutoSize = true;
 			this.resizeCheckbox.BackColor = System.Drawing.Color.Transparent;
+			this.resizeCheckbox.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.resizeCheckbox.Location = new System.Drawing.Point(19, 97);
 			this.resizeCheckbox.Name = "resizeCheckbox";
-			this.resizeCheckbox.Size = new System.Drawing.Size(97, 17);
+			this.resizeCheckbox.Size = new System.Drawing.Size(103, 17);
 			this.resizeCheckbox.TabIndex = 9;
 			this.resizeCheckbox.Text = "Resize window";
 			this.resizeCheckbox.UseVisualStyleBackColor = false;
@@ -188,7 +179,8 @@ namespace AeroShot {
 			// 
 			// windowHeight
 			// 
-			this.windowHeight.Location = new System.Drawing.Point(327, 25);
+			this.windowHeight.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.windowHeight.Location = new System.Drawing.Point(338, 25);
 			this.windowHeight.Maximum = new decimal(new int[] {
             16777215,
             0,
@@ -200,7 +192,7 @@ namespace AeroShot {
             0,
             0});
 			this.windowHeight.Name = "windowHeight";
-			this.windowHeight.Size = new System.Drawing.Size(72, 20);
+			this.windowHeight.Size = new System.Drawing.Size(60, 22);
 			this.windowHeight.TabIndex = 14;
 			this.windowHeight.Value = new decimal(new int[] {
             480,
@@ -211,7 +203,8 @@ namespace AeroShot {
 			// labelX
 			// 
 			this.labelX.AutoSize = true;
-			this.labelX.Location = new System.Drawing.Point(309, 27);
+			this.labelX.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.labelX.Location = new System.Drawing.Point(324, 27);
 			this.labelX.Name = "labelX";
 			this.labelX.Size = new System.Drawing.Size(12, 13);
 			this.labelX.TabIndex = 13;
@@ -219,7 +212,8 @@ namespace AeroShot {
 			// 
 			// windowWidth
 			// 
-			this.windowWidth.Location = new System.Drawing.Point(231, 25);
+			this.windowWidth.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.windowWidth.Location = new System.Drawing.Point(262, 25);
 			this.windowWidth.Maximum = new decimal(new int[] {
             16777215,
             0,
@@ -231,7 +225,7 @@ namespace AeroShot {
             0,
             0});
 			this.windowWidth.Name = "windowWidth";
-			this.windowWidth.Size = new System.Drawing.Size(72, 20);
+			this.windowWidth.Size = new System.Drawing.Size(60, 22);
 			this.windowWidth.TabIndex = 12;
 			this.windowWidth.Value = new decimal(new int[] {
             640,
@@ -243,9 +237,10 @@ namespace AeroShot {
 			// 
 			this.opaqueCheckbox.AutoSize = true;
 			this.opaqueCheckbox.BackColor = System.Drawing.Color.Transparent;
+			this.opaqueCheckbox.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.opaqueCheckbox.Location = new System.Drawing.Point(19, 158);
 			this.opaqueCheckbox.Name = "opaqueCheckbox";
-			this.opaqueCheckbox.Size = new System.Drawing.Size(124, 17);
+			this.opaqueCheckbox.Size = new System.Drawing.Size(134, 17);
 			this.opaqueCheckbox.TabIndex = 15;
 			this.opaqueCheckbox.Text = "Opaque background";
 			this.opaqueCheckbox.UseVisualStyleBackColor = false;
@@ -254,6 +249,7 @@ namespace AeroShot {
 			// opaqueType
 			// 
 			this.opaqueType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.opaqueType.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.opaqueType.FormattingEnabled = true;
 			this.opaqueType.Items.AddRange(new object[] {
             "Checkerboard",
@@ -268,9 +264,10 @@ namespace AeroShot {
 			// 
 			this.label4.AutoSize = true;
 			this.label4.BackColor = System.Drawing.Color.Transparent;
+			this.label4.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.label4.Location = new System.Drawing.Point(192, 48);
 			this.label4.Name = "label4";
-			this.label4.Size = new System.Drawing.Size(29, 13);
+			this.label4.Size = new System.Drawing.Size(28, 13);
 			this.label4.TabIndex = 19;
 			this.label4.Text = "VAR";
 			// 
@@ -323,15 +320,6 @@ namespace AeroShot {
 			this.colourHexBox.Text = "FFFFFF";
 			this.colourHexBox.TextChanged += new System.EventHandler(this.ColourTextboxTextChange);
 			// 
-			// colourDisplay
-			// 
-			this.colourDisplay.Color = System.Drawing.Color.White;
-			this.colourDisplay.Location = new System.Drawing.Point(327, 46);
-			this.colourDisplay.Name = "colourDisplay";
-			this.colourDisplay.Size = new System.Drawing.Size(72, 19);
-			this.colourDisplay.TabIndex = 22;
-			this.colourDisplay.Click += new System.EventHandler(this.ColourDisplayClick);
-			// 
 			// label5
 			// 
 			this.label5.AutoSize = true;
@@ -345,9 +333,10 @@ namespace AeroShot {
 			// 
 			this.labelOpaque.AutoSize = true;
 			this.labelOpaque.BackColor = System.Drawing.Color.Transparent;
+			this.labelOpaque.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.labelOpaque.Location = new System.Drawing.Point(6, 20);
 			this.labelOpaque.Name = "labelOpaque";
-			this.labelOpaque.Size = new System.Drawing.Size(153, 39);
+			this.labelOpaque.Size = new System.Drawing.Size(162, 39);
 			this.labelOpaque.TabIndex = 17;
 			this.labelOpaque.Text = "Screenshots are saved with an\r\nopaque background, rather\r\nthan a transparent one." +
 				"";
@@ -356,6 +345,7 @@ namespace AeroShot {
 			// 
 			this.labelHash.AutoSize = true;
 			this.labelHash.BackColor = System.Drawing.Color.Transparent;
+			this.labelHash.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.labelHash.Location = new System.Drawing.Point(250, 48);
 			this.labelHash.Name = "labelHash";
 			this.labelHash.Size = new System.Drawing.Size(14, 13);
@@ -378,9 +368,10 @@ namespace AeroShot {
 			// 
 			this.labelResize.AutoSize = true;
 			this.labelResize.BackColor = System.Drawing.Color.Transparent;
+			this.labelResize.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.labelResize.Location = new System.Drawing.Point(6, 20);
 			this.labelResize.Name = "labelResize";
-			this.labelResize.Size = new System.Drawing.Size(212, 26);
+			this.labelResize.Size = new System.Drawing.Size(239, 26);
 			this.labelResize.TabIndex = 11;
 			this.labelResize.Text = "Sets the exact resolution screenshots are\r\ncaptured in, if the window supports re" +
 				"sizing.";
@@ -394,9 +385,10 @@ namespace AeroShot {
 			// 
 			this.diskButton.AutoSize = true;
 			this.diskButton.BackColor = System.Drawing.Color.Transparent;
-			this.diskButton.Location = new System.Drawing.Point(114, 52);
+			this.diskButton.Font = new System.Drawing.Font("Segoe UI", 8.25F);
+			this.diskButton.Location = new System.Drawing.Point(118, 52);
 			this.diskButton.Name = "diskButton";
-			this.diskButton.Size = new System.Drawing.Size(44, 17);
+			this.diskButton.Size = new System.Drawing.Size(46, 17);
 			this.diskButton.TabIndex = 4;
 			this.diskButton.TabStop = true;
 			this.diskButton.Text = "disk";
@@ -407,9 +399,10 @@ namespace AeroShot {
 			// 
 			this.label3.AutoSize = true;
 			this.label3.BackColor = System.Drawing.Color.Transparent;
-			this.label3.Location = new System.Drawing.Point(154, 54);
+			this.label3.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.label3.Location = new System.Drawing.Point(160, 54);
 			this.label3.Name = "label3";
-			this.label3.Size = new System.Drawing.Size(16, 13);
+			this.label3.Size = new System.Drawing.Size(18, 13);
 			this.label3.TabIndex = 5;
 			this.label3.Text = "or";
 			// 
@@ -417,9 +410,10 @@ namespace AeroShot {
 			// 
 			this.clipboardButton.AutoSize = true;
 			this.clipboardButton.BackColor = System.Drawing.Color.Transparent;
-			this.clipboardButton.Location = new System.Drawing.Point(173, 52);
+			this.clipboardButton.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.clipboardButton.Location = new System.Drawing.Point(180, 52);
 			this.clipboardButton.Name = "clipboardButton";
-			this.clipboardButton.Size = new System.Drawing.Size(68, 17);
+			this.clipboardButton.Size = new System.Drawing.Size(74, 17);
 			this.clipboardButton.TabIndex = 6;
 			this.clipboardButton.TabStop = true;
 			this.clipboardButton.Text = "clipboard";
@@ -430,9 +424,10 @@ namespace AeroShot {
 			// 
 			this.mouseCheckbox.AutoSize = true;
 			this.mouseCheckbox.BackColor = System.Drawing.Color.Transparent;
+			this.mouseCheckbox.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.mouseCheckbox.Location = new System.Drawing.Point(19, 240);
 			this.mouseCheckbox.Name = "mouseCheckbox";
-			this.mouseCheckbox.Size = new System.Drawing.Size(132, 17);
+			this.mouseCheckbox.Size = new System.Drawing.Size(145, 17);
 			this.mouseCheckbox.TabIndex = 25;
 			this.mouseCheckbox.Text = "Capture mouse pointer";
 			this.mouseCheckbox.UseVisualStyleBackColor = false;
@@ -451,12 +446,38 @@ namespace AeroShot {
 			// 
 			this.labelMouse.AutoSize = true;
 			this.labelMouse.BackColor = System.Drawing.Color.Transparent;
+			this.labelMouse.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.labelMouse.Location = new System.Drawing.Point(6, 20);
 			this.labelMouse.Name = "labelMouse";
-			this.labelMouse.Size = new System.Drawing.Size(378, 26);
+			this.labelMouse.Size = new System.Drawing.Size(387, 26);
 			this.labelMouse.TabIndex = 27;
-			this.labelMouse.Text = "The system mouse pointer will be preserved in screenshots when the Alt + Print\r\nS" +
+			this.labelMouse.Text = "The system mouse pointer will be preserved in screenshots when the Alt +\r\nPrint S" +
 				"creen key combination is used to capture.";
+			// 
+			// ssButton
+			// 
+			this.ssButton.BackColor = System.Drawing.Color.Transparent;
+			this.ssButton.Location = new System.Drawing.Point(115, 305);
+			this.ssButton.Name = "ssButton";
+			this.ssButton.Size = new System.Drawing.Size(200, 30);
+			this.ssButton.TabIndex = 28;
+			this.ssButton.MouseLeave += new System.EventHandler(this.ScreenshotButtonPlaceholderMouseLeave);
+			this.ssButton.Leave += new System.EventHandler(this.ScreenshotButtonPlaceholderLeave);
+			this.ssButton.KeyUp += new System.Windows.Forms.KeyEventHandler(this.ScreenshotButtonPlaceholderKeyUp);
+			this.ssButton.MouseDown += new System.Windows.Forms.MouseEventHandler(this.ScreenshotButtonPlaceholderMouseDown);
+			this.ssButton.Enter += new System.EventHandler(this.ScreenshotButtonPlaceholderEnter);
+			this.ssButton.MouseUp += new System.Windows.Forms.MouseEventHandler(this.ScreenshotButtonPlaceholderMouseUp);
+			this.ssButton.MouseEnter += new System.EventHandler(this.ScreenshotButtonPlaceholderMouseEnter);
+			this.ssButton.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ScreenshotButtonPlaceholderKeyDown);
+			// 
+			// colourDisplay
+			// 
+			this.colourDisplay.Color = System.Drawing.Color.White;
+			this.colourDisplay.Location = new System.Drawing.Point(327, 46);
+			this.colourDisplay.Name = "colourDisplay";
+			this.colourDisplay.Size = new System.Drawing.Size(72, 19);
+			this.colourDisplay.TabIndex = 22;
+			this.colourDisplay.Click += new System.EventHandler(this.ColourDisplayClick);
 			// 
 			// MainForm
 			// 
