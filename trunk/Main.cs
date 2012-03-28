@@ -366,7 +366,7 @@ namespace AeroShot {
 				new ScreenshotTask(useForegroundWindow ? WindowsApi.GetForegroundWindow() : handleList[windowList.SelectedIndex],
 				                   clipboardButton.Checked, folderTextBox.Text, resizeCheckbox.Checked, (int) windowWidth.Value,
 				                   (int) windowHeight.Value, type, colourDialog.Color, (int) checkerValue.Value,
-				                   mouseCheckbox.Checked);
+				                   useForegroundWindow && mouseCheckbox.Checked);
 		}
 
 		private bool ListWindows(IntPtr hWnd, int lParam) {

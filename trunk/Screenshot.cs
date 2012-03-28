@@ -106,10 +106,10 @@ namespace AeroShot {
 						WindowsApi.ShowWindow(taskbar, 1);
 					}
 
-					if (s == null)
+					if (s == null) {
 						MessageBox.Show("The screenshot taken was blank, it will not be saved.", "Warning", MessageBoxButtons.OK,
-										MessageBoxIcon.Warning);
-					else {
+						                MessageBoxIcon.Warning);
+					} else {
 						if (data.ClipboardNotDisk && data.Background != ScreenshotTask.BackgroundType.Transparent) {
 							// Screenshot is already opaque, don't need to modify it
 							Clipboard.SetImage(s);
@@ -127,7 +127,7 @@ namespace AeroShot {
 								// Add fallback for applications that don't support PNG from clipboard (eg. Photoshop or Paint)
 								pngClipboardData.SetData(DataFormats.Bitmap, whiteS);
 								Clipboard.Clear();
-								Clipboard.SetDataObject(data, true);
+								Clipboard.SetDataObject(pngClipboardData, true);
 							}
 							whiteS.Dispose();
 						} else {
