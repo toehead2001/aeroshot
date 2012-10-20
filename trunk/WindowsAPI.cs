@@ -1,5 +1,5 @@
 ﻿/*  AeroShot - Transparent screenshot utility for Windows
-	Copyright (C) 2011 Caleb Joseph
+	Copyright (C) 2012 Caleb Joseph
 
 	AeroShot is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -112,9 +112,9 @@ namespace AeroShot {
 		internal static int DwmGetWindowAttribute(IntPtr hWnd, DwmWindowAttribute dwAttribute, ref WindowsRect pvAttribute,
 		                                          int cbAttribute) {
 			var dwmDll = LoadLibrary("dwmapi.dll");
-			if (dwmDll == IntPtr.Zero) return Marshal.GetLastWin32Error();
+			if (dwmDll == IntPtr.Zero) return -1;
 			var dwmFunction = GetProcAddress(dwmDll, "DwmGetWindowAttribute");
-			if (dwmFunction == IntPtr.Zero) return Marshal.GetLastWin32Error();
+			if (dwmFunction == IntPtr.Zero) return -1;
 			var call =
 				(DwmGetWindowAttributeDelegate)
 				Marshal.GetDelegateForFunctionPointer(dwmFunction, typeof (DwmGetWindowAttributeDelegate));
@@ -125,9 +125,9 @@ namespace AeroShot {
 
 		internal static int DwmExtendFrameIntoClientArea(IntPtr hWnd, ref WindowsMargins pMarInset) {
 			var dwmDll = LoadLibrary("dwmapi.dll");
-			if (dwmDll == IntPtr.Zero) return Marshal.GetLastWin32Error();
+			if (dwmDll == IntPtr.Zero) return -1;
 			var dwmFunction = GetProcAddress(dwmDll, "DwmExtendFrameIntoClientArea");
-			if (dwmFunction == IntPtr.Zero) return Marshal.GetLastWin32Error();
+			if (dwmFunction == IntPtr.Zero) return -1;
 			var call =
 				(DwmExtendFrameIntoClientAreaDelegate)
 				Marshal.GetDelegateForFunctionPointer(dwmFunction, typeof (DwmExtendFrameIntoClientAreaDelegate));
@@ -138,9 +138,9 @@ namespace AeroShot {
 
 		internal static int DwmIsCompositionEnabled(ref bool pfEnabled) {
 			var dwmDll = LoadLibrary("dwmapi.dll");
-			if (dwmDll == IntPtr.Zero) return Marshal.GetLastWin32Error();
+			if (dwmDll == IntPtr.Zero) return -1;
 			var dwmFunction = GetProcAddress(dwmDll, "DwmIsCompositionEnabled");
-			if (dwmFunction == IntPtr.Zero) return Marshal.GetLastWin32Error();
+			if (dwmFunction == IntPtr.Zero) return -1;
 			var call =
 				(DwmIsCompositionEnabledDelegate)
 				Marshal.GetDelegateForFunctionPointer(dwmFunction, typeof (DwmIsCompositionEnabledDelegate));

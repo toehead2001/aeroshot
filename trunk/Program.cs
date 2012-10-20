@@ -1,5 +1,5 @@
 ﻿/*  AeroShot - Transparent screenshot utility for Windows
-	Copyright (C) 2011 Caleb Joseph
+	Copyright (C) 2012 Caleb Joseph
 
 	AeroShot is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
