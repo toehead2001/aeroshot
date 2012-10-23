@@ -18,7 +18,6 @@ using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Windows.Forms;
 
 namespace AeroShot {
 	internal delegate bool CallBackPtr(IntPtr hwnd, int lParam);
@@ -87,50 +86,58 @@ namespace AeroShot {
 
 	[StructLayout(LayoutKind.Sequential)]
 	internal struct PointStruct {
-		internal int x;
-		internal int y;
+		internal int X;
+		internal int Y;
 	}
 
 	internal enum DwmWindowAttribute {
-		DWMWA_NCRENDERING_ENABLED = 1,
-		DWMWA_NCRENDERING_POLICY,
-		DWMWA_TRANSITIONS_FORCEDISABLED,
-		DWMWA_ALLOW_NCPAINT,
-		DWMWA_CAPTION_BUTTON_BOUNDS,
-		DWMWA_NONCLIENT_RTL_LAYOUT,
-		DWMWA_FORCE_ICONIC_REPRESENTATION,
-		DWMWA_FLIP3D_POLICY,
-		DWMWA_EXTENDED_FRAME_BOUNDS,
-		DWMWA_HAS_ICONIC_BITMAP,
-		DWMWA_DISALLOW_PEEK,
-		DWMWA_EXCLUDED_FROM_PEEK,
-		DWMWA_LAST
+		NonClientRenderingEnabled = 1,
+		NonClientRenderingPolicy,
+		TransitionsForceDisabled,
+		AllowNonClientPaint,
+		CaptionButtonBounds,
+		NonClientRtlLayout,
+		ForceIconicRepresentation,
+		Flip3DPolicy,
+		ExtendedFrameBounds,
+		HasIconicBitmap,
+		DisallowPeek,
+		ExcludedFromPeek,
+		Last
 	}
 
 	internal static class WindowsApi {
 		// Safe method of calling dwmapi.dll, for versions of Windows lower than Vista
-		internal static int DwmGetWindowAttribute(IntPtr hWnd, DwmWindowAttribute dwAttribute, ref WindowsRect pvAttribute,
+		internal static int DwmGetWindowAttribute(IntPtr hWnd,
+		                                          DwmWindowAttribute dwAttribute,
+		                                          ref WindowsRect pvAttribute,
 		                                          int cbAttribute) {
 			var dwmDll = LoadLibrary("dwmapi.dll");
-			if (dwmDll == IntPtr.Zero) return -1;
+			if (dwmDll == IntPtr.Zero) return Marshal.GetLastWin32Error();
 			var dwmFunction = GetProcAddress(dwmDll, "DwmGetWindowAttribute");
-			if (dwmFunction == IntPtr.Zero) return -1;
+			if (dwmFunction == IntPtr.Zero) return Marshal.GetLastWin32Error();
 			var call =
 				(DwmGetWindowAttributeDelegate)
-				Marshal.GetDelegateForFunctionPointer(dwmFunction, typeof (DwmGetWindowAttributeDelegate));
+				Marshal.GetDelegateForFunctionPointer(dwmFunction,
+				                                      typeof (DwmGetWindowAttributeDelegate
+				                                      	));
 			var result = call(hWnd, dwAttribute, ref pvAttribute, cbAttribute);
 			FreeLibrary(dwmDll);
 			return result;
 		}
 
-		internal static int DwmExtendFrameIntoClientArea(IntPtr hWnd, ref WindowsMargins pMarInset) {
+		internal static int DwmExtendFrameIntoClientArea(IntPtr hWnd,
+		                                                 ref WindowsMargins pMarInset) {
 			var dwmDll = LoadLibrary("dwmapi.dll");
-			if (dwmDll == IntPtr.Zero) return -1;
+			if (dwmDll == IntPtr.Zero) return Marshal.GetLastWin32Error();
 			var dwmFunction = GetProcAddress(dwmDll, "DwmExtendFrameIntoClientArea");
-			if (dwmFunction == IntPtr.Zero) return -1;
+			if (dwmFunction == IntPtr.Zero) return Marshal.GetLastWin32Error();
 			var call =
 				(DwmExtendFrameIntoClientAreaDelegate)
-				Marshal.GetDelegateForFunctionPointer(dwmFunction, typeof (DwmExtendFrameIntoClientAreaDelegate));
+				Marshal.GetDelegateForFunctionPointer(dwmFunction,
+				                                      typeof (
+				                                      	DwmExtendFrameIntoClientAreaDelegate
+				                                      	));
 			var result = call(hWnd, ref pMarInset);
 			FreeLibrary(dwmDll);
 			return result;
@@ -138,19 +145,22 @@ namespace AeroShot {
 
 		internal static int DwmIsCompositionEnabled(ref bool pfEnabled) {
 			var dwmDll = LoadLibrary("dwmapi.dll");
-			if (dwmDll == IntPtr.Zero) return -1;
+			if (dwmDll == IntPtr.Zero) return Marshal.GetLastWin32Error();
 			var dwmFunction = GetProcAddress(dwmDll, "DwmIsCompositionEnabled");
-			if (dwmFunction == IntPtr.Zero) return -1;
+			if (dwmFunction == IntPtr.Zero) return Marshal.GetLastWin32Error();
 			var call =
 				(DwmIsCompositionEnabledDelegate)
-				Marshal.GetDelegateForFunctionPointer(dwmFunction, typeof (DwmIsCompositionEnabledDelegate));
+				Marshal.GetDelegateForFunctionPointer(dwmFunction,
+				                                      typeof (
+				                                      	DwmIsCompositionEnabledDelegate));
 			var result = call(ref pfEnabled);
 			FreeLibrary(dwmDll);
 			return result;
 		}
 
 		[DllImport("user32.dll")]
-		internal static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
+		internal static extern IntPtr FindWindow(string lpClassName,
+		                                         string lpWindowName);
 
 		[DllImport("user32.dll")]
 		internal static extern bool SetForegroundWindow(IntPtr hWnd);
@@ -159,7 +169,8 @@ namespace AeroShot {
 		internal static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
 
 		[DllImport("user32.dll")]
-		internal static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int x, int y, int width, int height,
+		internal static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter,
+		                                         int x, int y, int width, int height,
 		                                         uint uFlags);
 
 		[DllImport("user32.dll")]
@@ -172,10 +183,17 @@ namespace AeroShot {
 		internal static extern bool IsIconic(IntPtr hWnd);
 
 		[DllImport("user32.dll")]
+		internal static extern bool IsWindowVisible(IntPtr hWnd);
+
+		[DllImport("user32.dll")]
 		internal static extern long GetWindowLong(IntPtr hWnd, int nIndex);
 
 		[DllImport("user32.dll")]
-		internal static extern int GetWindowText(IntPtr hWnd, StringBuilder lpString, int nMaxCount);
+		internal static extern IntPtr GetWindow(IntPtr hWnd, uint uCmd);
+
+		[DllImport("user32.dll")]
+		internal static extern int GetWindowText(IntPtr hWnd, StringBuilder lpString,
+		                                         int nMaxCount);
 
 		[DllImport("user32.dll")]
 		internal static extern int GetWindowTextLength(IntPtr hWnd);
@@ -193,20 +211,24 @@ namespace AeroShot {
 		public static extern IntPtr CopyIcon(IntPtr hIcon);
 
 		[DllImport("user32.dll")]
-		public static extern bool GetIconInfo(IntPtr hIcon, out IconInfoStruct piconinfo);
+		public static extern bool GetIconInfo(IntPtr hIcon,
+		                                      out IconInfoStruct piconinfo);
 
 		[DllImport("user32.dll")]
-		internal static extern bool RegisterHotKey(IntPtr hWnd, int id, int fsModifiers, int vlc);
+		internal static extern bool RegisterHotKey(IntPtr hWnd, int id,
+		                                           int fsModifiers, int vlc);
 
 		[DllImport("user32.dll")]
 		internal static extern bool UnregisterHotKey(IntPtr hWnd, int id);
 
 		[DllImport("gdi32.dll")]
-		internal static extern bool BitBlt(IntPtr hdcDest, int xDest, int yDest, int wDest, int hDest, IntPtr hdcSource,
+		internal static extern bool BitBlt(IntPtr hdcDest, int xDest, int yDest,
+		                                   int wDest, int hDest, IntPtr hdcSource,
 		                                   int xSrc, int ySrc, CopyPixelOperation rop);
 
 		[DllImport("gdi32.dll")]
-		internal static extern IntPtr CreateDC(string lpszDriver, string lpszDevice, string lpszOutput, int lpInitData);
+		internal static extern IntPtr CreateDC(string lpszDriver, string lpszDevice,
+		                                       string lpszOutput, int lpInitData);
 
 		[DllImport("gdi32.dll")]
 		internal static extern IntPtr DeleteDC(IntPtr hDc);
@@ -215,14 +237,17 @@ namespace AeroShot {
 		internal static extern int SaveDC(IntPtr hdc);
 
 		[DllImport("gdi32.dll")]
-		internal static extern IntPtr CreateDIBSection(IntPtr hdc, [In] ref BitmapInfo pbmi, uint pila, out IntPtr ppvBits,
+		internal static extern IntPtr CreateDIBSection(IntPtr hdc,
+		                                               [In] ref BitmapInfo pbmi,
+		                                               uint pila, out IntPtr ppvBits,
 		                                               IntPtr hSection, uint dwOffset);
 
 		[DllImport("gdi32.dll")]
 		internal static extern IntPtr DeleteObject(IntPtr hDc);
 
 		[DllImport("gdi32.dll")]
-		internal static extern IntPtr CreateCompatibleBitmap(IntPtr hdc, int nWidth, int nHeight);
+		internal static extern IntPtr CreateCompatibleBitmap(IntPtr hdc, int nWidth,
+		                                                     int nHeight);
 
 		[DllImport("gdi32.dll")]
 		internal static extern IntPtr CreateCompatibleDC(IntPtr hdc);
@@ -230,21 +255,24 @@ namespace AeroShot {
 		[DllImport("gdi32.dll")]
 		internal static extern IntPtr SelectObject(IntPtr hdc, IntPtr bmp);
 
-		[DllImport("kernel32.dll")]
+		[DllImport("kernel32.dll", SetLastError = true)]
 		private static extern bool FreeLibrary(IntPtr hModule);
 
-		[DllImport("kernel32.dll")]
+		[DllImport("kernel32.dll", SetLastError = true)]
 		private static extern IntPtr LoadLibrary(string dllToLoad);
 
-		[DllImport("kernel32.dll")]
-		private static extern IntPtr GetProcAddress(IntPtr hModule, string procedureName);
+		[DllImport("kernel32.dll", SetLastError = true)]
+		private static extern IntPtr GetProcAddress(IntPtr hModule,
+		                                            string procedureName);
 
 		[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-		private delegate int DwmExtendFrameIntoClientAreaDelegate(IntPtr hWnd, ref WindowsMargins pMarInset);
+		private delegate int DwmExtendFrameIntoClientAreaDelegate(
+			IntPtr hWnd, ref WindowsMargins pMarInset);
 
 		[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
 		private delegate int DwmGetWindowAttributeDelegate(
-			IntPtr hWnd, DwmWindowAttribute dwAttribute, ref WindowsRect pvAttribute, int cbAttribute);
+			IntPtr hWnd, DwmWindowAttribute dwAttribute, ref WindowsRect pvAttribute,
+			int cbAttribute);
 
 		[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
 		private delegate int DwmIsCompositionEnabledDelegate(ref bool pfEnabled);
