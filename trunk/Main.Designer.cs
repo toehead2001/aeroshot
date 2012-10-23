@@ -75,6 +75,7 @@ namespace AeroShot {
 			this.checkerValue = new System.Windows.Forms.NumericUpDown();
 			this.groupBox2 = new System.Windows.Forms.GroupBox();
 			this.colourHexBox = new System.Windows.Forms.TextBox();
+			this.colourDisplay = new AeroShot.ColourDisplay();
 			this.label5 = new System.Windows.Forms.Label();
 			this.labelOpaque = new System.Windows.Forms.Label();
 			this.labelHash = new System.Windows.Forms.Label();
@@ -88,7 +89,6 @@ namespace AeroShot {
 			this.groupBox3 = new System.Windows.Forms.GroupBox();
 			this.labelMouse = new System.Windows.Forms.Label();
 			this.ssButton = new AeroShot.Placeholder();
-			this.colourDisplay = new AeroShot.ColourDisplay();
 			((System.ComponentModel.ISupportInitialize)(this.windowHeight)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.windowWidth)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.checkerValue)).BeginInit();
@@ -116,7 +116,7 @@ namespace AeroShot {
 			this.label1.Name = "label1";
 			this.label1.Size = new System.Drawing.Size(395, 13);
 			this.label1.TabIndex = 0;
-			this.label1.Text = "Select window to capture, or press Alt + Print Screen over an active window";
+			this.label1.Text = "Select window to capture, or press Alt + Print Screen over an active window.";
 			// 
 			// label2
 			// 
@@ -161,8 +161,8 @@ namespace AeroShot {
 			// 
 			// folderSelection
 			// 
-			this.folderSelection.Description = "Please select the folder you wish screenshots to be saved to.\r\nFilenames are dete" +
-				"rmined by the title of the window you are capturing.";
+			this.folderSelection.Description = "Please select the folder you wish screenshots to be saved to.\r\n" +
+			                                   "Filenames are determined by the title of the window you are capturing.";
 			// 
 			// resizeCheckbox
 			// 
@@ -320,6 +320,15 @@ namespace AeroShot {
 			this.colourHexBox.Text = "FFFFFF";
 			this.colourHexBox.TextChanged += new System.EventHandler(this.ColourTextboxTextChange);
 			// 
+			// colourDisplay
+			// 
+			this.colourDisplay.Color = System.Drawing.Color.White;
+			this.colourDisplay.Location = new System.Drawing.Point(327, 46);
+			this.colourDisplay.Name = "colourDisplay";
+			this.colourDisplay.Size = new System.Drawing.Size(72, 19);
+			this.colourDisplay.TabIndex = 22;
+			this.colourDisplay.Click += new System.EventHandler(this.ColourDisplayClick);
+			// 
 			// label5
 			// 
 			this.label5.AutoSize = true;
@@ -338,8 +347,7 @@ namespace AeroShot {
 			this.labelOpaque.Name = "labelOpaque";
 			this.labelOpaque.Size = new System.Drawing.Size(162, 39);
 			this.labelOpaque.TabIndex = 17;
-			this.labelOpaque.Text = "Screenshots are saved with an\r\nopaque background, rather\r\nthan a transparent one." +
-				"";
+			this.labelOpaque.Text = "Screenshots are saved with an\r\nopaque background, rather\r\nthan a transparent one.";
 			// 
 			// labelHash
 			// 
@@ -373,8 +381,7 @@ namespace AeroShot {
 			this.labelResize.Name = "labelResize";
 			this.labelResize.Size = new System.Drawing.Size(239, 26);
 			this.labelResize.TabIndex = 11;
-			this.labelResize.Text = "Sets the exact resolution screenshots are\r\ncaptured in, if the window supports re" +
-				"sizing.";
+			this.labelResize.Text = "Sets the exact resolution screenshots are\r\ncaptured in, if the window supports resizing.";
 			// 
 			// colourDialog
 			// 
@@ -451,8 +458,7 @@ namespace AeroShot {
 			this.labelMouse.Name = "labelMouse";
 			this.labelMouse.Size = new System.Drawing.Size(387, 26);
 			this.labelMouse.TabIndex = 27;
-			this.labelMouse.Text = "The system mouse pointer will be preserved in screenshots when the Alt +\r\nPrint S" +
-				"creen key combination is used to capture.";
+			this.labelMouse.Text = "The system mouse pointer will be preserved in screenshots when the Alt +\r\nPrint Screen key combination is used to capture.";
 			// 
 			// ssButton
 			// 
@@ -461,23 +467,14 @@ namespace AeroShot {
 			this.ssButton.Name = "ssButton";
 			this.ssButton.Size = new System.Drawing.Size(200, 30);
 			this.ssButton.TabIndex = 28;
-			this.ssButton.MouseLeave += new System.EventHandler(this.ScreenshotButtonPlaceholderMouseLeave);
-			this.ssButton.Leave += new System.EventHandler(this.ScreenshotButtonPlaceholderLeave);
-			this.ssButton.KeyUp += new System.Windows.Forms.KeyEventHandler(this.ScreenshotButtonPlaceholderKeyUp);
-			this.ssButton.MouseDown += new System.Windows.Forms.MouseEventHandler(this.ScreenshotButtonPlaceholderMouseDown);
 			this.ssButton.Enter += new System.EventHandler(this.ScreenshotButtonPlaceholderEnter);
-			this.ssButton.MouseUp += new System.Windows.Forms.MouseEventHandler(this.ScreenshotButtonPlaceholderMouseUp);
-			this.ssButton.MouseEnter += new System.EventHandler(this.ScreenshotButtonPlaceholderMouseEnter);
 			this.ssButton.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ScreenshotButtonPlaceholderKeyDown);
-			// 
-			// colourDisplay
-			// 
-			this.colourDisplay.Color = System.Drawing.Color.White;
-			this.colourDisplay.Location = new System.Drawing.Point(327, 46);
-			this.colourDisplay.Name = "colourDisplay";
-			this.colourDisplay.Size = new System.Drawing.Size(72, 19);
-			this.colourDisplay.TabIndex = 22;
-			this.colourDisplay.Click += new System.EventHandler(this.ColourDisplayClick);
+			this.ssButton.KeyUp += new System.Windows.Forms.KeyEventHandler(this.ScreenshotButtonPlaceholderKeyUp);
+			this.ssButton.Leave += new System.EventHandler(this.ScreenshotButtonPlaceholderLeave);
+			this.ssButton.MouseDown += new System.Windows.Forms.MouseEventHandler(this.ScreenshotButtonPlaceholderMouseDown);
+			this.ssButton.MouseEnter += new System.EventHandler(this.ScreenshotButtonPlaceholderMouseEnter);
+			this.ssButton.MouseLeave += new System.EventHandler(this.ScreenshotButtonPlaceholderMouseLeave);
+			this.ssButton.MouseUp += new System.Windows.Forms.MouseEventHandler(this.ScreenshotButtonPlaceholderMouseUp);
 			// 
 			// MainForm
 			// 
@@ -502,11 +499,11 @@ namespace AeroShot {
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
 			this.MaximizeBox = false;
 			this.Name = "MainForm";
-			this.Text = "AeroShot 1.3.1";
-			this.Paint += new System.Windows.Forms.PaintEventHandler(this.OnPaint);
-			this.SizeChanged += new System.EventHandler(this.FormSizeChange);
-			this.Shown += new System.EventHandler(this.FormShown);
+			this.Text = "AeroShot 1.3.2";
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormClose);
+			this.Shown += new System.EventHandler(this.FormShown);
+			this.SizeChanged += new System.EventHandler(this.FormSizeChange);
+			this.Paint += new System.Windows.Forms.PaintEventHandler(this.OnPaint);
 			((System.ComponentModel.ISupportInitialize)(this.windowHeight)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.windowWidth)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.checkerValue)).EndInit();
