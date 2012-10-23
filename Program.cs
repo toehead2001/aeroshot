@@ -23,8 +23,8 @@ using System.Windows.Forms;
 [assembly: AssemblyProduct("AeroShot")]
 [assembly: AssemblyDescription("Screenshot capture utility for Windows Aero")]
 [assembly: AssemblyCopyright("© 2012 Caleb Joseph")]
-[assembly: AssemblyVersion("1.3.1.0")]
-[assembly: AssemblyFileVersion("1.3.1.0")]
+[assembly: AssemblyVersion("1.3.2.0")]
+[assembly: AssemblyFileVersion("1.3.2.0")]
 [assembly: ComVisible(false)]
 
 namespace AeroShot {
