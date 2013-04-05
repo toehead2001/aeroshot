@@ -1,63 +1,63 @@
 ﻿/*  AeroShot - Transparent screenshot utility for Windows
-	Copyright (C) 2012 Caleb Joseph
+    Copyright (C) 2012 Caleb Joseph
 
-	AeroShot is free software: you can redistribute it and/or modify
-	it under the terms of the GNU General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
+    AeroShot is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
 
-	AeroShot is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU General Public License for more details.
+    AeroShot is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
 
-	You should have received a copy of the GNU General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>. */
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
 using System.Drawing;
 using System.Windows.Forms;
 
 namespace AeroShot {
-	sealed partial class MainForm {
-		private System.Windows.Forms.Button bButton;
-		private System.Windows.Forms.NumericUpDown checkerValue;
-		private System.Windows.Forms.ColorDialog colourDialog;
-		private AeroShot.ColourDisplay colourDisplay;
-		private System.Windows.Forms.TextBox colourHexBox;
-		private System.Windows.Forms.FolderBrowserDialog folderSelection;
-		private System.Windows.Forms.TextBox folderTextBox;
-		private System.Windows.Forms.GroupBox groupBox1;
-		private System.Windows.Forms.GroupBox groupBox2;
-		private System.Windows.Forms.Label label1;
-		private System.Windows.Forms.Label label2;
-		private System.Windows.Forms.Label labelResize;
-		private System.Windows.Forms.Label labelX;
-		private System.Windows.Forms.Label labelOpaque;
-		private System.Windows.Forms.Label label4;
-		private System.Windows.Forms.Label label5;
-		private System.Windows.Forms.Label labelHash;
-		private System.Windows.Forms.CheckBox opaqueCheckbox;
-		private System.Windows.Forms.ComboBox opaqueType;
-		private System.Windows.Forms.Button rButton;
-		private AeroShot.Placeholder ssButton = new AeroShot.Placeholder();
-		private System.Windows.Forms.CheckBox resizeCheckbox;
-		private System.Windows.Forms.NumericUpDown windowHeight;
-		private System.Windows.Forms.ComboBox windowList;
-		private System.Windows.Forms.NumericUpDown windowWidth;
-		private System.Windows.Forms.RadioButton diskButton;
-		private System.Windows.Forms.Label label3;
-		private System.Windows.Forms.RadioButton clipboardButton;
-		private System.Windows.Forms.CheckBox mouseCheckbox;
-		private System.Windows.Forms.GroupBox groupBox3;
-		private System.Windows.Forms.Label labelMouse;
+    sealed partial class MainForm {
+        private System.Windows.Forms.Button bButton;
+        private System.Windows.Forms.NumericUpDown checkerValue;
+        private System.Windows.Forms.ColorDialog colourDialog;
+        private AeroShot.ColourDisplay colourDisplay;
+        private System.Windows.Forms.TextBox colourHexBox;
+        private System.Windows.Forms.FolderBrowserDialog folderSelection;
+        private System.Windows.Forms.TextBox folderTextBox;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label labelResize;
+        private System.Windows.Forms.Label labelX;
+        private System.Windows.Forms.Label labelOpaque;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label labelHash;
+        private System.Windows.Forms.CheckBox opaqueCheckbox;
+        private System.Windows.Forms.ComboBox opaqueType;
+        private System.Windows.Forms.Button rButton;
+        private AeroShot.Placeholder ssButton = new AeroShot.Placeholder();
+        private System.Windows.Forms.CheckBox resizeCheckbox;
+        private System.Windows.Forms.NumericUpDown windowHeight;
+        private System.Windows.Forms.ComboBox windowList;
+        private System.Windows.Forms.NumericUpDown windowWidth;
+        private System.Windows.Forms.RadioButton diskButton;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.RadioButton clipboardButton;
+        private System.Windows.Forms.CheckBox mouseCheckbox;
+        private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.Label labelMouse;
 
-		#region Windows Form Designer generated code
+        #region Windows Form Designer generated code
 
-		/// <summary>
-		/// Required method for Designer support - do not modify
-		/// the contents of this method with the code editor.
-		/// </summary>
-		private void InitializeComponent() {
+        /// <summary>
+        /// Required method for Designer support - do not modify
+        /// the contents of this method with the code editor.
+        /// </summary>
+        private void InitializeComponent() {
             this.windowList = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -519,7 +519,7 @@ namespace AeroShot {
             this.ResumeLayout(false);
             this.PerformLayout();
 
-		}
-		#endregion
-	}
+        }
+        #endregion
+    }
 }
