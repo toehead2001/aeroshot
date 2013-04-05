@@ -35,11 +35,11 @@ namespace AeroShot {
 		public Color BackgroundColour;
 		public bool CaptureMouse;
 		public int CheckerboardSize;
+		public bool ClipboardNotDisk;
 		public string DiskSaveDirectory;
 		public bool DoResize;
 		public int ResizeX;
 		public int ResizeY;
-		public bool ClipboardNotDisk;
 		public IntPtr WindowHandle;
 
 		public ScreenshotTask(IntPtr window, bool clipboard, string file, bool resize,
@@ -65,9 +65,9 @@ namespace AeroShot {
 		private const uint SWP_SHOWWINDOW = 0x0040;
 
 		internal static void CaptureWindow(ref ScreenshotTask data) {
-			var start = WindowsApi.FindWindow("Button", "Start");
-			var taskbar = WindowsApi.FindWindow("Shell_TrayWnd", null);
-			if (data.ClipboardNotDisk || Directory.Exists(data.DiskSaveDirectory))
+			IntPtr start = WindowsApi.FindWindow("Button", "Start");
+			IntPtr taskbar = WindowsApi.FindWindow("Shell_TrayWnd", null);
+			if (data.ClipboardNotDisk || Directory.Exists(data.DiskSaveDirectory)) {
 				try {
 					// Hide the taskbar, just incase it gets in the way
 					if (data.WindowHandle != start && data.WindowHandle != taskbar) {
@@ -90,16 +90,16 @@ namespace AeroShot {
 						Thread.Sleep(100);
 					}
 
-					var length = WindowsApi.GetWindowTextLength(data.WindowHandle);
+					int length = WindowsApi.GetWindowTextLength(data.WindowHandle);
 					var sb = new StringBuilder(length + 1);
 					WindowsApi.GetWindowText(data.WindowHandle, sb, sb.Capacity);
 
-					var name = sb.ToString();
+					string name = sb.ToString();
 
-					foreach (var inv in Path.GetInvalidFileNameChars())
+					foreach (char inv in Path.GetInvalidFileNameChars())
 						name = name.Replace(inv.ToString(), string.Empty);
 
-					var s = CaptureCompositeScreenshot(ref data);
+					Bitmap s = CaptureCompositeScreenshot(ref data);
 
 					// Show the taskbar again
 					if (data.WindowHandle != start && data.WindowHandle != taskbar) {
@@ -107,17 +107,17 @@ namespace AeroShot {
 						WindowsApi.ShowWindow(taskbar, 1);
 					}
 
-					if (s == null)
+					if (s == null) {
 						MessageBox.Show("The screenshot taken was blank, it will not be saved.",
 						                "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-					else {
+					} else {
 						if (data.ClipboardNotDisk &&
 						    data.Background != ScreenshotTask.BackgroundType.Transparent)
 							// Screenshot is already opaque, don't need to modify it
 							Clipboard.SetImage(s);
 						else if (data.ClipboardNotDisk) {
 							var whiteS = new Bitmap(s.Width, s.Height, PixelFormat.Format24bppRgb);
-							using (var graphics = Graphics.FromImage(whiteS)) {
+							using (Graphics graphics = Graphics.FromImage(whiteS)) {
 								graphics.Clear(Color.White);
 								graphics.DrawImage(s, 0, 0, s.Width, s.Height);
 							}
@@ -136,25 +136,28 @@ namespace AeroShot {
 							name = name.Trim();
 							if (name == string.Empty)
 								name = "AeroShot";
-							var path = Path.Combine(data.DiskSaveDirectory, name + ".png");
+							string path = Path.Combine(data.DiskSaveDirectory, name + ".png");
 
-							if (File.Exists(path))
-								for (var i = 1; i < 9999; i++) {
+							if (File.Exists(path)) {
+								for (int i = 1; i < 9999; i++) {
 									path = Path.Combine(data.DiskSaveDirectory, name + " " + i + ".png");
 									if (!File.Exists(path))
 										break;
 								}
+							}
 							s.Save(path, ImageFormat.Png);
 						}
 						s.Dispose();
 					}
 
-					if (data.DoResize)
+					if (data.DoResize) {
 						if ((WindowsApi.GetWindowLong(data.WindowHandle, GWL_STYLE) & WS_SIZEBOX) ==
-						    WS_SIZEBOX)
+						    WS_SIZEBOX) {
 							WindowsApi.SetWindowPos(data.WindowHandle, (IntPtr) 0, r.Left, r.Top,
 							                        r.Right - r.Left, r.Bottom - r.Top,
 							                        SWP_SHOWWINDOW);
+						}
+					}
 				} catch (Exception) {
 					if (data.WindowHandle != start && data.WindowHandle != taskbar) {
 						WindowsApi.ShowWindow(start, 1);
@@ -164,49 +167,52 @@ namespace AeroShot {
 						"An error occurred while trying to take a screenshot.\r\n\r\nPlease make sure you have selected a valid window.",
 						"Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 				}
-			else
+			} else {
 				MessageBox.Show("Invalid directory chosen.", "Error", MessageBoxButtons.OK,
 				                MessageBoxIcon.Error);
+			}
 		}
 
 		private static void SmartResizeWindow(ref ScreenshotTask data,
 		                                      out WindowsRect oldWindowSize) {
 			oldWindowSize = new WindowsRect(0);
 			if ((WindowsApi.GetWindowLong(data.WindowHandle, GWL_STYLE) & WS_SIZEBOX) !=
-			    WS_SIZEBOX) return;
+			    WS_SIZEBOX)
+				return;
 
 			var r = new WindowsRect();
 			WindowsApi.GetWindowRect(data.WindowHandle, ref r);
 			oldWindowSize = r;
 
-			var f = CaptureCompositeScreenshot(ref data);
+			Bitmap f = CaptureCompositeScreenshot(ref data);
 			if (f != null) {
 				WindowsApi.SetWindowPos(data.WindowHandle, (IntPtr) 0, r.Left, r.Top,
 				                        data.ResizeX - (f.Width - (r.Right - r.Left)),
 				                        data.ResizeY - (f.Height - (r.Bottom - r.Top)),
 				                        SWP_SHOWWINDOW);
 				f.Dispose();
-			} else
+			} else {
 				WindowsApi.SetWindowPos(data.WindowHandle, (IntPtr) 0, r.Left, r.Top,
 				                        data.ResizeX, data.ResizeY, SWP_SHOWWINDOW);
+			}
 		}
 
 		private static unsafe Bitmap CaptureCompositeScreenshot(
 			ref ScreenshotTask data) {
-			var tmpColour = data.BackgroundColour;
+			Color tmpColour = data.BackgroundColour;
 			if (data.Background == ScreenshotTask.BackgroundType.Transparent ||
 			    data.Background == ScreenshotTask.BackgroundType.Checkerboard)
 				tmpColour = Color.White;
 			var backdrop = new Form {
-			                        	BackColor = tmpColour,
-			                        	FormBorderStyle = FormBorderStyle.None,
-			                        	ShowInTaskbar = false,
-			                        	Opacity = 0
-			                        };
+				BackColor = tmpColour,
+				FormBorderStyle = FormBorderStyle.None,
+				ShowInTaskbar = false,
+				Opacity = 0
+			};
 
 			// Generate a rectangle with the size of all monitors combined
-			var totalSize = Rectangle.Empty;
-			foreach (var s in Screen.AllScreens)
+			Rectangle totalSize = Rectangle.Empty;
+			foreach (Screen s in Screen.AllScreens)
 				totalSize = Rectangle.Union(totalSize, s.Bounds);
 
 			var rct = new WindowsRect();
@@ -237,14 +243,14 @@ namespace AeroShot {
 				rct.Bottom = totalSize.Bottom;
 
 			WindowsApi.ShowWindow(backdrop.Handle, 4);
-			WindowsApi.SetWindowPos(backdrop.Handle, data.WindowHandle, rct.Left,
-			                        rct.Top, rct.Right - rct.Left, rct.Bottom - rct.Top,
+			WindowsApi.SetWindowPos(backdrop.Handle, data.WindowHandle, rct.Left, rct.Top,
+			                        rct.Right - rct.Left, rct.Bottom - rct.Top,
 			                        SWP_NOACTIVATE);
 			backdrop.Opacity = 1;
 			Application.DoEvents();
 
 			// Capture screenshot with white background
-			var whiteShot =
+			Bitmap whiteShot =
 				CaptureScreenRegion(new Rectangle(rct.Left, rct.Top, rct.Right - rct.Left,
 				                                  rct.Bottom - rct.Top));
 
@@ -252,7 +258,7 @@ namespace AeroShot {
 				backdrop.Dispose();
 				if (data.CaptureMouse)
 					DrawCursorToBitmap(whiteShot, new Point(rct.Left, rct.Top));
-				var final = CropEmptyEdges(whiteShot, tmpColour);
+				Bitmap final = CropEmptyEdges(whiteShot, tmpColour);
 				whiteShot.Dispose();
 				return final;
 			}
@@ -261,13 +267,13 @@ namespace AeroShot {
 			Application.DoEvents();
 
 			// Capture screenshot with black background
-			var blackShot =
+			Bitmap blackShot =
 				CaptureScreenRegion(new Rectangle(rct.Left, rct.Top, rct.Right - rct.Left,
 				                                  rct.Bottom - rct.Top));
 
 			backdrop.Dispose();
 
-			var transparentImage = DifferentiateAlpha(whiteShot, blackShot);
+			Bitmap transparentImage = DifferentiateAlpha(whiteShot, blackShot);
 			if (data.CaptureMouse)
 				DrawCursorToBitmap(transparentImage, new Point(rct.Left, rct.Top));
 			transparentImage = CropEmptyEdges(transparentImage,
@@ -279,7 +285,7 @@ namespace AeroShot {
 			if (data.Background == ScreenshotTask.BackgroundType.Checkerboard) {
 				var final = new Bitmap(transparentImage.Width, transparentImage.Height,
 				                       PixelFormat.Format24bppRgb);
-				var finalGraphics = Graphics.FromImage(final);
+				Graphics finalGraphics = Graphics.FromImage(final);
 				var brush = new TextureBrush(GenerateChecker(data.CheckerboardSize));
 				finalGraphics.FillRectangle(brush, finalGraphics.ClipBounds);
 				finalGraphics.DrawImageUnscaled(transparentImage, 0, 0);
@@ -295,42 +301,43 @@ namespace AeroShot {
 		                                       Point offsetLocation) {
 			var ci = new CursorInfoStruct();
 			ci.cbSize = Marshal.SizeOf(ci);
-			if (WindowsApi.GetCursorInfo(out ci))
+			if (WindowsApi.GetCursorInfo(out ci)) {
 				if (ci.flags == 1) {
-					var hicon = WindowsApi.CopyIcon(ci.hCursor);
+					IntPtr hicon = WindowsApi.CopyIcon(ci.hCursor);
 					IconInfoStruct icInfo;
 					if (WindowsApi.GetIconInfo(hicon, out icInfo)) {
 						var loc = new Point(
 							ci.ptScreenPos.X - offsetLocation.X - icInfo.xHotspot,
 							ci.ptScreenPos.Y - offsetLocation.Y - icInfo.yHotspot);
-						var ic = Icon.FromHandle(hicon);
-						var bmp = ic.ToBitmap();
+						Icon ic = Icon.FromHandle(hicon);
+						Bitmap bmp = ic.ToBitmap();
 
-						var g = Graphics.FromImage(windowImage);
+						Graphics g = Graphics.FromImage(windowImage);
 						g.DrawImage(bmp, new Rectangle(loc, bmp.Size));
 						g.Dispose();
 						WindowsApi.DestroyIcon(hicon);
 						bmp.Dispose();
 					}
 				}
+			}
 		}
 
 		private static Bitmap CaptureScreenRegion(Rectangle crop) {
-			var totalSize = Rectangle.Empty;
+			Rectangle totalSize = Rectangle.Empty;
 
-			foreach (var s in Screen.AllScreens)
+			foreach (Screen s in Screen.AllScreens)
 				totalSize = Rectangle.Union(totalSize, s.Bounds);
 
-			var hSrc = WindowsApi.CreateDC("DISPLAY", null, null, 0);
-			var hDest = WindowsApi.CreateCompatibleDC(hSrc);
-			var hBmp = WindowsApi.CreateCompatibleBitmap(hSrc, crop.Right - crop.Left,
-			                                             crop.Bottom - crop.Top);
-			var hOldBmp = WindowsApi.SelectObject(hDest, hBmp);
-			WindowsApi.BitBlt(hDest, 0, 0, crop.Right - crop.Left,
-			                  crop.Bottom - crop.Top, hSrc, crop.Left, crop.Top,
+			IntPtr hSrc = WindowsApi.CreateDC("DISPLAY", null, null, 0);
+			IntPtr hDest = WindowsApi.CreateCompatibleDC(hSrc);
+			IntPtr hBmp = WindowsApi.CreateCompatibleBitmap(hSrc, crop.Right - crop.Left,
+			                                                crop.Bottom - crop.Top);
+			IntPtr hOldBmp = WindowsApi.SelectObject(hDest, hBmp);
+			WindowsApi.BitBlt(hDest, 0, 0, crop.Right - crop.Left, crop.Bottom - crop.Top,
+			                  hSrc, crop.Left, crop.Top,
 			                  CopyPixelOperation.SourceCopy |
 			                  CopyPixelOperation.CaptureBlt);
-			var bmp = Image.FromHbitmap(hBmp);
+			Bitmap bmp = Image.FromHbitmap(hBmp);
 			WindowsApi.SelectObject(hDest, hOldBmp);
 			WindowsApi.DeleteObject(hBmp);
 			WindowsApi.DeleteDC(hDest);
@@ -367,17 +374,18 @@ namespace AeroShot {
 		}
 
 		private static unsafe Bitmap CropEmptyEdges(Bitmap b1, Color trimColour) {
-			if (b1 == null) return null;
+			if (b1 == null)
+				return null;
 
-			var sizeX = b1.Width;
-			var sizeY = b1.Height;
+			int sizeX = b1.Width;
+			int sizeY = b1.Height;
 			var b = new UnsafeBitmap(b1);
 			b.LockImage();
 
-			var left = -1;
-			var top = -1;
-			var right = -1;
-			var bottom = -1;
+			int left = -1;
+			int top = -1;
+			int right = -1;
+			int bottom = -1;
 
 			PixelData* pixel;
 
@@ -454,8 +462,8 @@ namespace AeroShot {
 			if (left >= right || top >= bottom)
 				return null;
 
-			var final = b1.Clone(new Rectangle(left, top, right - left, bottom - top),
-			                     b1.PixelFormat);
+			Bitmap final = b1.Clone(
+				new Rectangle(left, top, right - left, bottom - top), b1.PixelFormat);
 			b1.Dispose();
 			return final;
 		}
@@ -466,8 +474,8 @@ namespace AeroShot {
 			    whiteBitmap.Width != blackBitmap.Width ||
 			    whiteBitmap.Height != blackBitmap.Height)
 				return null;
-			var sizeX = whiteBitmap.Width;
-			var sizeY = whiteBitmap.Height;
+			int sizeX = whiteBitmap.Width;
+			int sizeY = whiteBitmap.Height;
 			var final = new Bitmap(sizeX, sizeY, PixelFormat.Format32bppArgb);
 			var a = new UnsafeBitmap(whiteBitmap);
 			var b = new UnsafeBitmap(blackBitmap);
@@ -476,22 +484,22 @@ namespace AeroShot {
 			b.LockImage();
 			f.LockImage();
 
-			var empty = true;
+			bool empty = true;
 
 			for (int x = 0, y = 0; x < sizeX && y < sizeY;) {
-				var pixelA = a.GetPixel(x, y);
-				var pixelB = b.GetPixel(x, y);
-				var pixelF = f.GetPixel(x, y);
+				PixelData* pixelA = a.GetPixel(x, y);
+				PixelData* pixelB = b.GetPixel(x, y);
+				PixelData* pixelF = f.GetPixel(x, y);
 
 				pixelF->Alpha = ToByte(pixelB->Red - pixelA->Red + 255);
 
-			    if (pixelF->Alpha > 0) {
-			        pixelF->Red = ToByte(255*pixelB->Red/pixelF->Alpha);
-			        pixelF->Green = ToByte(255*pixelB->Green/pixelF->Alpha);
-			        pixelF->Blue = ToByte(255*pixelB->Blue/pixelF->Alpha);
-			    }
+				if (pixelF->Alpha > 0) {
+					pixelF->Red = ToByte(255*pixelB->Red/pixelF->Alpha);
+					pixelF->Green = ToByte(255*pixelB->Green/pixelF->Alpha);
+					pixelF->Blue = ToByte(255*pixelB->Blue/pixelF->Alpha);
+				}
 
-			    if (empty && pixelF->Alpha > 0)
+				if (empty && pixelF->Alpha > 0)
 					empty = false;
 
 				if (x == sizeX - 1) {

@@ -49,7 +49,8 @@ namespace AeroShot {
 			var bounds = new Rectangle(Point.Empty, _inputBitmap.Size);
 
 			_width = bounds.Width*sizeof (PixelData);
-			if (_width%4 != 0) _width = 4*(_width/4 + 1);
+			if (_width%4 != 0)
+				_width = 4*(_width/4 + 1);
 
 			//Lock Image
 			_bitmapData = _inputBitmap.LockBits(bounds, ImageLockMode.ReadWrite,
