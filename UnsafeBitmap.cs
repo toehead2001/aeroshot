@@ -20,52 +20,52 @@ using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 
 namespace AeroShot {
-	[StructLayout(LayoutKind.Sequential)]
-	internal struct PixelData {
-		internal byte Red;
-		internal byte Green;
-		internal byte Blue;
-		internal byte Alpha;
+    [StructLayout(LayoutKind.Sequential)]
+    internal struct PixelData {
+        internal byte Red;
+        internal byte Green;
+        internal byte Blue;
+        internal byte Alpha;
 
-		internal void SetAll(byte b) {
-			Red = b;
-			Green = b;
-			Blue = b;
-			Alpha = 255;
-		}
-	}
+        internal void SetAll(byte b) {
+            Red = b;
+            Green = b;
+            Blue = b;
+            Alpha = 255;
+        }
+    }
 
-	internal unsafe class UnsafeBitmap {
-		private readonly Bitmap _inputBitmap;
-		private BitmapData _bitmapData;
-		private Byte* _pBase = null;
-		private int _width;
+    internal unsafe class UnsafeBitmap {
+        private readonly Bitmap _inputBitmap;
+        private BitmapData _bitmapData;
+        private Byte* _pBase = null;
+        private int _width;
 
-		internal UnsafeBitmap(Bitmap inputBitmap) {
-			_inputBitmap = inputBitmap;
-		}
+        internal UnsafeBitmap(Bitmap inputBitmap) {
+            _inputBitmap = inputBitmap;
+        }
 
-		internal void LockImage() {
-			var bounds = new Rectangle(Point.Empty, _inputBitmap.Size);
+        internal void LockImage() {
+            var bounds = new Rectangle(Point.Empty, _inputBitmap.Size);
 
-			_width = bounds.Width*sizeof (PixelData);
-			if (_width%4 != 0)
-				_width = 4*(_width/4 + 1);
+            _width = bounds.Width*sizeof (PixelData);
+            if (_width%4 != 0)
+                _width = 4*(_width/4 + 1);
 
-			//Lock Image
-			_bitmapData = _inputBitmap.LockBits(bounds, ImageLockMode.ReadWrite,
-			                                    PixelFormat.Format32bppArgb);
-			_pBase = (Byte*) _bitmapData.Scan0.ToPointer();
-		}
+            //Lock Image
+            _bitmapData = _inputBitmap.LockBits(bounds, ImageLockMode.ReadWrite,
+                                                PixelFormat.Format32bppArgb);
+            _pBase = (Byte*) _bitmapData.Scan0.ToPointer();
+        }
 
-		internal PixelData* GetPixel(int x, int y) {
-			return (PixelData*) (_pBase + y*_width + x*sizeof (PixelData));
-		}
+        internal PixelData* GetPixel(int x, int y) {
+            return (PixelData*) (_pBase + y*_width + x*sizeof (PixelData));
+        }
 
-		internal void UnlockImage() {
-			_inputBitmap.UnlockBits(_bitmapData);
-			_bitmapData = null;
-			_pBase = null;
-		}
-	}
+        internal void UnlockImage() {
+            _inputBitmap.UnlockBits(_bitmapData);
+            _bitmapData = null;
+            _pBase = null;
+        }
+    }
 }
