@@ -34,11 +34,11 @@ namespace AeroShot {
 		private const uint GW_OWNER = 4;
 		private const int WM_HOTKEY = 0x0312;
 		private const int MOD_ALT = 0x0001;
-		private bool _dwmComposited;
-		private readonly int _windowId;
 		private readonly List<IntPtr> _handleList = new List<IntPtr>();
 		private readonly RegistryKey _registryKey;
+		private readonly int _windowId;
 		private CallBackPtr _callBackPtr;
+		private bool _dwmComposited;
 		private Image _ssButtonImage;
 		private Thread _worker;
 
@@ -47,12 +47,13 @@ namespace AeroShot {
 			Icon = Icon.ExtractAssociatedIcon(Application.ExecutablePath);
 			InitializeComponent();
 
-			if (WindowsApi.DwmIsCompositionEnabled(ref _dwmComposited) == 0)
+			if (WindowsApi.DwmIsCompositionEnabled(ref _dwmComposited) == 0) {
 				if (_dwmComposited) {
 					ssButton.Location = new Point(ssButton.Location.X, 310);
 					var margin = new WindowsMargins(0, 0, 0, 35);
 					WindowsApi.DwmExtendFrameIntoClientArea(Handle, ref margin);
 				}
+			}
 
 			_windowId = GetHashCode();
 			WindowsApi.RegisterHotKey(Handle, _windowId, MOD_ALT, (int) Keys.PrintScreen);
@@ -60,7 +61,7 @@ namespace AeroShot {
 			object value;
 			_registryKey = Registry.CurrentUser.CreateSubKey(@"Software\AeroShot");
 			if ((value = _registryKey.GetValue("LastPath")) != null &&
-			    value.GetType() == (typeof (string)))
+			    value.GetType() == (typeof (string))) {
 				if (((string) value).Substring(0, 1) == "*") {
 					folderTextBox.Text = ((string) value).Substring(1);
 					clipboardButton.Checked = true;
@@ -68,14 +69,16 @@ namespace AeroShot {
 					folderTextBox.Text = (string) value;
 					diskButton.Checked = true;
 				}
-			else
+			} else {
 				folderTextBox.Text =
 					Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+			}
 
 			if ((value = _registryKey.GetValue("WindowSize")) != null &&
 			    value.GetType() == (typeof (long))) {
 				var b = new byte[8];
-				for (var i = 0; i < 8; i++) b[i] = (byte) (((long) value >> (i*8)) & 0xff);
+				for (int i = 0; i < 8; i++)
+					b[i] = (byte) (((long) value >> (i*8)) & 0xff);
 				resizeCheckbox.Checked = (b[0] & 1) == 1;
 				windowWidth.Value = b[1] << 16 | b[2] << 8 | b[3];
 				windowHeight.Value = b[4] << 16 | b[5] << 8 | b[6];
@@ -84,7 +87,8 @@ namespace AeroShot {
 			if ((value = _registryKey.GetValue("Opaque")) != null &&
 			    value.GetType() == (typeof (long))) {
 				var b = new byte[8];
-				for (var i = 0; i < 8; i++) b[i] = (byte) (((long) value >> (i*8)) & 0xff);
+				for (int i = 0; i < 8; i++)
+					b[i] = (byte) (((long) value >> (i*8)) & 0xff);
 				opaqueCheckbox.Checked = (b[0] & 1) == 1;
 				if ((b[0] & 2) == 2)
 					opaqueType.SelectedIndex = 0;
@@ -98,7 +102,8 @@ namespace AeroShot {
 				hex.AppendFormat("{0:X2}", b[3]);
 				hex.AppendFormat("{0:X2}", b[4]);
 				colourHexBox.Text = hex.ToString();
-			} else opaqueType.SelectedIndex = 0;
+			} else
+				opaqueType.SelectedIndex = 0;
 			if ((value = _registryKey.GetValue("CapturePointer")) != null &&
 			    value.GetType() == (typeof (int)))
 				mouseCheckbox.Checked = ((int) value & 1) == 1;
@@ -143,9 +148,10 @@ namespace AeroShot {
 			Invalidate();
 			Update();
 
-			var info = GetParamteresFromUI(false);
-			_worker = new Thread(() => Screenshot.CaptureWindow(ref info))
-			{IsBackground = true};
+			ScreenshotTask info = GetParamteresFromUI(false);
+			_worker = new Thread(() => Screenshot.CaptureWindow(ref info)) {
+				IsBackground = true
+			};
 			_worker.SetApartmentState(ApartmentState.STA);
 			_worker.Start();
 		}
@@ -207,14 +213,16 @@ namespace AeroShot {
 		}
 
 		private void ClipboardButtonStateChange(object sender, EventArgs e) {
-			if (!clipboardButton.Checked) return;
+			if (!clipboardButton.Checked)
+				return;
 			diskButton.Checked = false;
 			folderTextBox.Enabled = false;
 			bButton.Enabled = false;
 		}
 
 		private void DiskButtonStateChange(object sender, EventArgs e) {
-			if (!diskButton.Checked) return;
+			if (!diskButton.Checked)
+				return;
 			clipboardButton.Checked = false;
 			folderTextBox.Enabled = true;
 			bButton.Enabled = true;
@@ -249,21 +257,23 @@ namespace AeroShot {
 
 		private void ColourTextboxTextChange(object sender, EventArgs e) {
 			var c = new[] {
-			              	'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E',
-			              	'F', 'a', 'b', 'c', 'd', 'e', 'f'
-			              };
-			foreach (var v in colourHexBox.Text) {
-				var b = false;
-				foreach (var v1 in c)
+				'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E',
+				'F', 'a', 'b', 'c', 'd', 'e', 'f'
+			};
+			foreach (char v in colourHexBox.Text) {
+				bool b = false;
+				foreach (char v1 in c) {
 					if (v == v1) {
 						b = true;
 						break;
 					}
+				}
 				if (!b)
 					colourHexBox.Text = colourHexBox.Text.Replace(v.ToString(), string.Empty);
 			}
 
-			if (colourHexBox.TextLength != 6) return;
+			if (colourHexBox.TextLength != 6)
+				return;
 
 			colourDisplay.Color =
 				Color.FromArgb(Convert.ToInt32("FF" + colourHexBox.Text, 16));
@@ -294,7 +304,7 @@ namespace AeroShot {
 			b[5] = (byte) (((int) windowHeight.Value >> 8) & 0xff);
 			b[4] = (byte) (((int) windowHeight.Value >> 16) & 0xff);
 
-			var data = BitConverter.ToInt64(b, 0);
+			long data = BitConverter.ToInt64(b, 0);
 			_registryKey.SetValue("WindowSize", data, RegistryValueKind.QWord);
 
 			// Save background colour settings in an 8-byte long
@@ -325,21 +335,21 @@ namespace AeroShot {
 		private void OnPaint(object sender, PaintEventArgs e) {
 			if (_dwmComposited) {
 				var rc = new Rectangle(0, ClientSize.Height - 35, ClientSize.Width, 35);
-				var destdc = e.Graphics.GetHdc();
-				var memdc = WindowsApi.CreateCompatibleDC(destdc);
-				var bitmapOld = IntPtr.Zero;
+				IntPtr destdc = e.Graphics.GetHdc();
+				IntPtr memdc = WindowsApi.CreateCompatibleDC(destdc);
+				IntPtr bitmapOld = IntPtr.Zero;
 				var dib = new BitmapInfo {
-				                         	biHeight = -(rc.Bottom - rc.Top),
-				                         	biWidth = rc.Right - rc.Left,
-				                         	biPlanes = 1,
-				                         	biSize = Marshal.SizeOf(typeof (BitmapInfo)),
-				                         	biBitCount = 32,
-				                         	biCompression = 0
-				                         };
+					biHeight = -(rc.Bottom - rc.Top),
+					biWidth = rc.Right - rc.Left,
+					biPlanes = 1,
+					biSize = Marshal.SizeOf(typeof (BitmapInfo)),
+					biBitCount = 32,
+					biCompression = 0
+				};
 				if (WindowsApi.SaveDC(memdc) != 0) {
 					IntPtr tmp;
-					var bitmap = WindowsApi.CreateDIBSection(memdc, ref dib, 0, out tmp,
-					                                         IntPtr.Zero, 0);
+					IntPtr bitmap = WindowsApi.CreateDIBSection(memdc, ref dib, 0, out tmp,
+					                                            IntPtr.Zero, 0);
 					if (!(bitmap == IntPtr.Zero)) {
 						bitmapOld = WindowsApi.SelectObject(memdc, bitmap);
 						WindowsApi.BitBlt(destdc, rc.Left, rc.Top, rc.Right - rc.Left,
@@ -360,9 +370,10 @@ namespace AeroShot {
 			base.WndProc(ref m);
 
 			if (m.Msg == WM_HOTKEY) {
-				var info = GetParamteresFromUI(true);
-				_worker = new Thread(() => Screenshot.CaptureWindow(ref info))
-				{IsBackground = true};
+				ScreenshotTask info = GetParamteresFromUI(true);
+				_worker = new Thread(() => Screenshot.CaptureWindow(ref info)) {
+					IsBackground = true
+				};
 				_worker.SetApartmentState(ApartmentState.STA);
 				_worker.Start();
 			}
@@ -373,7 +384,8 @@ namespace AeroShot {
 					ssButton.Location = new Point(ssButton.Location.X, 310);
 					var margin = new WindowsMargins(0, 0, 0, 35);
 					WindowsApi.DwmExtendFrameIntoClientArea(Handle, ref margin);
-				} else ssButton.Location = new Point(ssButton.Location.X, 305);
+				} else
+					ssButton.Location = new Point(ssButton.Location.X, 305);
 			}
 		}
 
@@ -408,7 +420,7 @@ namespace AeroShot {
 					return true;
 			}
 
-			var length = WindowsApi.GetWindowTextLength(hWnd);
+			int length = WindowsApi.GetWindowTextLength(hWnd);
 			var sb = new StringBuilder(length + 1);
 			WindowsApi.GetWindowText(hWnd, sb, sb.Capacity);
 
@@ -435,13 +447,14 @@ namespace AeroShot {
 		protected override void OnPaintBackground(PaintEventArgs e) {}
 
 		protected override void OnPaint(PaintEventArgs e) {
-			var rect = e.ClipRectangle;
+			Rectangle rect = e.ClipRectangle;
 			rect.X = 2;
 			rect.Y = 2;
 			rect.Width -= 4;
 			rect.Height -= 4;
 
-			if (Enabled) _brush = new SolidBrush(_colour);
+			if (Enabled)
+				_brush = new SolidBrush(_colour);
 			else {
 				var grayScale =
 					(byte) (((_colour.R*.3) + (_colour.G*.59) + (_colour.B*.11)));
