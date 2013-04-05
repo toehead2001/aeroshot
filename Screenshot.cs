@@ -483,20 +483,15 @@ namespace AeroShot {
 				var pixelB = b.GetPixel(x, y);
 				var pixelF = f.GetPixel(x, y);
 
-				pixelF->Alpha =
-					ToByte(255 -
-					       ((Abs(pixelA->Red - pixelB->Red) +
-					         Abs(pixelA->Green - pixelB->Green) +
-					         Abs(pixelA->Blue - pixelB->Blue))/3));
+				pixelF->Alpha = ToByte(pixelB->Red - pixelA->Red + 255);
 
-				pixelF->Red =
-					ToByte(pixelF->Alpha != 0 ? pixelB->Red*255/pixelF->Alpha : 0);
-				pixelF->Green =
-					ToByte(pixelF->Alpha != 0 ? pixelB->Green*255/pixelF->Alpha : 0);
-				pixelF->Blue =
-					ToByte(pixelF->Alpha != 0 ? pixelB->Blue*255/pixelF->Alpha : 0);
+			    if (pixelF->Alpha > 0) {
+			        pixelF->Red = ToByte(255*pixelB->Red/pixelF->Alpha);
+			        pixelF->Green = ToByte(255*pixelB->Green/pixelF->Alpha);
+			        pixelF->Blue = ToByte(255*pixelB->Blue/pixelF->Alpha);
+			    }
 
-				if (empty && pixelF->Alpha > 0)
+			    if (empty && pixelF->Alpha > 0)
 					empty = false;
 
 				if (x == sizeX - 1) {
