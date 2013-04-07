@@ -537,9 +537,21 @@ namespace AeroShot {
                             pixelA->Green + 255 + pixelB->Blue - pixelA->Blue +
                             255)/3);
                 if (pixelF->Alpha > 0) {
+                    // Following math creates an image optimized to be displayed on a black background
                     pixelF->Red = ToByte(255*pixelB->Red/pixelF->Alpha);
                     pixelF->Green = ToByte(255*pixelB->Green/pixelF->Alpha);
                     pixelF->Blue = ToByte(255*pixelB->Blue/pixelF->Alpha);
+
+                    // Following math creates an image optimized to be displayed on a white background
+                    /*pixelF->Red =
+                        ToByte(255*(pixelA->Red + pixelF->Alpha - 255)/
+                               pixelF->Alpha);
+                    pixelF->Green =
+                        ToByte(255*(pixelA->Green + pixelF->Alpha - 255)/
+                               pixelF->Alpha);
+                    pixelF->Blue =
+                        ToByte(255*(pixelA->Blue + pixelF->Alpha - 255)/
+                               pixelF->Alpha);*/
                 }
                 if (empty && pixelF->Alpha > 0)
                     empty = false;
