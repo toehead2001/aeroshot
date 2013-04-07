@@ -14,7 +14,6 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
-using System;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
@@ -22,9 +21,9 @@ using System.Runtime.InteropServices;
 namespace AeroShot {
     [StructLayout(LayoutKind.Sequential)]
     internal struct PixelData {
-        internal byte Red;
-        internal byte Green;
         internal byte Blue;
+        internal byte Green;
+        internal byte Red;
         internal byte Alpha;
 
         internal void SetAll(byte b) {
@@ -38,7 +37,7 @@ namespace AeroShot {
     internal unsafe class UnsafeBitmap {
         private readonly Bitmap _inputBitmap;
         private BitmapData _bitmapData;
-        private Byte* _pBase = null;
+        private byte* _pBase = null;
         private int _width;
 
         internal UnsafeBitmap(Bitmap inputBitmap) {
@@ -55,7 +54,7 @@ namespace AeroShot {
             //Lock Image
             _bitmapData = _inputBitmap.LockBits(bounds, ImageLockMode.ReadWrite,
                                                 PixelFormat.Format32bppArgb);
-            _pBase = (Byte*) _bitmapData.Scan0.ToPointer();
+            _pBase = (byte*) _bitmapData.Scan0.ToPointer();
         }
 
         internal PixelData* GetPixel(int x, int y) {
