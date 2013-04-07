@@ -532,14 +532,15 @@ namespace AeroShot {
                 PixelData* pixelB = b.GetPixel(x, y);
                 PixelData* pixelF = f.GetPixel(x, y);
 
-                pixelF->Alpha = ToByte(pixelB->Red - pixelA->Red + 255);
-
+                pixelF->Alpha =
+                    ToByte((pixelB->Red - pixelA->Red + 255 + pixelB->Green -
+                            pixelA->Green + 255 + pixelB->Blue - pixelA->Blue +
+                            255)/3);
                 if (pixelF->Alpha > 0) {
                     pixelF->Red = ToByte(255*pixelB->Red/pixelF->Alpha);
                     pixelF->Green = ToByte(255*pixelB->Green/pixelF->Alpha);
                     pixelF->Blue = ToByte(255*pixelB->Blue/pixelF->Alpha);
                 }
-
                 if (empty && pixelF->Alpha > 0)
                     empty = false;
 
@@ -559,11 +560,6 @@ namespace AeroShot {
 
         private static byte ToByte(int i) {
             return (byte) (i > 255 ? 255 : (i < 0 ? 0 : i));
-        }
-
-        private static int Abs(int i) {
-            // This is a magnitude more faster than Math.Abs()
-            return i < 0 ? -i : i;
         }
     }
 }
