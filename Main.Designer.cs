@@ -472,12 +472,13 @@ namespace AeroShot {
             this.ssButton.TabIndex = 28;
             this.ssButton.Text = "Capture Screenshot";
             this.ssButton.UseCompatibleTextRendering = true;
-            this.bButton.UseVisualStyleBackColor = true;
+            this.ssButton.UseVisualStyleBackColor = true;
             this.ssButton.Click += new System.EventHandler(this.ScreenshotButtonClick);
             // 
             // MainForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
+            this.BackColor = System.Drawing.SystemColors.Window;
             this.ClientSize = new System.Drawing.Size(430, 340);
             this.Controls.Add(this.ssButton);
             this.Controls.Add(this.resizeCheckbox);
