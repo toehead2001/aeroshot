@@ -39,7 +39,6 @@ namespace AeroShot {
         private readonly int _windowId;
         private CallBackPtr _callBackPtr;
         private bool _dwmComposited;
-        private Image _ssButtonImage;
         private Thread _worker;
 
         public MainForm() {
@@ -113,42 +112,10 @@ namespace AeroShot {
             groupBox1.Enabled = resizeCheckbox.Checked;
             groupBox2.Enabled = opaqueCheckbox.Checked;
             groupBox3.Enabled = mouseCheckbox.Checked;
-
-            _ssButtonImage = Resources.capture;
         }
 
-        private void ScreenshotButtonPlaceholderMouseEnter(object sender,
-                                                           EventArgs e) {
-            _ssButtonImage = Resources.capture_hover;
-            Invalidate();
-            Update();
-        }
-
-        private void ScreenshotButtonPlaceholderMouseDown(object sender,
-                                                          MouseEventArgs e) {
-            _ssButtonImage = Resources.capture_press;
-            Invalidate();
-            Update();
-        }
-
-        private void ScreenshotButtonPlaceholderMouseLeave(object sender,
-                                                           EventArgs e) {
-            _ssButtonImage = Resources.capture;
-            Invalidate();
-            Update();
-        }
-
-        private void ScreenshotButtonPlaceholderMouseUp(object sender,
-                                                        MouseEventArgs e) {
-            if (e != null &&
-                (e.X < 0 || e.Y < 0 || e.X > ssButton.Size.Width ||
-                 e.Y > ssButton.Size.Height)) {
-                _ssButtonImage = Resources.capture;
-                Invalidate();
-                Update();
-                return;
-            }
-            _ssButtonImage = Resources.capture_hover;
+        private void ScreenshotButtonClick(object sender, EventArgs e)
+        {
             Invalidate();
             Update();
 
@@ -158,26 +125,6 @@ namespace AeroShot {
             };
             _worker.SetApartmentState(ApartmentState.STA);
             _worker.Start();
-        }
-
-        private void ScreenshotButtonPlaceholderKeyDown(object sender,
-                                                        KeyEventArgs e) {
-            if (e.KeyCode == Keys.Space || e.KeyCode == Keys.Enter)
-                ScreenshotButtonPlaceholderMouseDown(null, null);
-        }
-
-        private void ScreenshotButtonPlaceholderKeyUp(object sender,
-                                                      KeyEventArgs e) {
-            if (e.KeyCode == Keys.Space || e.KeyCode == Keys.Enter)
-                ScreenshotButtonPlaceholderMouseUp(null, null);
-        }
-
-        private void ScreenshotButtonPlaceholderEnter(object sender, EventArgs e) {
-            ScreenshotButtonPlaceholderMouseEnter(null, null);
-        }
-
-        private void ScreenshotButtonPlaceholderLeave(object sender, EventArgs e) {
-            ScreenshotButtonPlaceholderMouseLeave(null, null);
         }
 
         private void RefreshButtonClick(object sender, EventArgs e) {
@@ -373,8 +320,6 @@ namespace AeroShot {
                 }
                 e.Graphics.ReleaseHdc(destdc);
             }
-            e.Graphics.DrawImage(_ssButtonImage,
-                                 new Rectangle(ssButton.Location, ssButton.Size));
         }
 
         protected override void WndProc(ref Message m) {
@@ -482,12 +427,6 @@ namespace AeroShot {
             }
             e.Graphics.FillRectangle(_border, e.ClipRectangle);
             e.Graphics.FillRectangle(_brush, rect);
-        }
-    }
-
-    public class Placeholder : Control {
-        public Placeholder() {
-            SetStyle(ControlStyles.SupportsTransparentBackColor, true);
         }
     }
 }

@@ -39,7 +39,7 @@ namespace AeroShot {
         private System.Windows.Forms.CheckBox opaqueCheckbox;
         private System.Windows.Forms.ComboBox opaqueType;
         private System.Windows.Forms.Button rButton;
-        private AeroShot.Placeholder ssButton = new AeroShot.Placeholder();
+        private System.Windows.Forms.Button ssButton;
         private System.Windows.Forms.CheckBox resizeCheckbox;
         private System.Windows.Forms.NumericUpDown windowHeight;
         private System.Windows.Forms.ComboBox windowList;
@@ -88,7 +88,7 @@ namespace AeroShot {
             this.mouseCheckbox = new System.Windows.Forms.CheckBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.labelMouse = new System.Windows.Forms.Label();
-            this.ssButton = new AeroShot.Placeholder();
+            this.ssButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.windowHeight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.windowWidth)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.checkerValue)).BeginInit();
@@ -465,19 +465,15 @@ namespace AeroShot {
             // 
             // ssButton
             // 
-            this.ssButton.BackColor = System.Drawing.Color.Transparent;
-            this.ssButton.Location = new System.Drawing.Point(115, 305);
+            this.ssButton.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ssButton.Location = new System.Drawing.Point(140, 305);
             this.ssButton.Name = "ssButton";
-            this.ssButton.Size = new System.Drawing.Size(200, 30);
+            this.ssButton.Size = new System.Drawing.Size(150, 30);
             this.ssButton.TabIndex = 28;
-            this.ssButton.Enter += new System.EventHandler(this.ScreenshotButtonPlaceholderEnter);
-            this.ssButton.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ScreenshotButtonPlaceholderKeyDown);
-            this.ssButton.KeyUp += new System.Windows.Forms.KeyEventHandler(this.ScreenshotButtonPlaceholderKeyUp);
-            this.ssButton.Leave += new System.EventHandler(this.ScreenshotButtonPlaceholderLeave);
-            this.ssButton.MouseDown += new System.Windows.Forms.MouseEventHandler(this.ScreenshotButtonPlaceholderMouseDown);
-            this.ssButton.MouseEnter += new System.EventHandler(this.ScreenshotButtonPlaceholderMouseEnter);
-            this.ssButton.MouseLeave += new System.EventHandler(this.ScreenshotButtonPlaceholderMouseLeave);
-            this.ssButton.MouseUp += new System.Windows.Forms.MouseEventHandler(this.ScreenshotButtonPlaceholderMouseUp);
+            this.ssButton.Text = "Capture Screenshot";
+            this.ssButton.UseCompatibleTextRendering = true;
+            this.bButton.UseVisualStyleBackColor = true;
+            this.ssButton.Click += new System.EventHandler(this.ScreenshotButtonClick);
             // 
             // MainForm
             // 
