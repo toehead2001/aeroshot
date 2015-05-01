@@ -34,12 +34,14 @@ namespace AeroShot {
         private const uint GW_OWNER = 4;
         private const int WM_HOTKEY = 0x0312;
         private const int MOD_ALT = 0x0001;
+        private const int MOD_CONTROL = 0x0002;
         private readonly List<IntPtr> _handleList = new List<IntPtr>();
         private readonly RegistryKey _registryKey;
-        private readonly int _windowId;
+        private readonly int[] _windowId;
         private CallBackPtr _callBackPtr;
         private bool _dwmComposited;
         private Thread _worker;
+        private bool _busyCapturing;
 
         public MainForm() {
             DoubleBuffered = true;
@@ -54,9 +56,9 @@ namespace AeroShot {
                 }
             }
 
-            _windowId = GetHashCode();
-            WindowsApi.RegisterHotKey(Handle, _windowId, MOD_ALT,
-                                      (int) Keys.PrintScreen);
+            _windowId = new[] { GetHashCode(), GetHashCode() ^ 327 };
+            WindowsApi.RegisterHotKey(Handle, _windowId[0], MOD_ALT, (int) Keys.PrintScreen);
+            WindowsApi.RegisterHotKey(Handle, _windowId[1], MOD_ALT | MOD_CONTROL, (int)Keys.PrintScreen);
 
             object value;
             _registryKey =
@@ -240,7 +242,9 @@ namespace AeroShot {
         }
 
         private void FormClose(object sender, FormClosingEventArgs e) {
-            WindowsApi.UnregisterHotKey(Handle, _windowId);
+            foreach (var id in _windowId) {
+                WindowsApi.UnregisterHotKey(Handle, id);
+            }
             if (clipboardButton.Checked)
                 _registryKey.SetValue("LastPath", "*" + folderTextBox.Text);
             else
@@ -326,8 +330,22 @@ namespace AeroShot {
             base.WndProc(ref m);
 
             if (m.Msg == WM_HOTKEY) {
+                if (_busyCapturing)
+                    return;
                 ScreenshotTask info = GetParamteresFromUI(true);
-                _worker = new Thread(() => Screenshot.CaptureWindow(ref info)) {
+                var deferred = (m.LParam.ToInt32() & (MOD_ALT | MOD_CONTROL)) == (MOD_ALT | MOD_CONTROL);
+                _busyCapturing = true;
+                _worker = new Thread(() =>
+                {
+                    if (deferred)
+                        Thread.Sleep(TimeSpan.FromSeconds(3));
+                    try {
+                        Screenshot.CaptureWindow(ref info);
+                    }
+                    finally {
+                        _busyCapturing = false;
+                    }
+                }) {                
                     IsBackground = true
                 };
                 _worker.SetApartmentState(ApartmentState.STA);
