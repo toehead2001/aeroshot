@@ -50,7 +50,7 @@ namespace AeroShot {
 
             if (WindowsApi.DwmIsCompositionEnabled(ref _dwmComposited) == 0) {
                 if (_dwmComposited) {
-                    ssButton.Location = new Point(ssButton.Location.X, 310);
+                    ssButton.Location = new Point(ssButton.Location.X, 370);
                     var margin = new WindowsMargins(0, 0, 0, 35);
                     WindowsApi.DwmExtendFrameIntoClientArea(Handle, ref margin);
                 }
@@ -107,13 +107,24 @@ namespace AeroShot {
                 colourHexBox.Text = hex.ToString();
             } else
                 opaqueType.SelectedIndex = 0;
+
             if ((value = _registryKey.GetValue("CapturePointer")) != null &&
                 value.GetType() == (typeof (int)))
                 mouseCheckbox.Checked = ((int) value & 1) == 1;
 
+            if ((value = _registryKey.GetValue("Delay")) != null &&
+                value.GetType() == (typeof(long))) {
+                var b = new byte[8];
+                for (int i = 0; i < 8; i++)
+                    b[i] = (byte)(((long)value >> (i * 8)) & 0xff);
+                delayCheckbox.Checked = (b[0] & 1) == 1;
+                delaySeconds.Value = b[1];
+            }
+
             groupBox1.Enabled = resizeCheckbox.Checked;
             groupBox2.Enabled = opaqueCheckbox.Checked;
             groupBox3.Enabled = mouseCheckbox.Checked;
+            groupBox4.Enabled = delayCheckbox.Checked;
         }
 
         private void ScreenshotButtonClick(object sender, EventArgs e)
@@ -165,6 +176,11 @@ namespace AeroShot {
 
         private void MouseCheckboxStateChange(object sender, EventArgs e) {
             groupBox3.Enabled = mouseCheckbox.Checked;
+        }
+
+        private void DelayCheckboxStateChange(object sender, EventArgs e)
+        {
+            groupBox4.Enabled = delayCheckbox.Checked;
         }
 
         private void ClipboardButtonStateChange(object sender, EventArgs e) {
@@ -282,6 +298,15 @@ namespace AeroShot {
             _registryKey.SetValue("CapturePointer",
                                   mouseCheckbox.Checked ? 1 : 0,
                                   RegistryValueKind.DWord);
+
+            // Save delay settings in an 8-byte long
+            b = new byte[8];
+            b[0] = (byte)(delayCheckbox.Checked ? 1 : 0);
+
+            b[1] = (byte)(((int)delaySeconds.Value) & 0xff);
+
+            data = BitConverter.ToInt64(b, 0);
+            _registryKey.SetValue("Delay", data, RegistryValueKind.QWord);
         }
 
         private void FormSizeChange(object sender, EventArgs e) {
@@ -333,12 +358,14 @@ namespace AeroShot {
                 if (_busyCapturing)
                     return;
                 ScreenshotTask info = GetParamteresFromUI(true);
-                var deferred = (m.LParam.ToInt32() & (MOD_ALT | MOD_CONTROL)) == (MOD_ALT | MOD_CONTROL);
+                var CtrlAlt = (m.LParam.ToInt32() & (MOD_ALT | MOD_CONTROL)) == (MOD_ALT | MOD_CONTROL);
                 _busyCapturing = true;
                 _worker = new Thread(() =>
                 {
-                    if (deferred)
+                    if (CtrlAlt)
                         Thread.Sleep(TimeSpan.FromSeconds(3));
+                    else if (delayCheckbox.Checked)
+                        Thread.Sleep(TimeSpan.FromSeconds((double)delaySeconds.Value));
                     try {
                         Screenshot.CaptureWindow(ref info);
                     }
@@ -355,11 +382,11 @@ namespace AeroShot {
                 WindowsApi.DwmIsCompositionEnabled(ref _dwmComposited);
 
                 if (_dwmComposited) {
-                    ssButton.Location = new Point(ssButton.Location.X, 310);
+                    ssButton.Location = new Point(ssButton.Location.X, 370);
                     var margin = new WindowsMargins(0, 0, 0, 35);
                     WindowsApi.DwmExtendFrameIntoClientArea(Handle, ref margin);
                 } else
-                    ssButton.Location = new Point(ssButton.Location.X, 305);
+                    ssButton.Location = new Point(ssButton.Location.X, 365);
             }
         }
 

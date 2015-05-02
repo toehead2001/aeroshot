@@ -50,6 +50,11 @@ namespace AeroShot {
         private System.Windows.Forms.CheckBox mouseCheckbox;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.Label labelMouse;
+        private System.Windows.Forms.CheckBox delayCheckbox;
+        private System.Windows.Forms.GroupBox groupBox4;
+        private System.Windows.Forms.Label labelDelay;
+        private System.Windows.Forms.NumericUpDown delaySeconds;
+        private System.Windows.Forms.Label label6;
 
         #region Windows Form Designer generated code
 
@@ -88,13 +93,20 @@ namespace AeroShot {
             this.mouseCheckbox = new System.Windows.Forms.CheckBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.labelMouse = new System.Windows.Forms.Label();
+            this.delayCheckbox = new System.Windows.Forms.CheckBox();
+            this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.labelDelay = new System.Windows.Forms.Label();
+            this.delaySeconds = new System.Windows.Forms.NumericUpDown();
+            this.label6 = new System.Windows.Forms.Label();
             this.ssButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.windowHeight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.windowWidth)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.checkerValue)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.delaySeconds)).BeginInit();
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBox3.SuspendLayout();
+            this.groupBox4.SuspendLayout();
             this.SuspendLayout();
             // 
             // windowList
@@ -463,10 +475,76 @@ namespace AeroShot {
             this.labelMouse.Text = "The system mouse pointer will be preserved in screenshots when the Alt +\r\nPrint S" +
     "creen key combination is used to capture.";
             // 
+            // delayCheckbox
+            // 
+            this.delayCheckbox.AutoSize = true;
+            this.delayCheckbox.BackColor = System.Drawing.Color.Transparent;
+            this.delayCheckbox.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.delayCheckbox.Location = new System.Drawing.Point(19, 300);
+            this.delayCheckbox.Name = "delayCheckbox";
+            this.delayCheckbox.Size = new System.Drawing.Size(145, 17);
+            this.delayCheckbox.TabIndex = 28;
+            this.delayCheckbox.Text = "Delay on Hotkey";
+            this.delayCheckbox.UseVisualStyleBackColor = false;
+            this.delayCheckbox.CheckedChanged += new System.EventHandler(this.DelayCheckboxStateChange);
+            // 
+            // delaySeconds
+            // 
+            this.delaySeconds.Location = new System.Drawing.Point(327, 25);
+            this.delaySeconds.Maximum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.delaySeconds.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.delaySeconds.Name = "delaySeconds";
+            this.delaySeconds.Size = new System.Drawing.Size(40, 20);
+            this.delaySeconds.TabIndex = 23;
+            this.delaySeconds.Value = new decimal(new int[] {
+            3,
+            0,
+            0,
+            0});
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(375, 27);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(18, 13);
+            this.label6.TabIndex = 24;
+            this.label6.Text = "sec";
+            // 
+            // groupBox4
+            // 
+            this.groupBox4.Controls.Add(this.labelDelay);
+            this.groupBox4.Controls.Add(this.delaySeconds);
+            this.groupBox4.Controls.Add(this.label6);
+            this.groupBox4.Location = new System.Drawing.Point(12, 300);
+            this.groupBox4.Name = "groupBox4";
+            this.groupBox4.Size = new System.Drawing.Size(405, 55);
+            this.groupBox4.TabIndex = 29;
+            this.groupBox4.TabStop = false;
+            // 
+            // labelDelay
+            // 
+            this.labelDelay.AutoSize = true;
+            this.labelDelay.BackColor = System.Drawing.Color.Transparent;
+            this.labelDelay.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelDelay.Location = new System.Drawing.Point(6, 20);
+            this.labelDelay.Name = "labelDelay";
+            this.labelDelay.Size = new System.Drawing.Size(387, 26);
+            this.labelDelay.TabIndex = 30;
+            this.labelDelay.Text = "Adds a delay before screenshots are taken when the\r\nAlt + Print S" +
+    "creen key combination is used to capture.";
+            // 
             // ssButton
             // 
             this.ssButton.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ssButton.Location = new System.Drawing.Point(140, 305);
+            this.ssButton.Location = new System.Drawing.Point(140, 365);
             this.ssButton.Name = "ssButton";
             this.ssButton.Size = new System.Drawing.Size(150, 30);
             this.ssButton.TabIndex = 28;
@@ -479,11 +557,12 @@ namespace AeroShot {
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.SystemColors.Window;
-            this.ClientSize = new System.Drawing.Size(430, 340);
+            this.ClientSize = new System.Drawing.Size(430, 400);
             this.Controls.Add(this.ssButton);
             this.Controls.Add(this.resizeCheckbox);
             this.Controls.Add(this.opaqueCheckbox);
             this.Controls.Add(this.mouseCheckbox);
+            this.Controls.Add(this.delayCheckbox);
             this.Controls.Add(this.folderTextBox);
             this.Controls.Add(this.bButton);
             this.Controls.Add(this.rButton);
@@ -496,6 +575,7 @@ namespace AeroShot {
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox3);
+            this.Controls.Add(this.groupBox4);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.Name = "MainForm";
@@ -507,6 +587,7 @@ namespace AeroShot {
             ((System.ComponentModel.ISupportInitialize)(this.windowHeight)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.windowWidth)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.checkerValue)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.delaySeconds)).EndInit();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.groupBox1.ResumeLayout(false);
