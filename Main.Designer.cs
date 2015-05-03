@@ -28,7 +28,6 @@ namespace AeroShot {
         private System.Windows.Forms.TextBox folderTextBox;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label labelResize;
         private System.Windows.Forms.Label labelX;
@@ -38,11 +37,8 @@ namespace AeroShot {
         private System.Windows.Forms.Label labelHash;
         private System.Windows.Forms.CheckBox opaqueCheckbox;
         private System.Windows.Forms.ComboBox opaqueType;
-        private System.Windows.Forms.Button rButton;
-        private System.Windows.Forms.Button ssButton;
         private System.Windows.Forms.CheckBox resizeCheckbox;
         private System.Windows.Forms.NumericUpDown windowHeight;
-        private System.Windows.Forms.ComboBox windowList;
         private System.Windows.Forms.NumericUpDown windowWidth;
         private System.Windows.Forms.RadioButton diskButton;
         private System.Windows.Forms.Label label3;
@@ -63,10 +59,7 @@ namespace AeroShot {
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
-            this.windowList = new System.Windows.Forms.ComboBox();
-            this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.rButton = new System.Windows.Forms.Button();
             this.folderTextBox = new System.Windows.Forms.TextBox();
             this.bButton = new System.Windows.Forms.Button();
             this.folderSelection = new System.Windows.Forms.FolderBrowserDialog();
@@ -98,7 +91,6 @@ namespace AeroShot {
             this.labelDelay = new System.Windows.Forms.Label();
             this.delaySeconds = new System.Windows.Forms.NumericUpDown();
             this.label6 = new System.Windows.Forms.Label();
-            this.ssButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.windowHeight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.windowWidth)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.checkerValue)).BeginInit();
@@ -108,27 +100,6 @@ namespace AeroShot {
             this.groupBox3.SuspendLayout();
             this.groupBox4.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // windowList
-            // 
-            this.windowList.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.windowList.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.windowList.FormattingEnabled = true;
-            this.windowList.Location = new System.Drawing.Point(12, 25);
-            this.windowList.Name = "windowList";
-            this.windowList.Size = new System.Drawing.Size(309, 21);
-            this.windowList.TabIndex = 1;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.BackColor = System.Drawing.Color.Transparent;
-            this.label1.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(9, 9);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(398, 13);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Select window to capture, or press Alt + Print Screen over an active window.";
             // 
             // label2
             // 
@@ -140,17 +111,6 @@ namespace AeroShot {
             this.label2.Size = new System.Drawing.Size(108, 13);
             this.label2.TabIndex = 3;
             this.label2.Text = "Save screenshots to";
-            // 
-            // rButton
-            // 
-            this.rButton.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.rButton.Location = new System.Drawing.Point(327, 23);
-            this.rButton.Name = "rButton";
-            this.rButton.Size = new System.Drawing.Size(90, 23);
-            this.rButton.TabIndex = 2;
-            this.rButton.Text = "Refresh List";
-            this.rButton.UseVisualStyleBackColor = true;
-            this.rButton.Click += new System.EventHandler(this.RefreshButtonClick);
             // 
             // folderTextBox
             // 
@@ -541,37 +501,21 @@ namespace AeroShot {
             this.labelDelay.Text = "Adds a delay before screenshots are taken when the\r\nAlt + Print S" +
     "creen key combination is used to capture.";
             // 
-            // ssButton
-            // 
-            this.ssButton.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ssButton.Location = new System.Drawing.Point(140, 365);
-            this.ssButton.Name = "ssButton";
-            this.ssButton.Size = new System.Drawing.Size(150, 30);
-            this.ssButton.TabIndex = 28;
-            this.ssButton.Text = "Capture Screenshot";
-            this.ssButton.UseCompatibleTextRendering = true;
-            this.ssButton.UseVisualStyleBackColor = true;
-            this.ssButton.Click += new System.EventHandler(this.ScreenshotButtonClick);
-            // 
             // MainForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.SystemColors.Window;
             this.ClientSize = new System.Drawing.Size(430, 400);
-            this.Controls.Add(this.ssButton);
             this.Controls.Add(this.resizeCheckbox);
             this.Controls.Add(this.opaqueCheckbox);
             this.Controls.Add(this.mouseCheckbox);
             this.Controls.Add(this.delayCheckbox);
             this.Controls.Add(this.folderTextBox);
             this.Controls.Add(this.bButton);
-            this.Controls.Add(this.rButton);
-            this.Controls.Add(this.label1);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.clipboardButton);
             this.Controls.Add(this.diskButton);
-            this.Controls.Add(this.windowList);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox3);
@@ -581,9 +525,6 @@ namespace AeroShot {
             this.Name = "MainForm";
             this.Text = "AeroShot 1.3.2";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormClose);
-            this.Shown += new System.EventHandler(this.FormShown);
-            this.SizeChanged += new System.EventHandler(this.FormSizeChange);
-            this.Paint += new System.Windows.Forms.PaintEventHandler(this.OnPaint);
             ((System.ComponentModel.ISupportInitialize)(this.windowHeight)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.windowWidth)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.checkerValue)).EndInit();

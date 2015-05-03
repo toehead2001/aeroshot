@@ -27,7 +27,6 @@ namespace AeroShot {
     public sealed partial class MainForm : Form {
         private const int GWL_STYLE = -16;
         private const int GWL_EXSTYLE = -20;
-        private const int WM_DWMCOMPOSITIONCHANGED = 0x031E;
         private const long WS_CHILD = 0x40000000L;
         private const long WS_EX_APPWINDOW = 0x00040000L;
         private const long WS_EX_TOOLWINDOW = 0x00000080L;
@@ -38,8 +37,6 @@ namespace AeroShot {
         private readonly List<IntPtr> _handleList = new List<IntPtr>();
         private readonly RegistryKey _registryKey;
         private readonly int[] _windowId;
-        private CallBackPtr _callBackPtr;
-        private bool _dwmComposited;
         private Thread _worker;
         private bool _busyCapturing;
 
@@ -47,14 +44,6 @@ namespace AeroShot {
             DoubleBuffered = true;
             Icon = Icon.ExtractAssociatedIcon(Application.ExecutablePath);
             InitializeComponent();
-
-            if (WindowsApi.DwmIsCompositionEnabled(ref _dwmComposited) == 0) {
-                if (_dwmComposited) {
-                    ssButton.Location = new Point(ssButton.Location.X, 370);
-                    var margin = new WindowsMargins(0, 0, 0, 35);
-                    WindowsApi.DwmExtendFrameIntoClientArea(Handle, ref margin);
-                }
-            }
 
             _windowId = new[] { GetHashCode(), GetHashCode() ^ 327 };
             WindowsApi.RegisterHotKey(Handle, _windowId[0], MOD_ALT, (int) Keys.PrintScreen);
@@ -125,28 +114,6 @@ namespace AeroShot {
             groupBox2.Enabled = opaqueCheckbox.Checked;
             groupBox3.Enabled = mouseCheckbox.Checked;
             groupBox4.Enabled = delayCheckbox.Checked;
-        }
-
-        private void ScreenshotButtonClick(object sender, EventArgs e)
-        {
-            Invalidate();
-            Update();
-
-            ScreenshotTask info = GetParamteresFromUI(false);
-            _worker = new Thread(() => Screenshot.CaptureWindow(ref info)) {
-                IsBackground = true
-            };
-            _worker.SetApartmentState(ApartmentState.STA);
-            _worker.Start();
-        }
-
-        private void RefreshButtonClick(object sender, EventArgs e) {
-            _handleList.Clear();
-            windowList.Items.Clear();
-
-            _callBackPtr = ListWindows;
-            WindowsApi.EnumWindows(_callBackPtr, (IntPtr) 0);
-            windowList.SelectedIndex = 0;
         }
 
         private void BrowseButtonClick(object sender, EventArgs e) {
@@ -253,10 +220,6 @@ namespace AeroShot {
                 Color.FromArgb(Convert.ToInt32("FF" + colourHexBox.Text, 16));
         }
 
-        private void FormShown(object sender, EventArgs e) {
-            RefreshButtonClick(null, null);
-        }
-
         private void FormClose(object sender, FormClosingEventArgs e) {
             foreach (var id in _windowId) {
                 WindowsApi.UnregisterHotKey(Handle, id);
@@ -309,55 +272,13 @@ namespace AeroShot {
             _registryKey.SetValue("Delay", data, RegistryValueKind.QWord);
         }
 
-        private void FormSizeChange(object sender, EventArgs e) {
-            if (WindowState == FormWindowState.Normal) {
-                Invalidate();
-                Update();
-            }
-        }
-
-        private void OnPaint(object sender, PaintEventArgs e) {
-            if (_dwmComposited) {
-                var rc = new Rectangle(0, ClientSize.Height - 35,
-                                       ClientSize.Width, 35);
-                IntPtr destdc = e.Graphics.GetHdc();
-                IntPtr memdc = WindowsApi.CreateCompatibleDC(destdc);
-                IntPtr bitmapOld = IntPtr.Zero;
-                var dib = new BitmapInfo {
-                    biHeight = -(rc.Bottom - rc.Top),
-                    biWidth = rc.Right - rc.Left,
-                    biPlanes = 1,
-                    biSize = Marshal.SizeOf(typeof (BitmapInfo)),
-                    biBitCount = 32,
-                    biCompression = 0
-                };
-                if (WindowsApi.SaveDC(memdc) != 0) {
-                    IntPtr tmp;
-                    IntPtr bitmap = WindowsApi.CreateDIBSection(memdc, ref dib,
-                                                                0, out tmp,
-                                                                IntPtr.Zero, 0);
-                    if (!(bitmap == IntPtr.Zero)) {
-                        bitmapOld = WindowsApi.SelectObject(memdc, bitmap);
-                        WindowsApi.BitBlt(destdc, rc.Left, rc.Top,
-                                          rc.Right - rc.Left, rc.Bottom - rc.Top,
-                                          memdc, 0, 0,
-                                          CopyPixelOperation.SourceCopy);
-                    }
-                    WindowsApi.SelectObject(memdc, bitmapOld);
-                    WindowsApi.DeleteObject(bitmap);
-                    WindowsApi.DeleteDC(memdc);
-                }
-                e.Graphics.ReleaseHdc(destdc);
-            }
-        }
-
         protected override void WndProc(ref Message m) {
             base.WndProc(ref m);
 
             if (m.Msg == WM_HOTKEY) {
                 if (_busyCapturing)
                     return;
-                ScreenshotTask info = GetParamteresFromUI(true);
+                ScreenshotTask info = GetParamteresFromUI();
                 var CtrlAlt = (m.LParam.ToInt32() & (MOD_ALT | MOD_CONTROL)) == (MOD_ALT | MOD_CONTROL);
                 _busyCapturing = true;
                 _worker = new Thread(() =>
@@ -378,19 +299,9 @@ namespace AeroShot {
                 _worker.SetApartmentState(ApartmentState.STA);
                 _worker.Start();
             }
-            if (m.Msg == WM_DWMCOMPOSITIONCHANGED) {
-                WindowsApi.DwmIsCompositionEnabled(ref _dwmComposited);
-
-                if (_dwmComposited) {
-                    ssButton.Location = new Point(ssButton.Location.X, 370);
-                    var margin = new WindowsMargins(0, 0, 0, 35);
-                    WindowsApi.DwmExtendFrameIntoClientArea(Handle, ref margin);
-                } else
-                    ssButton.Location = new Point(ssButton.Location.X, 365);
-            }
         }
 
-        private ScreenshotTask GetParamteresFromUI(bool useForegroundWindow) {
+        private ScreenshotTask GetParamteresFromUI() {
             var type = ScreenshotTask.BackgroundType.Transparent;
             if (opaqueCheckbox.Checked && opaqueType.SelectedIndex == 0)
                 type = ScreenshotTask.BackgroundType.Checkerboard;
@@ -399,38 +310,12 @@ namespace AeroShot {
 
             return
                 new ScreenshotTask(
-                    useForegroundWindow
-                        ? WindowsApi.GetForegroundWindow()
-                        : _handleList[windowList.SelectedIndex],
+                    WindowsApi.GetForegroundWindow(),
                     clipboardButton.Checked, folderTextBox.Text,
                     resizeCheckbox.Checked, (int) windowWidth.Value,
                     (int) windowHeight.Value, type, colourDialog.Color,
                     (int) checkerValue.Value,
-                    useForegroundWindow && mouseCheckbox.Checked);
-        }
-
-        private bool ListWindows(IntPtr hWnd, int lParam) {
-            if (!WindowsApi.IsWindowVisible(hWnd))
-                return true;
-            if ((WindowsApi.GetWindowLong(hWnd, GWL_EXSTYLE) & WS_EX_APPWINDOW) !=
-                WS_EX_APPWINDOW) {
-                if (WindowsApi.GetWindow(hWnd, GW_OWNER) != IntPtr.Zero)
-                    return true;
-                if ((WindowsApi.GetWindowLong(hWnd, GWL_EXSTYLE) &
-                     WS_EX_TOOLWINDOW) == WS_EX_TOOLWINDOW)
-                    return true;
-                if ((WindowsApi.GetWindowLong(hWnd, GWL_STYLE) & WS_CHILD) ==
-                    WS_CHILD)
-                    return true;
-            }
-
-            int length = WindowsApi.GetWindowTextLength(hWnd);
-            var sb = new StringBuilder(length + 1);
-            WindowsApi.GetWindowText(hWnd, sb, sb.Capacity);
-
-            _handleList.Add(hWnd);
-            windowList.Items.Add(sb.ToString());
-            return true;
+                    mouseCheckbox.Checked);
         }
     }
 
