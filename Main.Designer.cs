@@ -73,7 +73,6 @@ namespace AeroShot {
             this.checkerValue = new System.Windows.Forms.NumericUpDown();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.colourHexBox = new System.Windows.Forms.TextBox();
-            this.colourDisplay = new AeroShot.ColourDisplay();
             this.label5 = new System.Windows.Forms.Label();
             this.labelOpaque = new System.Windows.Forms.Label();
             this.labelHash = new System.Windows.Forms.Label();
@@ -91,14 +90,15 @@ namespace AeroShot {
             this.labelDelay = new System.Windows.Forms.Label();
             this.delaySeconds = new System.Windows.Forms.NumericUpDown();
             this.label6 = new System.Windows.Forms.Label();
+            this.colourDisplay = new AeroShot.ColourDisplay();
             ((System.ComponentModel.ISupportInitialize)(this.windowHeight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.windowWidth)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.checkerValue)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.delaySeconds)).BeginInit();
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.delaySeconds)).BeginInit();
             this.SuspendLayout();
             // 
             // label2
@@ -106,7 +106,7 @@ namespace AeroShot {
             this.label2.AutoSize = true;
             this.label2.BackColor = System.Drawing.Color.Transparent;
             this.label2.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(9, 54);
+            this.label2.Location = new System.Drawing.Point(9, 9);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(108, 13);
             this.label2.TabIndex = 3;
@@ -115,7 +115,7 @@ namespace AeroShot {
             // folderTextBox
             // 
             this.folderTextBox.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.folderTextBox.Location = new System.Drawing.Point(12, 70);
+            this.folderTextBox.Location = new System.Drawing.Point(12, 25);
             this.folderTextBox.Name = "folderTextBox";
             this.folderTextBox.Size = new System.Drawing.Size(309, 22);
             this.folderTextBox.TabIndex = 7;
@@ -123,7 +123,7 @@ namespace AeroShot {
             // bButton
             // 
             this.bButton.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.bButton.Location = new System.Drawing.Point(327, 68);
+            this.bButton.Location = new System.Drawing.Point(327, 24);
             this.bButton.Name = "bButton";
             this.bButton.Size = new System.Drawing.Size(90, 23);
             this.bButton.TabIndex = 8;
@@ -141,7 +141,7 @@ namespace AeroShot {
             this.resizeCheckbox.AutoSize = true;
             this.resizeCheckbox.BackColor = System.Drawing.Color.Transparent;
             this.resizeCheckbox.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.resizeCheckbox.Location = new System.Drawing.Point(19, 97);
+            this.resizeCheckbox.Location = new System.Drawing.Point(19, 53);
             this.resizeCheckbox.Name = "resizeCheckbox";
             this.resizeCheckbox.Size = new System.Drawing.Size(103, 17);
             this.resizeCheckbox.TabIndex = 9;
@@ -151,7 +151,6 @@ namespace AeroShot {
             // 
             // windowHeight
             // 
-            this.windowHeight.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.windowHeight.Location = new System.Drawing.Point(338, 25);
             this.windowHeight.Maximum = new decimal(new int[] {
             16777215,
@@ -164,7 +163,7 @@ namespace AeroShot {
             0,
             0});
             this.windowHeight.Name = "windowHeight";
-            this.windowHeight.Size = new System.Drawing.Size(60, 22);
+            this.windowHeight.Size = new System.Drawing.Size(60, 20);
             this.windowHeight.TabIndex = 14;
             this.windowHeight.Value = new decimal(new int[] {
             480,
@@ -184,7 +183,6 @@ namespace AeroShot {
             // 
             // windowWidth
             // 
-            this.windowWidth.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.windowWidth.Location = new System.Drawing.Point(262, 25);
             this.windowWidth.Maximum = new decimal(new int[] {
             16777215,
@@ -197,7 +195,7 @@ namespace AeroShot {
             0,
             0});
             this.windowWidth.Name = "windowWidth";
-            this.windowWidth.Size = new System.Drawing.Size(60, 22);
+            this.windowWidth.Size = new System.Drawing.Size(60, 20);
             this.windowWidth.TabIndex = 12;
             this.windowWidth.Value = new decimal(new int[] {
             640,
@@ -210,7 +208,7 @@ namespace AeroShot {
             this.opaqueCheckbox.AutoSize = true;
             this.opaqueCheckbox.BackColor = System.Drawing.Color.Transparent;
             this.opaqueCheckbox.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.opaqueCheckbox.Location = new System.Drawing.Point(19, 158);
+            this.opaqueCheckbox.Location = new System.Drawing.Point(19, 114);
             this.opaqueCheckbox.Name = "opaqueCheckbox";
             this.opaqueCheckbox.Size = new System.Drawing.Size(134, 17);
             this.opaqueCheckbox.TabIndex = 15;
@@ -275,7 +273,7 @@ namespace AeroShot {
             this.groupBox2.Controls.Add(this.opaqueType);
             this.groupBox2.Controls.Add(this.labelOpaque);
             this.groupBox2.Controls.Add(this.labelHash);
-            this.groupBox2.Location = new System.Drawing.Point(12, 158);
+            this.groupBox2.Location = new System.Drawing.Point(12, 114);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(405, 76);
             this.groupBox2.TabIndex = 16;
@@ -291,15 +289,6 @@ namespace AeroShot {
             this.colourHexBox.TabIndex = 21;
             this.colourHexBox.Text = "FFFFFF";
             this.colourHexBox.TextChanged += new System.EventHandler(this.ColourTextboxTextChange);
-            // 
-            // colourDisplay
-            // 
-            this.colourDisplay.Color = System.Drawing.Color.White;
-            this.colourDisplay.Location = new System.Drawing.Point(327, 46);
-            this.colourDisplay.Name = "colourDisplay";
-            this.colourDisplay.Size = new System.Drawing.Size(72, 19);
-            this.colourDisplay.TabIndex = 22;
-            this.colourDisplay.Click += new System.EventHandler(this.ColourDisplayClick);
             // 
             // label5
             // 
@@ -339,7 +328,7 @@ namespace AeroShot {
             this.groupBox1.Controls.Add(this.windowHeight);
             this.groupBox1.Controls.Add(this.windowWidth);
             this.groupBox1.Controls.Add(this.labelX);
-            this.groupBox1.Location = new System.Drawing.Point(12, 97);
+            this.groupBox1.Location = new System.Drawing.Point(12, 53);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(405, 55);
             this.groupBox1.TabIndex = 10;
@@ -367,7 +356,7 @@ namespace AeroShot {
             this.diskButton.AutoSize = true;
             this.diskButton.BackColor = System.Drawing.Color.Transparent;
             this.diskButton.Font = new System.Drawing.Font("Segoe UI", 8.25F);
-            this.diskButton.Location = new System.Drawing.Point(118, 52);
+            this.diskButton.Location = new System.Drawing.Point(118, 7);
             this.diskButton.Name = "diskButton";
             this.diskButton.Size = new System.Drawing.Size(46, 17);
             this.diskButton.TabIndex = 4;
@@ -381,7 +370,7 @@ namespace AeroShot {
             this.label3.AutoSize = true;
             this.label3.BackColor = System.Drawing.Color.Transparent;
             this.label3.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(160, 54);
+            this.label3.Location = new System.Drawing.Point(160, 9);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(18, 13);
             this.label3.TabIndex = 5;
@@ -392,7 +381,7 @@ namespace AeroShot {
             this.clipboardButton.AutoSize = true;
             this.clipboardButton.BackColor = System.Drawing.Color.Transparent;
             this.clipboardButton.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.clipboardButton.Location = new System.Drawing.Point(180, 52);
+            this.clipboardButton.Location = new System.Drawing.Point(180, 7);
             this.clipboardButton.Name = "clipboardButton";
             this.clipboardButton.Size = new System.Drawing.Size(74, 17);
             this.clipboardButton.TabIndex = 6;
@@ -406,7 +395,7 @@ namespace AeroShot {
             this.mouseCheckbox.AutoSize = true;
             this.mouseCheckbox.BackColor = System.Drawing.Color.Transparent;
             this.mouseCheckbox.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.mouseCheckbox.Location = new System.Drawing.Point(19, 240);
+            this.mouseCheckbox.Location = new System.Drawing.Point(19, 196);
             this.mouseCheckbox.Name = "mouseCheckbox";
             this.mouseCheckbox.Size = new System.Drawing.Size(145, 17);
             this.mouseCheckbox.TabIndex = 25;
@@ -417,9 +406,9 @@ namespace AeroShot {
             // groupBox3
             // 
             this.groupBox3.Controls.Add(this.labelMouse);
-            this.groupBox3.Location = new System.Drawing.Point(12, 240);
+            this.groupBox3.Location = new System.Drawing.Point(12, 196);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(405, 55);
+            this.groupBox3.Size = new System.Drawing.Size(405, 42);
             this.groupBox3.TabIndex = 26;
             this.groupBox3.TabStop = false;
             // 
@@ -430,23 +419,44 @@ namespace AeroShot {
             this.labelMouse.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelMouse.Location = new System.Drawing.Point(6, 20);
             this.labelMouse.Name = "labelMouse";
-            this.labelMouse.Size = new System.Drawing.Size(387, 26);
+            this.labelMouse.Size = new System.Drawing.Size(310, 13);
             this.labelMouse.TabIndex = 27;
-            this.labelMouse.Text = "The system mouse pointer will be preserved in screenshots when the Alt +\r\nPrint S" +
-    "creen key combination is used to capture.";
+            this.labelMouse.Text = "The system mouse pointer will be preserved in screenshots.";
             // 
             // delayCheckbox
             // 
             this.delayCheckbox.AutoSize = true;
             this.delayCheckbox.BackColor = System.Drawing.Color.Transparent;
             this.delayCheckbox.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.delayCheckbox.Location = new System.Drawing.Point(19, 300);
+            this.delayCheckbox.Location = new System.Drawing.Point(19, 244);
             this.delayCheckbox.Name = "delayCheckbox";
-            this.delayCheckbox.Size = new System.Drawing.Size(145, 17);
+            this.delayCheckbox.Size = new System.Drawing.Size(96, 17);
             this.delayCheckbox.TabIndex = 28;
-            this.delayCheckbox.Text = "Delay on Hotkey";
+            this.delayCheckbox.Text = "Delay capture";
             this.delayCheckbox.UseVisualStyleBackColor = false;
             this.delayCheckbox.CheckedChanged += new System.EventHandler(this.DelayCheckboxStateChange);
+            // 
+            // groupBox4
+            // 
+            this.groupBox4.Controls.Add(this.labelDelay);
+            this.groupBox4.Controls.Add(this.delaySeconds);
+            this.groupBox4.Controls.Add(this.label6);
+            this.groupBox4.Location = new System.Drawing.Point(12, 244);
+            this.groupBox4.Name = "groupBox4";
+            this.groupBox4.Size = new System.Drawing.Size(405, 55);
+            this.groupBox4.TabIndex = 29;
+            this.groupBox4.TabStop = false;
+            // 
+            // labelDelay
+            // 
+            this.labelDelay.AutoSize = true;
+            this.labelDelay.BackColor = System.Drawing.Color.Transparent;
+            this.labelDelay.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelDelay.Location = new System.Drawing.Point(6, 20);
+            this.labelDelay.Name = "labelDelay";
+            this.labelDelay.Size = new System.Drawing.Size(244, 13);
+            this.labelDelay.TabIndex = 30;
+            this.labelDelay.Text = "Adds a delay before screenshots are captured.";
             // 
             // delaySeconds
             // 
@@ -469,43 +479,31 @@ namespace AeroShot {
             0,
             0,
             0});
+            // 
             // label6
             // 
             this.label6.AutoSize = true;
             this.label6.Location = new System.Drawing.Point(375, 27);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(18, 13);
+            this.label6.Size = new System.Drawing.Size(24, 13);
             this.label6.TabIndex = 24;
             this.label6.Text = "sec";
             // 
-            // groupBox4
+            // colourDisplay
             // 
-            this.groupBox4.Controls.Add(this.labelDelay);
-            this.groupBox4.Controls.Add(this.delaySeconds);
-            this.groupBox4.Controls.Add(this.label6);
-            this.groupBox4.Location = new System.Drawing.Point(12, 300);
-            this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(405, 55);
-            this.groupBox4.TabIndex = 29;
-            this.groupBox4.TabStop = false;
-            // 
-            // labelDelay
-            // 
-            this.labelDelay.AutoSize = true;
-            this.labelDelay.BackColor = System.Drawing.Color.Transparent;
-            this.labelDelay.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelDelay.Location = new System.Drawing.Point(6, 20);
-            this.labelDelay.Name = "labelDelay";
-            this.labelDelay.Size = new System.Drawing.Size(387, 26);
-            this.labelDelay.TabIndex = 30;
-            this.labelDelay.Text = "Adds a delay before screenshots are taken when the\r\nAlt + Print S" +
-    "creen key combination is used to capture.";
+            this.colourDisplay.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.colourDisplay.Color = System.Drawing.Color.White;
+            this.colourDisplay.Location = new System.Drawing.Point(327, 46);
+            this.colourDisplay.Name = "colourDisplay";
+            this.colourDisplay.Size = new System.Drawing.Size(72, 19);
+            this.colourDisplay.TabIndex = 22;
+            this.colourDisplay.Click += new System.EventHandler(this.ColourDisplayClick);
             // 
             // MainForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.SystemColors.Window;
-            this.ClientSize = new System.Drawing.Size(430, 400);
+            this.ClientSize = new System.Drawing.Size(430, 310);
             this.Controls.Add(this.resizeCheckbox);
             this.Controls.Add(this.opaqueCheckbox);
             this.Controls.Add(this.mouseCheckbox);
@@ -523,18 +521,20 @@ namespace AeroShot {
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.Name = "MainForm";
-            this.Text = "AeroShot 1.3.2";
+            this.Text = "Settings";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormClose);
             ((System.ComponentModel.ISupportInitialize)(this.windowHeight)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.windowWidth)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.checkerValue)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.delaySeconds)).EndInit();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
+            this.groupBox4.ResumeLayout(false);
+            this.groupBox4.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.delaySeconds)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 

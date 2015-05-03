@@ -321,7 +321,7 @@ namespace AeroShot {
 
     public class ColourDisplay : UserControl {
         private readonly SolidBrush _border =
-            new SolidBrush(SystemColors.ControlDark);
+            new SolidBrush(SystemColors.Window);
 
         private SolidBrush _brush;
         private Color _colour = Color.Black;
@@ -339,10 +339,10 @@ namespace AeroShot {
 
         protected override void OnPaint(PaintEventArgs e) {
             Rectangle rect = e.ClipRectangle;
-            rect.X = 2;
-            rect.Y = 2;
-            rect.Width -= 4;
-            rect.Height -= 4;
+            rect.X = 1;
+            rect.Y = 1;
+            rect.Width -= 2;
+            rect.Height -= 2;
 
             if (Enabled)
                 _brush = new SolidBrush(_colour);
