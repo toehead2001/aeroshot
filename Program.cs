@@ -34,6 +34,16 @@ namespace AeroShot
 		[STAThread]
 		private static void Main()
 		{
+            bool isFirstInstance;
+
+            // set if truly first instance:
+            var mutex = new System.Threading.Mutex(true, "AeroShot", out isFirstInstance);
+
+            if (!isFirstInstance)
+            {
+                return;
+            }
+
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
 			Application.Run(new MainForm());
