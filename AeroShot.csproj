@@ -56,6 +56,9 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Hotkeys.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Main.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -64,6 +67,10 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Screenshot.cs" />
+    <Compile Include="Settings.cs" />
+    <Compile Include="Tray.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="UnsafeBitmap.cs" />
     <Compile Include="WindowsAPI.cs" />
     <Content Include="icon.ico" />

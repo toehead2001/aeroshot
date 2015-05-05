@@ -1,4 +1,5 @@
 ﻿/*  AeroShot - Transparent screenshot utility for Windows
+	Copyright (C) 2015 toe_head2001
 	Copyright (C) 2012 Caleb Joseph
 
 	AeroShot is free software: you can redistribute it and/or modify
@@ -15,11 +16,9 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Threading;
 using System.Windows.Forms;
 using Microsoft.Win32;
 
@@ -27,112 +26,42 @@ namespace AeroShot
 {
 	public sealed partial class MainForm : Form
 	{
-		private const int GWL_STYLE = -16;
-		private const int GWL_EXSTYLE = -20;
-		private const long WS_CHILD = 0x40000000L;
-		private const long WS_EX_APPWINDOW = 0x00040000L;
-		private const long WS_EX_TOOLWINDOW = 0x00000080L;
-		private const uint GW_OWNER = 4;
-		private const int WM_HOTKEY = 0x0312;
-		private const int MOD_ALT = 0x0001;
-		private const int MOD_CONTROL = 0x0002;
-		private readonly List<IntPtr> _handleList = new List<IntPtr>();
 		private readonly RegistryKey _registryKey;
-		private readonly int[] _windowId;
-		private Thread _worker;
-		private bool _busyCapturing;
+        Settings _settings = new Settings();
 
 		public MainForm()
 		{
 			DoubleBuffered = true;
-			Icon = Icon.ExtractAssociatedIcon(Application.ExecutablePath);
 			InitializeComponent();
 
-			_windowId = new[] { GetHashCode(), GetHashCode() ^ 327 };
-			WindowsApi.RegisterHotKey(Handle, _windowId[0], MOD_ALT, (int)Keys.PrintScreen);
-			WindowsApi.RegisterHotKey(Handle, _windowId[1], MOD_ALT | MOD_CONTROL, (int)Keys.PrintScreen);
-
-			object value;
-			_registryKey =
-				Registry.CurrentUser.CreateSubKey(@"Software\AeroShot");
-			if ((value = _registryKey.GetValue("LastPath")) != null &&
-				value.GetType() == (typeof(string)))
-			{
-				if (((string)value).Substring(0, 1) == "*")
-				{
-					folderTextBox.Text = ((string)value).Substring(1);
-					clipboardButton.Checked = true;
-				}
-				else
-				{
-					folderTextBox.Text = (string)value;
-					diskButton.Checked = true;
-				}
-			}
-			else
-			{
-				folderTextBox.Text =
-					Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-			}
-
-			if ((value = _registryKey.GetValue("WindowSize")) != null &&
-				value.GetType() == (typeof(long)))
-			{
-				var b = new byte[8];
-				for (int i = 0; i < 8; i++)
-					b[i] = (byte)(((long)value >> (i * 8)) & 0xff);
-				resizeCheckbox.Checked = (b[0] & 1) == 1;
-				windowWidth.Value = b[1] << 16 | b[2] << 8 | b[3];
-				windowHeight.Value = b[4] << 16 | b[5] << 8 | b[6];
-			}
-
-			if ((value = _registryKey.GetValue("Opaque")) != null &&
-				value.GetType() == (typeof(long)))
-			{
-				var b = new byte[8];
-				for (int i = 0; i < 8; i++)
-					b[i] = (byte)(((long)value >> (i * 8)) & 0xff);
-				opaqueCheckbox.Checked = (b[0] & 1) == 1;
-				if ((b[0] & 2) == 2)
-					opaqueType.SelectedIndex = 0;
-				if ((b[0] & 4) == 4)
-					opaqueType.SelectedIndex = 1;
-
-				checkerValue.Value = b[1] + 2;
-
-				var hex = new StringBuilder(6);
-				hex.AppendFormat("{0:X2}", b[2]);
-				hex.AppendFormat("{0:X2}", b[3]);
-				hex.AppendFormat("{0:X2}", b[4]);
-				colourHexBox.Text = hex.ToString();
-			}
-			else
-				opaqueType.SelectedIndex = 0;
-
-			if ((value = _registryKey.GetValue("CapturePointer")) != null &&
-				value.GetType() == (typeof(int)))
-				mouseCheckbox.Checked = ((int)value & 1) == 1;
-
-			if ((value = _registryKey.GetValue("Delay")) != null &&
-				value.GetType() == (typeof(long)))
-			{
-				var b = new byte[8];
-				for (int i = 0; i < 8; i++)
-					b[i] = (byte)(((long)value >> (i * 8)) & 0xff);
-				delayCheckbox.Checked = (b[0] & 1) == 1;
-				delaySeconds.Value = b[1];
-			}
+            folderTextBox.Text = _settings.folderTextBox;
+            clipboardButton.Checked = _settings.clipboardButton;
+            diskButton.Checked = _settings.diskButton;
+            resizeCheckbox.Checked = _settings.resizeCheckbox;
+            windowWidth.Value = _settings.windowWidth;
+            windowHeight.Value = _settings.windowHeight;
+            opaqueCheckbox.Checked = _settings.opaqueCheckbox;
+            opaqueType.SelectedIndex = _settings.opaqueType;
+            checkerValue.Value = _settings.checkerValue;
+            colourHexBox.Text = _settings.colourHexBox;
+            mouseCheckbox.Checked = _settings.mouseCheckbox;
+            delayCheckbox.Checked = _settings.delayCheckbox;
+            delaySeconds.Value = _settings.delaySeconds;
 
 			groupBox1.Enabled = resizeCheckbox.Checked;
 			groupBox2.Enabled = opaqueCheckbox.Checked;
 			groupBox3.Enabled = mouseCheckbox.Checked;
 			groupBox4.Enabled = delayCheckbox.Checked;
+
+            _registryKey = Registry.CurrentUser.CreateSubKey(@"Software\AeroShot");
 		}
 
 		private void BrowseButtonClick(object sender, EventArgs e)
 		{
 			if (folderSelection.ShowDialog() == DialogResult.OK)
-				folderTextBox.Text = folderSelection.SelectedPath;
+            {
+                folderTextBox.Text = folderSelection.SelectedPath;
+            }
 		}
 
 		private void ColourDisplayClick(object sender, EventArgs e)
@@ -242,18 +171,12 @@ namespace AeroShot
 			if (colourHexBox.TextLength != 6)
 				return;
 
-			colourDisplay.Color =
-				Color.FromArgb(Convert.ToInt32("FF" + colourHexBox.Text, 16));
-			colourDialog.Color =
-				Color.FromArgb(Convert.ToInt32("FF" + colourHexBox.Text, 16));
+			colourDisplay.Color = Color.FromArgb(Convert.ToInt32("FF" + colourHexBox.Text, 16));
+			colourDialog.Color = Color.FromArgb(Convert.ToInt32("FF" + colourHexBox.Text, 16));
 		}
 
-		private void FormClose(object sender, FormClosingEventArgs e)
+        private void OkButtonClick(object sender, EventArgs e)
 		{
-			foreach (var id in _windowId)
-			{
-				WindowsApi.UnregisterHotKey(Handle, id);
-			}
 			if (clipboardButton.Checked)
 				_registryKey.SetValue("LastPath", "*" + folderTextBox.Text);
 			else
@@ -300,59 +223,14 @@ namespace AeroShot
 
 			data = BitConverter.ToInt64(b, 0);
 			_registryKey.SetValue("Delay", data, RegistryValueKind.QWord);
+
+            this.Close();
 		}
 
-		protected override void WndProc(ref Message m)
-		{
-			base.WndProc(ref m);
-
-			if (m.Msg == WM_HOTKEY)
-			{
-				if (_busyCapturing)
-					return;
-				ScreenshotTask info = GetParamteresFromUI();
-				var CtrlAlt = (m.LParam.ToInt32() & (MOD_ALT | MOD_CONTROL)) == (MOD_ALT | MOD_CONTROL);
-				_busyCapturing = true;
-				_worker = new Thread(() =>
-				{
-					if (CtrlAlt)
-						Thread.Sleep(TimeSpan.FromSeconds(3));
-					else if (delayCheckbox.Checked)
-						Thread.Sleep(TimeSpan.FromSeconds((double)delaySeconds.Value));
-					try
-					{
-						Screenshot.CaptureWindow(ref info);
-					}
-					finally
-					{
-						_busyCapturing = false;
-					}
-				})
-				{
-					IsBackground = true
-				};
-				_worker.SetApartmentState(ApartmentState.STA);
-				_worker.Start();
-			}
-		}
-
-		private ScreenshotTask GetParamteresFromUI()
-		{
-			var type = ScreenshotTask.BackgroundType.Transparent;
-			if (opaqueCheckbox.Checked && opaqueType.SelectedIndex == 0)
-				type = ScreenshotTask.BackgroundType.Checkerboard;
-			else if (opaqueCheckbox.Checked && opaqueType.SelectedIndex == 1)
-				type = ScreenshotTask.BackgroundType.SolidColour;
-
-			return
-				new ScreenshotTask(
-					WindowsApi.GetForegroundWindow(),
-					clipboardButton.Checked, folderTextBox.Text,
-					resizeCheckbox.Checked, (int)windowWidth.Value,
-					(int)windowHeight.Value, type, colourDialog.Color,
-					(int)checkerValue.Value,
-					mouseCheckbox.Checked);
-		}
+        private void CancelButtonClick(object sender, EventArgs e)
+        {
+            this.Close();
+        }
 	}
 
 	public class ColourDisplay : UserControl
@@ -394,7 +272,7 @@ namespace AeroShot
 				_brush =
 					new SolidBrush(
 						ControlPaint.Light(Color.FromArgb(grayScale, grayScale,
-														  grayScale)));
+															grayScale)));
 			}
 			e.Graphics.FillRectangle(_border, e.ClipRectangle);
 			e.Graphics.FillRectangle(_brush, rect);
