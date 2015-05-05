@@ -1,4 +1,5 @@
 ﻿/*  AeroShot - Transparent screenshot utility for Windows
+    Copyright (C) 2015 toe_head2001
 	Copyright (C) 2012 Caleb Joseph
 
 	AeroShot is free software: you can redistribute it and/or modify
@@ -19,12 +20,12 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
-[assembly: AssemblyTitle("AeroShot")]
-[assembly: AssemblyProduct("AeroShot")]
+[assembly: AssemblyTitle("AeroShotClassic")]
+[assembly: AssemblyProduct("AeroShotClassic")]
 [assembly: AssemblyDescription("Screenshot capture utility for Windows Aero")]
-[assembly: AssemblyCopyright("© 2012 Caleb Joseph")]
-[assembly: AssemblyVersion("1.3.2.0")]
-[assembly: AssemblyFileVersion("1.3.2.0")]
+[assembly: AssemblyCopyright("© 2015 toe_head2001")]
+[assembly: AssemblyVersion("1.4.0.0")]
+[assembly: AssemblyFileVersion("1.4.0.0")]
 [assembly: ComVisible(false)]
 
 namespace AeroShot

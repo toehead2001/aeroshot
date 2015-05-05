@@ -1,4 +1,5 @@
 ﻿/*  AeroShot - Transparent screenshot utility for Windows
+    Copyright (C) 2015 toe_head2001
 	Copyright (C) 2012 Caleb Joseph
 
 	AeroShot is free software: you can redistribute it and/or modify
@@ -582,7 +583,7 @@ namespace AeroShot
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
 			this.MaximizeBox = false;
 			this.Name = "MainForm";
-			this.Text = "AeroShot 1.3.2";
+			this.Text = "AeroShot Classic v1.4.0";
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormClose);
 			this.Shown += new System.EventHandler(this.FormShown);
 			this.SizeChanged += new System.EventHandler(this.FormSizeChange);
