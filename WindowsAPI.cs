@@ -1,4 +1,5 @@
 ﻿/*  AeroShot - Transparent screenshot utility for Windows
+	Copyright (C) 2015 toe_head2001
 	Copyright (C) 2012 Caleb Joseph
 
 	AeroShot is free software: you can redistribute it and/or modify
@@ -207,6 +208,15 @@ namespace AeroShot
 
 		[DllImport("user32.dll")]
 		internal static extern bool UnregisterHotKey(IntPtr hWnd, int id);
+
+        [DllImport("user32.dll")]
+		internal static extern bool SystemParametersInfo(uint uiAction, uint uiParam, ref int pvParam, uint fWinIni);
+
+		[DllImport("user32.dll")]
+		internal static extern bool SystemParametersInfo(uint uiAction, uint uiParam, uint pvParam, uint fWinIni);
+
+		[DllImport("user32.dll")]
+		internal static extern bool RedrawWindow(IntPtr hWnd, IntPtr lpRectUpdate, IntPtr hrgnUpdate, UInt32 flags);
 
 		[DllImport("gdi32.dll")]
 		internal static extern bool BitBlt(IntPtr hdcDest, int xDest, int yDest,

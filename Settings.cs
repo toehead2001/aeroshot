@@ -37,6 +37,7 @@ namespace AeroShot
         public bool mouseCheckbox;
         public bool delayCheckbox;
         public byte delaySeconds = 3;
+		public bool clearTypeCheckbox;
         private readonly RegistryKey _registryKey;
 
 
@@ -108,6 +109,10 @@ namespace AeroShot
             if ((value = _registryKey.GetValue("CapturePointer")) != null &&
                 value.GetType() == (typeof(int)))
                 mouseCheckbox = ((int)value & 1) == 1;
+
+			if ((value = _registryKey.GetValue("ClearType")) != null &&
+				value.GetType() == (typeof(int)))
+				clearTypeCheckbox = ((int)value & 1) == 1;
 
             if ((value = _registryKey.GetValue("Delay")) != null &&
                 value.GetType() == (typeof(long)))

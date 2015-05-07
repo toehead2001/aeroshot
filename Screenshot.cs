@@ -1,4 +1,5 @@
 ﻿/*  AeroShot - Transparent screenshot utility for Windows
+	Copyright (C) 2015 toe_head2001
 	Copyright (C) 2012 Caleb Joseph
 
 	AeroShot is free software: you can redistribute it and/or modify
@@ -37,6 +38,7 @@ namespace AeroShot
 		public BackgroundType Background;
 		public Color BackgroundColour;
 		public bool CaptureMouse;
+		public bool DisableClearType;
 		public int CheckerboardSize;
 		public bool ClipboardNotDisk;
 		public string DiskSaveDirectory;
@@ -48,7 +50,7 @@ namespace AeroShot
 		public ScreenshotTask(IntPtr window, bool clipboard, string file,
 							  bool resize, int resizeX, int resizeY,
 							  BackgroundType backType, Color backColour,
-							  int checkerSize, bool mouse)
+							  int checkerSize, bool mouse, bool clearType)
 		{
 			WindowHandle = window;
 			ClipboardNotDisk = clipboard;
@@ -60,6 +62,7 @@ namespace AeroShot
 			BackgroundColour = backColour;
 			CheckerboardSize = checkerSize;
 			CaptureMouse = mouse;
+			DisableClearType = clearType;
 		}
 	}
 
@@ -70,6 +73,19 @@ namespace AeroShot
 		private const long WS_SIZEBOX = 0x00040000L;
 		private const uint SWP_SHOWWINDOW = 0x0040;
 
+		private const uint SPI_GETFONTSMOOTHING = 0x004A;
+		private const uint SPI_GETFONTSMOOTHINGTYPE = 0x200A;
+		private const uint SPI_SETFONTSMOOTHINGTYPE = 0x200B;
+		private const uint FE_FONTSMOOTHINGCLEARTYPE = 0x2;
+		private const uint FE_FONTSMOOTHINGSTANDARD = 0x1;
+		private const uint SPIF_UPDATEINIFILE = 0x1;
+		private const uint SPIF_SENDCHANGE = 0x2;
+
+		private const uint RDW_FRAME = 0x0400;
+		private const uint RDW_INVALIDATE = 0x0001;
+		private const uint RDW_UPDATENOW = 0x0100;
+		private const uint RDW_ALLCHILDREN = 0x0080;
+		
 		internal static void CaptureWindow(ref ScreenshotTask data)
 		{
 			IntPtr start = WindowsApi.FindWindow("Button", "Start");
@@ -86,6 +102,13 @@ namespace AeroShot
 						WindowsApi.ShowWindow(start, 0);
 						WindowsApi.ShowWindow(taskbar, 0);
 						Application.DoEvents();
+					}
+					bool ClearTypeToggled = false;
+					if (data.DisableClearType && ClearTypeEnabled())
+					{
+						WindowsApi.SystemParametersInfo(SPI_SETFONTSMOOTHINGTYPE, 0, FE_FONTSMOOTHINGSTANDARD, SPIF_UPDATEINIFILE | SPIF_SENDCHANGE);
+						WindowsApi.RedrawWindow(data.WindowHandle, IntPtr.Zero, IntPtr.Zero, RDW_FRAME | RDW_INVALIDATE | RDW_UPDATENOW | RDW_ALLCHILDREN);
+						ClearTypeToggled = true;
 					}
 					if (WindowsApi.IsIconic(data.WindowHandle))
 					{
@@ -118,6 +141,12 @@ namespace AeroShot
 
 					Bitmap s = CaptureCompositeScreenshot(ref data);
 
+
+					if (ClearTypeToggled)
+					{
+						WindowsApi.SystemParametersInfo(SPI_SETFONTSMOOTHINGTYPE, 0, FE_FONTSMOOTHINGCLEARTYPE, SPIF_UPDATEINIFILE | SPIF_SENDCHANGE);
+						WindowsApi.RedrawWindow(data.WindowHandle, IntPtr.Zero, IntPtr.Zero, RDW_FRAME | RDW_INVALIDATE | RDW_UPDATENOW | RDW_ALLCHILDREN);
+					}
 					// Show the taskbar again
 					if (data.WindowHandle != start &&
 						data.WindowHandle != taskbar)
@@ -220,6 +249,26 @@ namespace AeroShot
 			{
 				MessageBox.Show("Invalid directory chosen.", "Error",
 								MessageBoxButtons.OK, MessageBoxIcon.Error);
+			}
+		}
+
+		private static bool ClearTypeEnabled()
+		{
+			int sv = 0;
+			/* Call to systemparametersinfo to get the font smoothing value. */
+			WindowsApi.SystemParametersInfo(SPI_GETFONTSMOOTHING, 0, ref sv, 0);
+
+			int stv = 0;
+			/* Call to systemparametersinfo to get the font smoothing Type value. */
+			WindowsApi.SystemParametersInfo(SPI_GETFONTSMOOTHINGTYPE, 0, ref stv, 0);
+
+			if (sv > 0 && stv == 2) //if smoothing is on, and is set to cleartype
+			{
+				return true;
+			}
+			else
+			{
+				return false;
 			}
 		}
 

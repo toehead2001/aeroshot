@@ -47,11 +47,13 @@ namespace AeroShot
             mouseCheckbox.Checked = _settings.mouseCheckbox;
             delayCheckbox.Checked = _settings.delayCheckbox;
             delaySeconds.Value = _settings.delaySeconds;
+			clearTypeCheckbox.Checked = _settings.clearTypeCheckbox;
 
 			groupBox1.Enabled = resizeCheckbox.Checked;
 			groupBox2.Enabled = opaqueCheckbox.Checked;
 			groupBox3.Enabled = mouseCheckbox.Checked;
 			groupBox4.Enabled = delayCheckbox.Checked;
+			groupBox5.Enabled = clearTypeCheckbox.Checked;
 
             _registryKey = Registry.CurrentUser.CreateSubKey(@"Software\AeroShot");
 		}
@@ -96,6 +98,11 @@ namespace AeroShot
 		private void DelayCheckboxStateChange(object sender, EventArgs e)
 		{
 			groupBox4.Enabled = delayCheckbox.Checked;
+		}
+
+		private void ClearTypeCheckboxStateChange(object sender, EventArgs e)
+		{
+			groupBox5.Enabled = clearTypeCheckbox.Checked;
 		}
 
 		private void ClipboardButtonStateChange(object sender, EventArgs e)
@@ -214,6 +221,10 @@ namespace AeroShot
 			_registryKey.SetValue("CapturePointer",
 								  mouseCheckbox.Checked ? 1 : 0,
 								  RegistryValueKind.DWord);
+
+			_registryKey.SetValue("ClearType",
+					  clearTypeCheckbox.Checked ? 1 : 0,
+					  RegistryValueKind.DWord);
 
 			// Save delay settings in an 8-byte long
 			b = new byte[8];
