@@ -33,7 +33,9 @@ namespace AeroShot
 		{
 			trayIcon = new NotifyIcon();
 			trayIcon.Text = "AeroShot Mini";
-			trayIcon.Icon = Icon.ExtractAssociatedIcon(Application.ExecutablePath);
+
+			Icon _trayIcon = new Icon(typeof(SysTray), "icon.ico");
+			trayIcon.Icon = new Icon(_trayIcon, 16, 16);
 
 			// Create a tray menu
 			trayMenu = new ContextMenu();
