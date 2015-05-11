@@ -49,7 +49,7 @@ namespace AeroShot
 		public MainForm()
 		{
 			DoubleBuffered = true;
-			Icon = Icon.ExtractAssociatedIcon(Application.ExecutablePath);
+			Icon = new Icon(typeof(MainForm), "icon.ico");
 			InitializeComponent();
 
 			if (WindowsApi.DwmIsCompositionEnabled(ref _dwmComposited) == 0)
