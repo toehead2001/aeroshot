@@ -161,17 +161,6 @@ namespace AeroShot
 		[DllImport("user32.dll")]
 		internal static extern bool GetWindowRect(IntPtr hWnd,
 												  ref WindowsRect rect);
-
-		[DllImport("user32.dll")]
-		internal static extern bool EnumWindows(CallBackPtr lpEnumFunc,
-												IntPtr lParam);
-
-		[DllImport("user32.dll")]
-		internal static extern bool IsIconic(IntPtr hWnd);
-
-		[DllImport("user32.dll")]
-		internal static extern bool IsWindowVisible(IntPtr hWnd);
-
 		[DllImport("user32.dll")]
 		internal static extern long GetWindowLong(IntPtr hWnd, int nIndex);
 
@@ -234,14 +223,6 @@ namespace AeroShot
 
 		[DllImport("gdi32.dll")]
 		internal static extern int SaveDC(IntPtr hdc);
-
-		[DllImport("gdi32.dll")]
-		internal static extern IntPtr CreateDIBSection(IntPtr hdc,
-													   [In] ref BitmapInfo pbmi,
-													   uint pila,
-													   out IntPtr ppvBits,
-													   IntPtr hSection,
-													   uint dwOffset);
 
 		[DllImport("gdi32.dll")]
 		internal static extern IntPtr DeleteObject(IntPtr hDc);

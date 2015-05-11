@@ -110,16 +110,6 @@ namespace AeroShot
 						WindowsApi.RedrawWindow(data.WindowHandle, IntPtr.Zero, IntPtr.Zero, RDW_FRAME | RDW_INVALIDATE | RDW_UPDATENOW | RDW_ALLCHILDREN);
 						ClearTypeToggled = true;
 					}
-					if (WindowsApi.IsIconic(data.WindowHandle))
-					{
-						WindowsApi.ShowWindow(data.WindowHandle, 1);
-						Thread.Sleep(300); // Wait for window to be restored
-					}
-					else
-					{
-						WindowsApi.ShowWindow(data.WindowHandle, 5);
-						Thread.Sleep(100);
-					}
 					WindowsApi.SetForegroundWindow(data.WindowHandle);
 
 					var r = new WindowsRect(0);
