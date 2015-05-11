@@ -1,24 +1,28 @@
 AeroShot is a free (GPLv3) and open source screenshot utility designed for capturing individual windows. It captures screenshots **with full transparency**, such as seen in the Windows Aero visual style. This allows for a clean and professional screenshot, useful for showcasing an application. The entire program is written in C#, heavily utilizing the Windows API.
 
-AeroShot was original developed by Caleb Joseph in 2011, and was inspired by the proprietary [Window Clippings](http://www.windowclippings.com/) program.
+AeroShot was originally developed by Caleb Joseph in 2011, and was inspired by the proprietary [Window Clippings](http://www.windowclippings.com/) program.
 
 Please leave any feature suggestions or bug reports in the issue tracker.
 
-## AeroShot Classic & AeroShot Mini
-My version of AeroShot comes in two flavors: **AeroShot Classic** & **AeroShot Mini**. Both are based on AeroShot's original Free Software source code. See the Changelog below.
+Downloads are available at the bottom of the page.
 
-**AeroShot Classic** is the AeroShot that you know and love, but with added features and GUI enhancements.
+## AeroShot Mini
+AeroShot is dead, long live **AeroShot Mini**!
 
-**AeroShot Mini** runs from the system tray and doesn't have a main window GUI. A settings window is still available if need. Development will be focused here.
+AeroShot Mini is the next generation of the original AeroShot, and is based on its Free Software code base. AeroShot Mini runs from the system tray, and doesn't have a main window GUI. A settings window is still available if need.
+
+If you want the original AeroShot experience with the newer features, **AeroShot Classic** is available. See the comparison table below.
+
 
 Feature | AeroShot Classic | AeroShot Mini
 ------- | ---------------- | -------------
 Send screenshots to the clipboard | **Yes** | **Yes**
 Save screenshots to disk | **Yes** | **Yes**
-Automatically resize windows when capturing screenshots | **Yes** | **Yes**
+Resize windows when capturing screenshots | **Yes** | **Yes**
 Transparent, Opaque, or Checkered backgrounds | **Yes** | **Yes**
 Capture mouse pointer in screenshots | **Yes** | **Yes**
 Delayed screenshot capture when using hotkey | **Yes** | **Yes**
+Disable ClearType while capturing screenshots | **Yes** | **Yes**
 Capture screenshots via GUI | **Yes** | No
 System tray icon | No | **Yes**
 
@@ -31,12 +35,13 @@ Both of these methods will save a transparent or opaque PNG image into the chose
 
 ## Screenshots
 
-### AeroShot Classic
-![AeroShot Classic](https://aeroshot.ml/gfx/classic.png)
-
 ### AeroShot Mini
 ![AeroShot Mini](https://aeroshot.ml/gfx/tray.png)
+
 ![AeroShot Mini - Settings](https://aeroshot.ml/gfx/settings.png)
+
+### AeroShot Classic
+![AeroShot Classic](https://aeroshot.ml/gfx/classic.png)
 
 ## Examples
 These examples have all been captured with AeroShot, using the "Resize window" option. Note how they have been captured with a transparent background, checkerboards have been added to better show this effect.
@@ -49,18 +54,18 @@ These examples have all been captured with AeroShot, using the "Resize window" o
 
 ## Change Log
 ### 1.4.0
-May 2015
-##### Both AeroShot Classic & AeroShot Mini
-* New program icon. Based on icons by ![Yusuke Kamiyamane](http://p.yusukekamiyamane.com/).
-* Small adjustments to the GUI style
+11th May 2015
+##### Both AeroShot Mini & AeroShot Classic
+* New program icon. Based on icons by [Yusuke Kamiyamane](http://p.yusukekamiyamane.com/).
+* Small adjustments to the GUI style.
 * Added option to delay the capturing of screenshots when using the hotkey (1-10 seconds).
-
-##### AeroShot Classic
-* Use a native control for 'Capture Screenshot' button, instead of the custom one made from png images.
+* Added option to temporarily disable ClearType on the target window while the screenshot is being captured.
 
 ##### AeroShot Mini
-* First Release
+* First Release. Runs from system tray icon; screenshot capture via hotkey only.
 
+##### AeroShot Classic
+* Use a native control for the 'Capture Screenshot' button.
 
 ## Change Log from the original AeroShot
 
@@ -70,13 +75,11 @@ May 2015
 * Fixed AeroShot not working correctly on Windows XP.
 * Improved the list of open windows in the user interface, it should now show all windows open on the taskbar.
 
-
 ### 1.3.1
 28th March 2012
 
 * **New capture hotkey**: AeroShot now uses Alt + Print Screen to capture, this resolves conflicts with Windows 8.
 * AeroShot's interface now uses Segoe UI, previously Microsoft Sans Serif was used.
-
 
 ### 1.3
 31st December 2011
@@ -89,13 +92,11 @@ May 2015
 * Improved how the taskbar is hidden and restored on capture.
 * "Take Screenshot" button replaced with a custom button.
 
-
 ### 1.2.1
 8th November 2011
 
 **Changes**:
 * Slightly faster image processing
-
 
 ### 1.2
 10th August 2011
@@ -103,7 +104,6 @@ May 2015
 **Changes**:
 * Taskbar is hidden during capture, this fixes issues when taking screenshots of maximized windows.
 * Increased the margin of the capture area from 40 pixels to 100 pixels. This improves capturing of custom themes with large window drop shadows.
-
 
 ### 1.1
 13th June 2011
@@ -115,15 +115,15 @@ May 2015
 * **Improved Capturing**: Screenshots are now taken much more faster and reliably.
 * **Windows XP support**: AeroShot will now function flawlessly on Windows XP.
 
-
 ### 1.0
 5th June 2011
 
 * **Initial release**
 
 ## Download
-**AeroShot Mini** (recommended):
+**AeroShot Mini** (recommended): [Download](https://aeroshot.ml/releases/?file=asm)
 
-**AeroShot Classic**:
+**AeroShot Classic**: [Download](https://aeroshot.ml/releases/?file=asc)
 
-*Note: User of older version of Windows (XP and Vista) will need to have the [.NET Framework 3.5](http://download.microsoft.com/download/0/6/1/061F001C-8752-4600-A198-53214C69B51F/dotnetfx35setup.exe) installed.*
+*Note: User of older version of Windows (XP and Vista) will need to have the [.NET Framework 3.5](http://download.microsoft.com/download/0/6/1/061F001C-8752-4600-A198-53214C69B51F/dotnetfx35setup.exe) installed.
+Also be aware that I do not test on these older versions of Windows, and they are not offically supported anymore.*
