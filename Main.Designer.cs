@@ -1,5 +1,5 @@
 ﻿/*  AeroShot - Transparent screenshot utility for Windows
-    Copyright (C) 2015 toe_head2001
+	Copyright (C) 2015 toe_head2001
 	Copyright (C) 2012 Caleb Joseph
 
 	AeroShot is free software: you can redistribute it and/or modify
@@ -58,6 +58,9 @@ namespace AeroShot
 		private System.Windows.Forms.Label labelDelay;
 		private System.Windows.Forms.NumericUpDown delaySeconds;
 		private System.Windows.Forms.Label label6;
+		private System.Windows.Forms.GroupBox groupBox5;
+		private System.Windows.Forms.Label labelClearType;
+		private System.Windows.Forms.CheckBox clearTypeCheckbox;
 
 		#region Windows Form Designer generated code
 
@@ -84,7 +87,6 @@ namespace AeroShot
 			this.checkerValue = new System.Windows.Forms.NumericUpDown();
 			this.groupBox2 = new System.Windows.Forms.GroupBox();
 			this.colourHexBox = new System.Windows.Forms.TextBox();
-			this.colourDisplay = new AeroShot.ColourDisplay();
 			this.label5 = new System.Windows.Forms.Label();
 			this.labelOpaque = new System.Windows.Forms.Label();
 			this.labelHash = new System.Windows.Forms.Label();
@@ -102,15 +104,20 @@ namespace AeroShot
 			this.labelDelay = new System.Windows.Forms.Label();
 			this.delaySeconds = new System.Windows.Forms.NumericUpDown();
 			this.label6 = new System.Windows.Forms.Label();
+			this.groupBox5 = new System.Windows.Forms.GroupBox();
+			this.labelClearType = new System.Windows.Forms.Label();
+			this.clearTypeCheckbox = new System.Windows.Forms.CheckBox();
 			this.ssButton = new System.Windows.Forms.Button();
+			this.colourDisplay = new AeroShot.ColourDisplay();
 			((System.ComponentModel.ISupportInitialize)(this.windowHeight)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.windowWidth)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.checkerValue)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.delaySeconds)).BeginInit();
 			this.groupBox2.SuspendLayout();
 			this.groupBox1.SuspendLayout();
 			this.groupBox3.SuspendLayout();
 			this.groupBox4.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.delaySeconds)).BeginInit();
+			this.groupBox5.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// windowList
@@ -336,15 +343,6 @@ namespace AeroShot
 			this.colourHexBox.Text = "FFFFFF";
 			this.colourHexBox.TextChanged += new System.EventHandler(this.ColourTextboxTextChange);
 			// 
-			// colourDisplay
-			// 
-			this.colourDisplay.Color = System.Drawing.Color.White;
-			this.colourDisplay.Location = new System.Drawing.Point(327, 46);
-			this.colourDisplay.Name = "colourDisplay";
-			this.colourDisplay.Size = new System.Drawing.Size(72, 19);
-			this.colourDisplay.TabIndex = 22;
-			this.colourDisplay.Click += new System.EventHandler(this.ColourDisplayClick);
-			// 
 			// label5
 			// 
 			this.label5.AutoSize = true;
@@ -486,11 +484,34 @@ namespace AeroShot
 			this.delayCheckbox.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.delayCheckbox.Location = new System.Drawing.Point(19, 300);
 			this.delayCheckbox.Name = "delayCheckbox";
-			this.delayCheckbox.Size = new System.Drawing.Size(145, 17);
+			this.delayCheckbox.Size = new System.Drawing.Size(110, 17);
 			this.delayCheckbox.TabIndex = 28;
 			this.delayCheckbox.Text = "Delay on Hotkey";
 			this.delayCheckbox.UseVisualStyleBackColor = false;
 			this.delayCheckbox.CheckedChanged += new System.EventHandler(this.DelayCheckboxStateChange);
+			// 
+			// groupBox4
+			// 
+			this.groupBox4.Controls.Add(this.labelDelay);
+			this.groupBox4.Controls.Add(this.delaySeconds);
+			this.groupBox4.Controls.Add(this.label6);
+			this.groupBox4.Location = new System.Drawing.Point(12, 300);
+			this.groupBox4.Name = "groupBox4";
+			this.groupBox4.Size = new System.Drawing.Size(405, 55);
+			this.groupBox4.TabIndex = 29;
+			this.groupBox4.TabStop = false;
+			// 
+			// labelDelay
+			// 
+			this.labelDelay.AutoSize = true;
+			this.labelDelay.BackColor = System.Drawing.Color.Transparent;
+			this.labelDelay.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.labelDelay.Location = new System.Drawing.Point(6, 20);
+			this.labelDelay.Name = "labelDelay";
+			this.labelDelay.Size = new System.Drawing.Size(282, 26);
+			this.labelDelay.TabIndex = 30;
+			this.labelDelay.Text = "Adds a delay before screenshots are taken when the\r\nAlt + Print Screen key combin" +
+	"ation is used to capture.";
 			// 
 			// delaySeconds
 			// 
@@ -513,42 +534,54 @@ namespace AeroShot
 			0,
 			0,
 			0});
+			// 
 			// label6
 			// 
 			this.label6.AutoSize = true;
 			this.label6.Location = new System.Drawing.Point(375, 27);
 			this.label6.Name = "label6";
-			this.label6.Size = new System.Drawing.Size(18, 13);
+			this.label6.Size = new System.Drawing.Size(24, 13);
 			this.label6.TabIndex = 24;
 			this.label6.Text = "sec";
 			// 
-			// groupBox4
+			// groupBox5
 			// 
-			this.groupBox4.Controls.Add(this.labelDelay);
-			this.groupBox4.Controls.Add(this.delaySeconds);
-			this.groupBox4.Controls.Add(this.label6);
-			this.groupBox4.Location = new System.Drawing.Point(12, 300);
-			this.groupBox4.Name = "groupBox4";
-			this.groupBox4.Size = new System.Drawing.Size(405, 55);
-			this.groupBox4.TabIndex = 29;
-			this.groupBox4.TabStop = false;
+			this.groupBox5.Controls.Add(this.labelClearType);
+			this.groupBox5.Location = new System.Drawing.Point(12, 360);
+			this.groupBox5.Name = "groupBox5";
+			this.groupBox5.Size = new System.Drawing.Size(405, 55);
+			this.groupBox5.TabIndex = 26;
+			this.groupBox5.TabStop = false;
 			// 
-			// labelDelay
+			// labelClearType
 			// 
-			this.labelDelay.AutoSize = true;
-			this.labelDelay.BackColor = System.Drawing.Color.Transparent;
-			this.labelDelay.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.labelDelay.Location = new System.Drawing.Point(6, 20);
-			this.labelDelay.Name = "labelDelay";
-			this.labelDelay.Size = new System.Drawing.Size(387, 26);
-			this.labelDelay.TabIndex = 30;
-			this.labelDelay.Text = "Adds a delay before screenshots are taken when the\r\nAlt + Print S" +
-	"creen key combination is used to capture.";
+			this.labelClearType.AutoSize = true;
+			this.labelClearType.BackColor = System.Drawing.Color.Transparent;
+			this.labelClearType.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.labelClearType.Location = new System.Drawing.Point(6, 20);
+			this.labelClearType.Name = "labelClearType";
+			this.labelClearType.Size = new System.Drawing.Size(374, 26);
+			this.labelClearType.TabIndex = 27;
+			this.labelClearType.Text = "ClearType font smoothing will be disabled while screenshots are being \r\ncaptured," +
+	" if it is turned on.";
+			// 
+			// clearTypeCheckbox
+			// 
+			this.clearTypeCheckbox.AutoSize = true;
+			this.clearTypeCheckbox.BackColor = System.Drawing.Color.Transparent;
+			this.clearTypeCheckbox.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.clearTypeCheckbox.Location = new System.Drawing.Point(19, 360);
+			this.clearTypeCheckbox.Name = "clearTypeCheckbox";
+			this.clearTypeCheckbox.Size = new System.Drawing.Size(116, 17);
+			this.clearTypeCheckbox.TabIndex = 25;
+			this.clearTypeCheckbox.Text = "Disable ClearType";
+			this.clearTypeCheckbox.UseVisualStyleBackColor = false;
+			this.clearTypeCheckbox.CheckedChanged += new System.EventHandler(this.ClearTypeCheckboxStateChange);
 			// 
 			// ssButton
 			// 
 			this.ssButton.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.ssButton.Location = new System.Drawing.Point(140, 365);
+			this.ssButton.Location = new System.Drawing.Point(140, 430);
 			this.ssButton.Name = "ssButton";
 			this.ssButton.Size = new System.Drawing.Size(150, 30);
 			this.ssButton.TabIndex = 28;
@@ -557,16 +590,26 @@ namespace AeroShot
 			this.ssButton.UseVisualStyleBackColor = true;
 			this.ssButton.Click += new System.EventHandler(this.ScreenshotButtonClick);
 			// 
+			// colourDisplay
+			// 
+			this.colourDisplay.Color = System.Drawing.Color.White;
+			this.colourDisplay.Location = new System.Drawing.Point(327, 46);
+			this.colourDisplay.Name = "colourDisplay";
+			this.colourDisplay.Size = new System.Drawing.Size(72, 19);
+			this.colourDisplay.TabIndex = 22;
+			this.colourDisplay.Click += new System.EventHandler(this.ColourDisplayClick);
+			// 
 			// MainForm
 			// 
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
 			this.BackColor = System.Drawing.SystemColors.Window;
-			this.ClientSize = new System.Drawing.Size(430, 400);
+			this.ClientSize = new System.Drawing.Size(430, 462);
 			this.Controls.Add(this.ssButton);
 			this.Controls.Add(this.resizeCheckbox);
 			this.Controls.Add(this.opaqueCheckbox);
 			this.Controls.Add(this.mouseCheckbox);
 			this.Controls.Add(this.delayCheckbox);
+			this.Controls.Add(this.clearTypeCheckbox);
 			this.Controls.Add(this.folderTextBox);
 			this.Controls.Add(this.bButton);
 			this.Controls.Add(this.rButton);
@@ -580,6 +623,7 @@ namespace AeroShot
 			this.Controls.Add(this.groupBox2);
 			this.Controls.Add(this.groupBox3);
 			this.Controls.Add(this.groupBox4);
+			this.Controls.Add(this.groupBox5);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
 			this.MaximizeBox = false;
 			this.Name = "MainForm";
@@ -591,13 +635,17 @@ namespace AeroShot
 			((System.ComponentModel.ISupportInitialize)(this.windowHeight)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.windowWidth)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.checkerValue)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.delaySeconds)).EndInit();
 			this.groupBox2.ResumeLayout(false);
 			this.groupBox2.PerformLayout();
 			this.groupBox1.ResumeLayout(false);
 			this.groupBox1.PerformLayout();
 			this.groupBox3.ResumeLayout(false);
 			this.groupBox3.PerformLayout();
+			this.groupBox4.ResumeLayout(false);
+			this.groupBox4.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.delaySeconds)).EndInit();
+			this.groupBox5.ResumeLayout(false);
+			this.groupBox5.PerformLayout();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
