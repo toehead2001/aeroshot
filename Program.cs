@@ -20,8 +20,8 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
-[assembly: AssemblyTitle("AeroShotMini")]
-[assembly: AssemblyProduct("AeroShotMini")]
+[assembly: AssemblyTitle("AeroShot Mini")]
+[assembly: AssemblyProduct("AeroShot Mini")]
 [assembly: AssemblyDescription("Screenshot capture utility for Windows Aero")]
 [assembly: AssemblyCopyright("© 2015 toe_head2001")]
 [assembly: AssemblyVersion("1.4.0.0")]
@@ -48,6 +48,7 @@ namespace AeroShot
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
 			Application.Run(new SysTray());
+			GC.KeepAlive(mutex);
 		}
 	}
 }
