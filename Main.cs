@@ -32,6 +32,7 @@ namespace AeroShot
 		public MainForm()
 		{
 			DoubleBuffered = true;
+			Icon = new Icon(typeof(MainForm), "icon.ico");
 			InitializeComponent();
 
             folderTextBox.Text = _settings.folderTextBox;

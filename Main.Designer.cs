@@ -57,6 +57,8 @@ namespace AeroShot
 		private System.Windows.Forms.CheckBox clearTypeCheckbox;
 		private System.Windows.Forms.GroupBox groupBox5;
 		private System.Windows.Forms.Label labelClearType;
+		private System.Windows.Forms.Button cancelButton;
+		private System.Windows.Forms.Button okButton;
 
 		#region Windows Form Designer generated code
 
@@ -571,7 +573,6 @@ namespace AeroShot
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
 			this.BackColor = System.Drawing.SystemColors.Window;
 			this.ClientSize = new System.Drawing.Size(430, 397);
-			this.ControlBox = false;
 			this.Controls.Add(this.okButton);
 			this.Controls.Add(this.cancelButton);
 			this.Controls.Add(this.resizeCheckbox);
@@ -591,6 +592,8 @@ namespace AeroShot
 			this.Controls.Add(this.groupBox4);
 			this.Controls.Add(this.groupBox5);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+			this.MaximizeBox = false;
+			this.MinimizeBox = false;
 			this.Name = "MainForm";
 			this.ShowInTaskbar = false;
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -614,8 +617,5 @@ namespace AeroShot
 
 		}
 		#endregion
-
-        private Button cancelButton;
-        private Button okButton;
 	}
 }
