@@ -20,8 +20,8 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
-[assembly: AssemblyTitle("AeroShotClassic")]
-[assembly: AssemblyProduct("AeroShotClassic")]
+[assembly: AssemblyTitle("AeroShot Classic")]
+[assembly: AssemblyProduct("AeroShot Classic")]
 [assembly: AssemblyDescription("Screenshot capture utility for Windows Aero")]
 [assembly: AssemblyCopyright("© 2015 toe_head2001")]
 [assembly: AssemblyVersion("1.4.0.0")]
@@ -35,19 +35,20 @@ namespace AeroShot
 		[STAThread]
 		private static void Main()
 		{
-            bool isFirstInstance;
+			bool isFirstInstance;
 
-            // set if truly first instance:
-            var mutex = new System.Threading.Mutex(true, "AeroShot", out isFirstInstance);
+			// set if truly first instance:
+			var mutex = new System.Threading.Mutex(true, "AeroShot", out isFirstInstance);
 
-            if (!isFirstInstance)
-            {
-                return;
-            }
+			if (!isFirstInstance)
+			{
+				return;
+			}
 
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
 			Application.Run(new MainForm());
+			GC.KeepAlive(mutex);
 		}
 	}
 }
