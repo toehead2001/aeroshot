@@ -56,7 +56,7 @@ namespace AeroShot
 			{
 				if (_dwmComposited)
 				{
-					ssButton.Location = new Point(ssButton.Location.X, 370);
+					ssButton.Location = new Point(ssButton.Location.X, 432);
 					var margin = new WindowsMargins(0, 0, 0, 35);
 					WindowsApi.DwmExtendFrameIntoClientArea(Handle, ref margin);
 				}
@@ -127,6 +127,10 @@ namespace AeroShot
 				value.GetType() == (typeof(int)))
 				mouseCheckbox.Checked = ((int)value & 1) == 1;
 
+			if ((value = _registryKey.GetValue("ClearType")) != null &&
+				value.GetType() == (typeof(int)))
+				clearTypeCheckbox.Checked = ((int)value & 1) == 1;
+
 			if ((value = _registryKey.GetValue("Delay")) != null &&
 				value.GetType() == (typeof(long)))
 			{
@@ -141,6 +145,7 @@ namespace AeroShot
 			groupBox2.Enabled = opaqueCheckbox.Checked;
 			groupBox3.Enabled = mouseCheckbox.Checked;
 			groupBox4.Enabled = delayCheckbox.Checked;
+			groupBox5.Enabled = clearTypeCheckbox.Checked;
 		}
 
 		private void ScreenshotButtonClick(object sender, EventArgs e)
@@ -205,6 +210,11 @@ namespace AeroShot
 		private void DelayCheckboxStateChange(object sender, EventArgs e)
 		{
 			groupBox4.Enabled = delayCheckbox.Checked;
+		}
+
+		private void ClearTypeCheckboxStateChange(object sender, EventArgs e)
+		{
+			groupBox5.Enabled = clearTypeCheckbox.Checked;
 		}
 
 		private void ClipboardButtonStateChange(object sender, EventArgs e)
@@ -335,6 +345,10 @@ namespace AeroShot
 								  mouseCheckbox.Checked ? 1 : 0,
 								  RegistryValueKind.DWord);
 
+			_registryKey.SetValue("ClearType",
+								  clearTypeCheckbox.Checked ? 1 : 0,
+								  RegistryValueKind.DWord);
+
 			// Save delay settings in an 8-byte long
 			b = new byte[8];
 			b[0] = (byte)(delayCheckbox.Checked ? 1 : 0);
@@ -432,12 +446,12 @@ namespace AeroShot
 
 				if (_dwmComposited)
 				{
-					ssButton.Location = new Point(ssButton.Location.X, 370);
+					ssButton.Location = new Point(ssButton.Location.X, 437);
 					var margin = new WindowsMargins(0, 0, 0, 35);
 					WindowsApi.DwmExtendFrameIntoClientArea(Handle, ref margin);
 				}
 				else
-					ssButton.Location = new Point(ssButton.Location.X, 365);
+					ssButton.Location = new Point(ssButton.Location.X, 432);
 			}
 		}
 
@@ -458,7 +472,8 @@ namespace AeroShot
 					resizeCheckbox.Checked, (int)windowWidth.Value,
 					(int)windowHeight.Value, type, colourDialog.Color,
 					(int)checkerValue.Value,
-					useForegroundWindow && mouseCheckbox.Checked);
+					useForegroundWindow && mouseCheckbox.Checked,
+					clearTypeCheckbox.Checked);
 		}
 
 		private bool ListWindows(IntPtr hWnd, int lParam)
