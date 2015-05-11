@@ -592,6 +592,7 @@ namespace AeroShot
 			// 
 			// colourDisplay
 			// 
+			this.colourDisplay.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
 			this.colourDisplay.Color = System.Drawing.Color.White;
 			this.colourDisplay.Location = new System.Drawing.Point(327, 46);
 			this.colourDisplay.Name = "colourDisplay";
