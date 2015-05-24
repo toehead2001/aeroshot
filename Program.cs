@@ -35,6 +35,12 @@ namespace AeroShot
 		[STAThread]
 		private static void Main()
 		{
+			if (Environment.OSVersion.Version.Major < 6)
+			{
+				MessageBox.Show("Windows Vista or newer is required.", "AeroShot");
+				return;
+			}
+
 			bool isFirstInstance;
 
 			// set if truly first instance:
