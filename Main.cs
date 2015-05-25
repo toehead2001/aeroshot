@@ -45,6 +45,8 @@ namespace AeroShot
             opaqueType.SelectedIndex = _settings.opaqueType;
             checkerValue.Value = _settings.checkerValue;
             colourHexBox.Text = _settings.colourHexBox;
+			aeroColorCheckbox.Checked = _settings.aeroColorCheckbox;
+			aeroColorHexBox.Text = _settings.aeroColorHexBox;
             mouseCheckbox.Checked = _settings.mouseCheckbox;
             delayCheckbox.Checked = _settings.delayCheckbox;
             delaySeconds.Value = _settings.delaySeconds;
@@ -55,6 +57,7 @@ namespace AeroShot
 			groupBox3.Enabled = mouseCheckbox.Checked;
 			groupBox4.Enabled = delayCheckbox.Checked;
 			groupBox5.Enabled = clearTypeCheckbox.Checked;
+			groupBox6.Enabled = aeroColorCheckbox.Checked;
 
             _registryKey = Registry.CurrentUser.CreateSubKey(@"Software\AeroShot");
 		}
@@ -81,6 +84,20 @@ namespace AeroShot
 			}
 		}
 
+		private void AeroColorDisplayClick(object sender, EventArgs e)
+		{
+			if (aeroColorDialog.ShowDialog() == DialogResult.OK)
+			{
+				aeroColorDisplay.Color = aeroColorDialog.Color;
+
+				var hex = new StringBuilder(6);
+				hex.AppendFormat("{0:X2}", aeroColorDisplay.Color.R);
+				hex.AppendFormat("{0:X2}", aeroColorDisplay.Color.G);
+				hex.AppendFormat("{0:X2}", aeroColorDisplay.Color.B);
+				aeroColorHexBox.Text = hex.ToString();
+			}
+		}
+
 		private void ResizeCheckboxStateChange(object sender, EventArgs e)
 		{
 			groupBox1.Enabled = resizeCheckbox.Checked;
@@ -89,6 +106,11 @@ namespace AeroShot
 		private void OpaqueCheckboxStateChange(object sender, EventArgs e)
 		{
 			groupBox2.Enabled = opaqueCheckbox.Checked;
+		}
+
+		private void AeroColorCheckboxStateChange(object sender, EventArgs e)
+		{
+			groupBox6.Enabled = aeroColorCheckbox.Checked;
 		}
 
 		private void MouseCheckboxStateChange(object sender, EventArgs e)
@@ -183,6 +205,35 @@ namespace AeroShot
 			colourDialog.Color = Color.FromArgb(Convert.ToInt32("FF" + colourHexBox.Text, 16));
 		}
 
+		private void AeroColorTextboxTextChange(object sender, EventArgs e)
+		{
+			var c = new[] {
+				'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C',
+				'D', 'E', 'F', 'a', 'b', 'c', 'd', 'e', 'f'
+			};
+			foreach (char v in aeroColorHexBox.Text)
+			{
+				bool b = false;
+				foreach (char v1 in c)
+				{
+					if (v == v1)
+					{
+						b = true;
+						break;
+					}
+				}
+				if (!b)
+					aeroColorHexBox.Text = aeroColorHexBox.Text.Replace(v.ToString(),
+																  string.Empty);
+			}
+
+			if (colourHexBox.TextLength != 6)
+				return;
+
+			aeroColorDisplay.Color = Color.FromArgb(Convert.ToInt32("FF" + aeroColorHexBox.Text, 16));
+			aeroColorDialog.Color = Color.FromArgb(Convert.ToInt32("FF" + aeroColorHexBox.Text, 16));
+		}
+
         private void OkButtonClick(object sender, EventArgs e)
 		{
 			if (clipboardButton.Checked)
@@ -218,6 +269,17 @@ namespace AeroShot
 
 			data = BitConverter.ToInt64(b, 0);
 			_registryKey.SetValue("Opaque", data, RegistryValueKind.QWord);
+
+			// Save background colour settings in an 8-byte long
+			b = new byte[8];
+			b[0] = (byte)(aeroColorCheckbox.Checked ? 1 : 0);
+
+			b[1] = aeroColorDialog.Color.R;
+			b[2] = aeroColorDialog.Color.G;
+			b[3] = aeroColorDialog.Color.B;
+
+			data = BitConverter.ToInt64(b, 0);
+			_registryKey.SetValue("AeroColor", data, RegistryValueKind.QWord);
 
 			_registryKey.SetValue("CapturePointer",
 								  mouseCheckbox.Checked ? 1 : 0,

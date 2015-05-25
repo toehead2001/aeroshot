@@ -29,6 +29,8 @@ namespace AeroShot
         public string folderTextBox;
         public bool opaqueCheckbox;
         public byte opaqueType;
+		public bool aeroColorCheckbox;
+		public string aeroColorHexBox;
         public bool resizeCheckbox;
         public int windowHeight = 640;
         public int windowWidth = 480;
@@ -105,6 +107,23 @@ namespace AeroShot
             }
             else
                 opaqueType = 0;
+
+			if ((value = _registryKey.GetValue("AeroColor")) != null &&
+				value.GetType() == (typeof(long)))
+			{
+				var b = new byte[8];
+				for (int i = 0; i < 8; i++)
+					b[i] = (byte)(((long)value >> (i * 8)) & 0xff);
+				aeroColorCheckbox = (b[0] & 1) == 1;
+
+				var hex = new StringBuilder(6);
+				hex.AppendFormat("{0:X2}", b[1]);
+				hex.AppendFormat("{0:X2}", b[2]);
+				hex.AppendFormat("{0:X2}", b[3]);
+				aeroColorHexBox = hex.ToString();
+			}
+			else
+				opaqueType = 0;
 
             if ((value = _registryKey.GetValue("CapturePointer")) != null &&
                 value.GetType() == (typeof(int)))

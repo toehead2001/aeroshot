@@ -142,6 +142,17 @@ namespace AeroShot
 			return result;
 		}
 
+		internal struct DWM_COLORIZATION_PARAMS
+		{
+			public uint clrColor;
+			public uint clrAfterGlow;
+			public uint nIntensity;
+			public uint clrAfterGlowBalance;
+			public uint clrBlurBalance;
+			public uint clrGlassReflectionIntensity;
+			public bool fOpaque;
+		}
+
 		[DllImport("user32.dll")]
 		internal static extern IntPtr FindWindow(string lpClassName,
 												 string lpWindowName);
@@ -206,6 +217,15 @@ namespace AeroShot
 
 		[DllImport("user32.dll")]
 		internal static extern bool RedrawWindow(IntPtr hWnd, IntPtr lpRectUpdate, IntPtr hrgnUpdate, UInt32 flags);
+
+		[DllImport("dwmapi.dll")]
+		internal static extern int DwmIsCompositionEnabled(out bool enabled);
+
+		[DllImport("dwmapi.dll", EntryPoint = "#127", PreserveSig = false)]
+		internal static extern void DwmGetColorizationParameters(out DWM_COLORIZATION_PARAMS parameters);
+
+		[DllImport("dwmapi.dll", EntryPoint = "#131", PreserveSig = false)]
+		internal static extern void DwmSetColorizationParameters(ref DWM_COLORIZATION_PARAMS parameters, bool unknown);
 
 		[DllImport("gdi32.dll")]
 		internal static extern bool BitBlt(IntPtr hdcDest, int xDest, int yDest,

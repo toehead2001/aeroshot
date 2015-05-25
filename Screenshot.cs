@@ -23,6 +23,8 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
+using System.Diagnostics;
+using System.Globalization;
 
 namespace AeroShot
 {
@@ -40,6 +42,8 @@ namespace AeroShot
 		public bool CaptureMouse;
 		public bool DisableClearType;
 		public int CheckerboardSize;
+		public bool CustomGlass;
+		public Color AeroColor;
 		public bool ClipboardNotDisk;
 		public string DiskSaveDirectory;
 		public bool DoResize;
@@ -50,7 +54,8 @@ namespace AeroShot
 		public ScreenshotTask(IntPtr window, bool clipboard, string file,
 							  bool resize, int resizeX, int resizeY,
 							  BackgroundType backType, Color backColour,
-							  int checkerSize, bool mouse, bool clearType)
+							  int checkerSize, bool customGlass, Color aeroColor,
+							  bool mouse, bool clearType)
 		{
 			WindowHandle = window;
 			ClipboardNotDisk = clipboard;
@@ -61,6 +66,8 @@ namespace AeroShot
 			Background = backType;
 			BackgroundColour = backColour;
 			CheckerboardSize = checkerSize;
+			CustomGlass = customGlass;
+			AeroColor = aeroColor;
 			CaptureMouse = mouse;
 			DisableClearType = clearType;
 		}
@@ -112,6 +119,27 @@ namespace AeroShot
 					}
 					WindowsApi.SetForegroundWindow(data.WindowHandle);
 
+					bool AeroColorToggled = false;
+					WindowsApi.DWM_COLORIZATION_PARAMS originalParameters;
+					WindowsApi.DwmGetColorizationParameters(out originalParameters);
+					if (data.CustomGlass && AeroEnabled())
+					{
+						// Original colorization parameters
+						originalParameters.clrGlassReflectionIntensity = 50;
+
+						// Custom colorization parameters
+						WindowsApi.DWM_COLORIZATION_PARAMS parameters;
+						WindowsApi.DwmGetColorizationParameters(out parameters);
+						parameters.clrAfterGlowBalance = 2;
+						parameters.clrBlurBalance = 29;
+						parameters.clrColor = ColorToBgra(data.AeroColor);
+						parameters.nIntensity = 69;
+
+						// Call the DwmSetColorizationParameters to make the change take effect.
+						WindowsApi.DwmSetColorizationParameters(ref parameters, false);
+						AeroColorToggled = true;
+					}
+
 					var r = new WindowsRect(0);
 					if (data.DoResize)
 					{
@@ -131,6 +159,10 @@ namespace AeroShot
 
 					Bitmap s = CaptureCompositeScreenshot(ref data);
 
+					if (AeroColorToggled)
+					{
+						WindowsApi.DwmSetColorizationParameters(ref originalParameters, false);
+					}
 
 					if (ClearTypeToggled)
 					{
@@ -240,6 +272,20 @@ namespace AeroShot
 				MessageBox.Show("Invalid directory chosen.", "Error",
 								MessageBoxButtons.OK, MessageBoxIcon.Error);
 			}
+		}
+
+
+		private static bool AeroEnabled()
+		{
+			bool aeroEnabled;
+			WindowsApi.DwmIsCompositionEnabled(out aeroEnabled);
+			return aeroEnabled;
+		}
+
+		// Helper method to convert from a .NET color to a Win32 BGRA-format color.
+		private static uint ColorToBgra(Color color)
+		{
+			return (uint)(color.B | (color.G << 8) | (color.R << 16) | (color.A << 24));
 		}
 
 		private static bool ClearTypeEnabled()
