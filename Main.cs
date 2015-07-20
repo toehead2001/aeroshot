@@ -26,6 +26,9 @@ namespace AeroShot
 {
 	public sealed partial class MainForm : Form
 	{
+		private const uint SPI_GETFONTSMOOTHING = 0x004A;
+		private const uint SPI_GETFONTSMOOTHINGTYPE = 0x200A;
+
 		private readonly RegistryKey _registryKey;
         Settings _settings = new Settings();
 
@@ -52,6 +55,18 @@ namespace AeroShot
             delaySeconds.Value = _settings.delaySeconds;
 			clearTypeCheckbox.Checked = _settings.clearTypeCheckbox;
 
+			if (!GlassAvailable())
+			{
+				aeroColorCheckbox.Checked = false;
+				aeroColorCheckbox.Enabled = false;
+			}
+
+			if (!ClearTypeEnabled())
+			{
+				clearTypeCheckbox.Checked = false;
+				clearTypeCheckbox.Enabled = false;
+			}
+
 			groupBox1.Enabled = resizeCheckbox.Checked;
 			groupBox2.Enabled = opaqueCheckbox.Checked;
 			groupBox3.Enabled = mouseCheckbox.Checked;
@@ -60,6 +75,35 @@ namespace AeroShot
 			groupBox6.Enabled = aeroColorCheckbox.Checked;
 
             _registryKey = Registry.CurrentUser.CreateSubKey(@"Software\AeroShot");
+		}
+
+		private static bool GlassAvailable()
+		{
+			if (Environment.OSVersion.Version.Major >= 6 && Environment.OSVersion.Version.Minor > 1) return false;
+
+			bool aeroEnabled;
+			WindowsApi.DwmIsCompositionEnabled(out aeroEnabled);
+			return aeroEnabled;
+		}
+
+		private static bool ClearTypeEnabled()
+		{
+			int sv = 0;
+			/* Call to systemparametersinfo to get the font smoothing value. */
+			WindowsApi.SystemParametersInfo(SPI_GETFONTSMOOTHING, 0, ref sv, 0);
+
+			int stv = 0;
+			/* Call to systemparametersinfo to get the font smoothing Type value. */
+			WindowsApi.SystemParametersInfo(SPI_GETFONTSMOOTHINGTYPE, 0, ref stv, 0);
+
+			if (sv > 0 && stv == 2) //if smoothing is on, and is set to cleartype
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
 		}
 
 		private void BrowseButtonClick(object sender, EventArgs e)

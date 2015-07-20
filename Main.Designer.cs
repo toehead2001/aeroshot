@@ -629,8 +629,7 @@ namespace AeroShot
 			this.labelClearType.Name = "labelClearType";
 			this.labelClearType.Size = new System.Drawing.Size(374, 26);
 			this.labelClearType.TabIndex = 35;
-			this.labelClearType.Text = "ClearType font smoothing will be disabled while screenshots are being \r\ncaptured," +
-    " if it is turned on.";
+			this.labelClearType.Text = "ClearType font smoothing will be disabled while screenshots are being \r\ncaptured.";
 			// 
 			// cancelButton
 			// 
