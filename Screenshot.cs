@@ -34,11 +34,11 @@ namespace AeroShot
 		{
 			Transparent,
 			Checkerboard,
-			SolidColour
+			SolidColor
 		}
 
 		public BackgroundType Background;
-		public Color BackgroundColour;
+		public Color BackgroundColor;
 		public bool CaptureMouse;
 		public bool DisableClearType;
 		public int CheckerboardSize;
@@ -53,7 +53,7 @@ namespace AeroShot
 
 		public ScreenshotTask(IntPtr window, bool clipboard, string file,
 							  bool resize, int resizeX, int resizeY,
-							  BackgroundType backType, Color backColour,
+							  BackgroundType backType, Color backColor,
 							  int checkerSize, bool customGlass, Color aeroColor,
 							  bool mouse, bool clearType)
 		{
@@ -64,7 +64,7 @@ namespace AeroShot
 			ResizeX = resizeX;
 			ResizeY = resizeY;
 			Background = backType;
-			BackgroundColour = backColour;
+			BackgroundColor = backColor;
 			CheckerboardSize = checkerSize;
 			CustomGlass = customGlass;
 			AeroColor = aeroColor;
@@ -343,13 +343,13 @@ namespace AeroShot
 		private static unsafe Bitmap CaptureCompositeScreenshot(
 			ref ScreenshotTask data)
 		{
-			Color tmpColour = data.BackgroundColour;
+			Color tmpColor = data.BackgroundColor;
 			if (data.Background == ScreenshotTask.BackgroundType.Transparent ||
 				data.Background == ScreenshotTask.BackgroundType.Checkerboard)
-				tmpColour = Color.White;
+				tmpColor = Color.White;
 			var backdrop = new Form
 			{
-				BackColor = tmpColour,
+				BackColor = tmpColor,
 				FormBorderStyle = FormBorderStyle.None,
 				ShowInTaskbar = false,
 				Opacity = 0
@@ -403,12 +403,12 @@ namespace AeroShot
 												  rct.Right - rct.Left,
 												  rct.Bottom - rct.Top));
 
-			if (data.Background == ScreenshotTask.BackgroundType.SolidColour)
+			if (data.Background == ScreenshotTask.BackgroundType.SolidColor)
 			{
 				backdrop.Dispose();
 				if (data.CaptureMouse)
 					DrawCursorToBitmap(whiteShot, new Point(rct.Left, rct.Top));
-				Bitmap final = CropEmptyEdges(whiteShot, tmpColour);
+				Bitmap final = CropEmptyEdges(whiteShot, tmpColor);
 				whiteShot.Dispose();
 				return final;
 			}
@@ -542,7 +542,7 @@ namespace AeroShot
 			return b1;
 		}
 
-		private static unsafe Bitmap CropEmptyEdges(Bitmap b1, Color trimColour)
+		private static unsafe Bitmap CropEmptyEdges(Bitmap b1, Color trimColor)
 		{
 			if (b1 == null)
 				return null;
@@ -564,10 +564,10 @@ namespace AeroShot
 				pixel = b.GetPixel(x, y);
 				if (left == -1)
 				{
-					if ((trimColour.A == 0 && pixel->Alpha != 0) ||
-						(trimColour.R != pixel->Red &
-						 trimColour.G != pixel->Green &
-						 trimColour.B != pixel->Blue))
+					if ((trimColor.A == 0 && pixel->Alpha != 0) ||
+						(trimColor.R != pixel->Red &
+						 trimColor.G != pixel->Green &
+						 trimColor.B != pixel->Blue))
 					{
 						left = x;
 						x = 0;
@@ -586,10 +586,10 @@ namespace AeroShot
 				}
 				if (top == -1)
 				{
-					if ((trimColour.A == 0 && pixel->Alpha != 0) ||
-						(trimColour.R != pixel->Red &
-						 trimColour.G != pixel->Green &
-						 trimColour.B != pixel->Blue))
+					if ((trimColor.A == 0 && pixel->Alpha != 0) ||
+						(trimColor.R != pixel->Red &
+						 trimColor.G != pixel->Green &
+						 trimColor.B != pixel->Blue))
 					{
 						top = y;
 						x = sizeX - 1;
@@ -608,10 +608,10 @@ namespace AeroShot
 				}
 				if (right == -1)
 				{
-					if ((trimColour.A == 0 && pixel->Alpha != 0) ||
-						(trimColour.R != pixel->Red &
-						 trimColour.G != pixel->Green &
-						 trimColour.B != pixel->Blue))
+					if ((trimColor.A == 0 && pixel->Alpha != 0) ||
+						(trimColor.R != pixel->Red &
+						 trimColor.G != pixel->Green &
+						 trimColor.B != pixel->Blue))
 					{
 						right = x + 1;
 						x = 0;
@@ -630,10 +630,10 @@ namespace AeroShot
 				}
 				if (bottom == -1)
 				{
-					if ((trimColour.A == 0 && pixel->Alpha != 0) ||
-						(trimColour.R != pixel->Red &
-						 trimColour.G != pixel->Green &
-						 trimColour.B != pixel->Blue))
+					if ((trimColor.A == 0 && pixel->Alpha != 0) ||
+						(trimColor.R != pixel->Red &
+						 trimColor.G != pixel->Green &
+						 trimColor.B != pixel->Blue))
 					{
 						bottom = y + 1;
 						break;

@@ -92,7 +92,7 @@ namespace AeroShot
             if (_settings.opaqueCheckbox && _settings.opaqueType == 0)
 				type = ScreenshotTask.BackgroundType.Checkerboard;
             else if (_settings.opaqueCheckbox && _settings.opaqueType == 1)
-				type = ScreenshotTask.BackgroundType.SolidColour;
+				type = ScreenshotTask.BackgroundType.SolidColor;
 
 			return
 				new ScreenshotTask(
@@ -103,7 +103,7 @@ namespace AeroShot
                     _settings.windowWidth,
                     _settings.windowHeight,
                     type,
-                    Color.FromArgb(Convert.ToInt32("FF" + _settings.colourHexBox, 16)),
+                    Color.FromArgb(Convert.ToInt32("FF" + _settings.opaqueColorHexBox, 16)),
                     _settings.checkerValue,
 					_settings.aeroColorCheckbox,
 					Color.FromArgb(Convert.ToInt32("FF" + _settings.aeroColorHexBox, 16)),

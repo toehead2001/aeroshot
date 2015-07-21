@@ -25,7 +25,7 @@ namespace AeroShot
     {
         public bool firstRun;
         public int checkerValue = 8;
-        public string colourHexBox;
+        public string opaqueColorHexBox;
         public string folderTextBox;
         public bool opaqueCheckbox;
         public byte opaqueType;
@@ -103,7 +103,7 @@ namespace AeroShot
                 hex.AppendFormat("{0:X2}", b[2]);
                 hex.AppendFormat("{0:X2}", b[3]);
                 hex.AppendFormat("{0:X2}", b[4]);
-                colourHexBox = hex.ToString();
+                opaqueColorHexBox = hex.ToString();
             }
             else
                 opaqueType = 0;
