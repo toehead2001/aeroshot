@@ -28,6 +28,8 @@ namespace AeroShot
 {
 	public sealed partial class MainForm : Form
 	{
+		private const uint SPI_GETFONTSMOOTHING = 0x004A;
+		private const uint SPI_GETFONTSMOOTHINGTYPE = 0x200A;
 		private const int GWL_STYLE = -16;
 		private const int GWL_EXSTYLE = -20;
 		private const int WM_DWMCOMPOSITIONCHANGED = 0x031E;
@@ -141,11 +143,37 @@ namespace AeroShot
 				delaySeconds.Value = b[1];
 			}
 
+			if (!ClearTypeEnabled())
+			{
+				clearTypeCheckbox.Checked = false;
+				clearTypeCheckbox.Enabled = false;
+			}
+
 			groupBox1.Enabled = resizeCheckbox.Checked;
 			groupBox2.Enabled = opaqueCheckbox.Checked;
 			groupBox3.Enabled = mouseCheckbox.Checked;
 			groupBox4.Enabled = delayCheckbox.Checked;
 			groupBox5.Enabled = clearTypeCheckbox.Checked;
+		}
+
+		private static bool ClearTypeEnabled()
+		{
+			int sv = 0;
+			/* Call to systemparametersinfo to get the font smoothing value. */
+			WindowsApi.SystemParametersInfo(SPI_GETFONTSMOOTHING, 0, ref sv, 0);
+
+			int stv = 0;
+			/* Call to systemparametersinfo to get the font smoothing Type value. */
+			WindowsApi.SystemParametersInfo(SPI_GETFONTSMOOTHINGTYPE, 0, ref stv, 0);
+
+			if (sv > 0 && stv == 2) //if smoothing is on, and is set to cleartype
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
 		}
 
 		private void ScreenshotButtonClick(object sender, EventArgs e)
