@@ -24,8 +24,8 @@ using System.Windows.Forms;
 [assembly: AssemblyProduct("AeroShot Classic")]
 [assembly: AssemblyDescription("Screenshot capture utility for Windows Aero")]
 [assembly: AssemblyCopyright("© 2015 toe_head2001")]
-[assembly: AssemblyVersion("1.4.0.0")]
-[assembly: AssemblyFileVersion("1.4.0.0")]
+[assembly: AssemblyVersion("1.4.1.0")]
+[assembly: AssemblyFileVersion("1.4.1.0")]
 [assembly: ComVisible(false)]
 
 namespace AeroShot

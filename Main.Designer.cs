@@ -628,7 +628,7 @@ namespace AeroShot
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
 			this.MaximizeBox = false;
 			this.Name = "MainForm";
-			this.Text = "AeroShot Classic v1.4.0";
+			this.Text = "AeroShot Classic v1.4.1";
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormClose);
 			this.Shown += new System.EventHandler(this.FormShown);
 			this.SizeChanged += new System.EventHandler(this.FormSizeChange);
