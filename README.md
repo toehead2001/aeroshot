@@ -4,8 +4,6 @@ AeroShot was originally developed by Caleb Joseph in 2011, and was inspired by t
 
 Please leave any feature suggestions or bug reports in the issue tracker.
 
-Downloads are available at the bottom of the page.
-
 ## AeroShot Mini
 AeroShot is dead, long live **AeroShot Mini**!
 
@@ -23,6 +21,7 @@ Transparent, Opaque, or Checkered backgrounds | **Yes** | **Yes**
 Capture mouse pointer in screenshots | **Yes** | **Yes**
 Delayed screenshot capture when using hotkey | **Yes** | **Yes**
 Disable ClearType while capturing screenshots | **Yes** | **Yes**
+Custom colors for Aero Glass | No | **Yes**
 Capture screenshots via GUI | **Yes** | No
 System tray icon | No | **Yes**
 
@@ -53,6 +52,18 @@ These examples have all been captured with AeroShot, using the "Resize window" o
 ![Example 3](https://aeroshot.ml/gfx/eg3.png)
 
 ## Change Log
+
+### 1.5.0
+20th July 2015
+##### Both AeroShot Mini & AeroShot Classic
+* Fix for HiDPI displays
+* No longer allows you to try to disable ClearType if it's already turned off on your system.
+
+##### AeroShot Mini
+* Added option to change the color of Aero Glass. For obvious reasons, it only works in Windows 7 & Vista.
+
+**Note:** Custom Aero Glass colors was not added to *Classic*, as this was a quick release before *Mini* and *Classic* get merge back together. Classic is being released as v1.4.1.
+
 ### 1.4.0
 11th May 2015
 ##### Both AeroShot Mini & AeroShot Classic
@@ -119,11 +130,3 @@ These examples have all been captured with AeroShot, using the "Resize window" o
 5th June 2011
 
 * **Initial release**
-
-## Download
-**AeroShot Mini** (recommended): [Download](https://aeroshot.ml/releases/?file=asm)
-
-**AeroShot Classic**: [Download](https://aeroshot.ml/releases/?file=asc)
-
-*Note: User of older version of Windows (XP and Vista) will need to have the [.NET Framework 3.5](http://download.microsoft.com/download/0/6/1/061F001C-8752-4600-A198-53214C69B51F/dotnetfx35setup.exe) installed.
-Also be aware that I do not test on these older versions of Windows, and they are not offically supported anymore.*
