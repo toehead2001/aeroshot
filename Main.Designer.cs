@@ -702,7 +702,7 @@ namespace AeroShot
 			this.Name = "MainForm";
 			this.ShowInTaskbar = false;
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-			this.Text = "AeroShot Mini v1.5.0 - Settings";
+			this.Text = "{0} {1} - Settings";
 			((System.ComponentModel.ISupportInitialize)(this.windowHeight)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.windowWidth)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.checkerValue)).EndInit();

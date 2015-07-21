@@ -37,7 +37,7 @@ namespace AeroShot
 		{
 			if (Environment.OSVersion.Version.Major < 6)
 			{
-				MessageBox.Show("Windows Vista or newer is required.", "AeroShot");
+				MessageBox.Show("Windows Vista or newer is required.", Application.ProductName);
 				return;
 			}
 
