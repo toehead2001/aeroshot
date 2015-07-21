@@ -168,7 +168,7 @@ namespace AeroShot
 			// folderSelectionDialog
 			// 
 			this.folderSelectionDialog.Description = "Please select the folder you wish screenshots to be saved to.\r\nFilenames are dete" +
-    "rmined by the title of the window you are capturing.";
+	"rmined by the title of the window you are capturing.";
 			// 
 			// resizeCheckbox
 			// 
@@ -187,23 +187,23 @@ namespace AeroShot
 			// 
 			this.windowHeight.Location = new System.Drawing.Point(338, 25);
 			this.windowHeight.Maximum = new decimal(new int[] {
-            16777215,
-            0,
-            0,
-            0});
+			16777215,
+			0,
+			0,
+			0});
 			this.windowHeight.Minimum = new decimal(new int[] {
-            100,
-            0,
-            0,
-            0});
+			100,
+			0,
+			0,
+			0});
 			this.windowHeight.Name = "windowHeight";
 			this.windowHeight.Size = new System.Drawing.Size(60, 20);
 			this.windowHeight.TabIndex = 14;
 			this.windowHeight.Value = new decimal(new int[] {
-            480,
-            0,
-            0,
-            0});
+			480,
+			0,
+			0,
+			0});
 			// 
 			// labelX
 			// 
@@ -219,23 +219,23 @@ namespace AeroShot
 			// 
 			this.windowWidth.Location = new System.Drawing.Point(262, 25);
 			this.windowWidth.Maximum = new decimal(new int[] {
-            16777215,
-            0,
-            0,
-            0});
+			16777215,
+			0,
+			0,
+			0});
 			this.windowWidth.Minimum = new decimal(new int[] {
-            100,
-            0,
-            0,
-            0});
+			100,
+			0,
+			0,
+			0});
 			this.windowWidth.Name = "windowWidth";
 			this.windowWidth.Size = new System.Drawing.Size(60, 20);
 			this.windowWidth.TabIndex = 12;
 			this.windowWidth.Value = new decimal(new int[] {
-            640,
-            0,
-            0,
-            0});
+			640,
+			0,
+			0,
+			0});
 			// 
 			// opaqueCheckbox
 			// 
@@ -256,8 +256,8 @@ namespace AeroShot
 			this.opaqueType.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.opaqueType.FormattingEnabled = true;
 			this.opaqueType.Items.AddRange(new object[] {
-            "Checkerboard",
-            "Solid color"});
+			"Checkerboard",
+			"Solid color"});
 			this.opaqueType.Location = new System.Drawing.Point(195, 19);
 			this.opaqueType.Name = "opaqueType";
 			this.opaqueType.Size = new System.Drawing.Size(204, 21);
@@ -279,23 +279,23 @@ namespace AeroShot
 			// 
 			this.checkerValue.Location = new System.Drawing.Point(327, 46);
 			this.checkerValue.Maximum = new decimal(new int[] {
-            256,
-            0,
-            0,
-            0});
+			256,
+			0,
+			0,
+			0});
 			this.checkerValue.Minimum = new decimal(new int[] {
-            2,
-            0,
-            0,
-            0});
+			2,
+			0,
+			0,
+			0});
 			this.checkerValue.Name = "checkerValue";
 			this.checkerValue.Size = new System.Drawing.Size(48, 20);
 			this.checkerValue.TabIndex = 23;
 			this.checkerValue.Value = new decimal(new int[] {
-            8,
-            0,
-            0,
-            0});
+			8,
+			0,
+			0,
+			0});
 			// 
 			// opaqueGroupBox
 			// 
@@ -452,7 +452,7 @@ namespace AeroShot
 			this.resizeLabel.Size = new System.Drawing.Size(239, 26);
 			this.resizeLabel.TabIndex = 11;
 			this.resizeLabel.Text = "Sets the exact resolution screenshots are\r\ncaptured in, if the window supports re" +
-    "sizing.";
+	"sizing.";
 			// 
 			// opaqueColorDialog
 			// 
@@ -570,23 +570,23 @@ namespace AeroShot
 			// 
 			this.delaySeconds.Location = new System.Drawing.Point(327, 25);
 			this.delaySeconds.Maximum = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
+			10,
+			0,
+			0,
+			0});
 			this.delaySeconds.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
+			1,
+			0,
+			0,
+			0});
 			this.delaySeconds.Name = "delaySeconds";
 			this.delaySeconds.Size = new System.Drawing.Size(40, 20);
 			this.delaySeconds.TabIndex = 31;
 			this.delaySeconds.Value = new decimal(new int[] {
-            3,
-            0,
-            0,
-            0});
+			3,
+			0,
+			0,
+			0});
 			// 
 			// secondsLabel
 			// 

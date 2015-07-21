@@ -31,24 +31,24 @@ namespace AeroShot
 		private readonly int[] _windowId;
 		private Thread _worker;
 		private bool _busyCapturing;
-        Settings _settings;
+		Settings _settings;
 
 		public Hotkeys()
 		{
-            _windowId = new[] { GetHashCode(), GetHashCode() ^ 327 };
-            WindowsApi.RegisterHotKey(Handle, _windowId[0], MOD_ALT, (int)Keys.PrintScreen);
-            WindowsApi.RegisterHotKey(Handle, _windowId[1], MOD_ALT | MOD_CONTROL, (int)Keys.PrintScreen);
+			_windowId = new[] { GetHashCode(), GetHashCode() ^ 327 };
+			WindowsApi.RegisterHotKey(Handle, _windowId[0], MOD_ALT, (int)Keys.PrintScreen);
+			WindowsApi.RegisterHotKey(Handle, _windowId[1], MOD_ALT | MOD_CONTROL, (int)Keys.PrintScreen);
 
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormClose);
+			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormClose);
 		}
 
-        private void FormClose(object sender, FormClosingEventArgs e)
-        {
-        	foreach (var id in _windowId)
+		private void FormClose(object sender, FormClosingEventArgs e)
+		{
+			foreach (var id in _windowId)
 			{
 				WindowsApi.UnregisterHotKey(Handle, id);
 			}            
-        }
+		}
 
 		protected override void WndProc(ref Message m)
 		{
@@ -56,7 +56,7 @@ namespace AeroShot
 
 			if (m.Msg == WM_HOTKEY)
 			{
-                _settings = new Settings();
+				_settings = new Settings();
 
 				if (_busyCapturing)
 					return;
@@ -89,26 +89,26 @@ namespace AeroShot
 		private ScreenshotTask GetParamteresFromUI()
 		{
 			var type = ScreenshotTask.BackgroundType.Transparent;
-            if (_settings.opaqueCheckbox && _settings.opaqueType == 0)
+			if (_settings.opaqueCheckbox && _settings.opaqueType == 0)
 				type = ScreenshotTask.BackgroundType.Checkerboard;
-            else if (_settings.opaqueCheckbox && _settings.opaqueType == 1)
+			else if (_settings.opaqueCheckbox && _settings.opaqueType == 1)
 				type = ScreenshotTask.BackgroundType.SolidColor;
 
 			return
 				new ScreenshotTask(
-                    WindowsApi.GetForegroundWindow(),
-                    _settings.clipboardButton,
-                    _settings.folderTextBox,
-                    _settings.resizeCheckbox,
-                    _settings.windowWidth,
-                    _settings.windowHeight,
-                    type,
-                    Color.FromArgb(Convert.ToInt32("FF" + _settings.opaqueColorHexBox, 16)),
-                    _settings.checkerValue,
+					WindowsApi.GetForegroundWindow(),
+					_settings.clipboardButton,
+					_settings.folderTextBox,
+					_settings.resizeCheckbox,
+					_settings.windowWidth,
+					_settings.windowHeight,
+					type,
+					Color.FromArgb(Convert.ToInt32("FF" + _settings.opaqueColorHexBox, 16)),
+					_settings.checkerValue,
 					_settings.aeroColorCheckbox,
 					Color.FromArgb(Convert.ToInt32("FF" + _settings.aeroColorHexBox, 16)),
-                    _settings.mouseCheckbox,
+					_settings.mouseCheckbox,
 					_settings.clearTypeCheckbox);
 		}
-    }
+	}
 }

@@ -27,7 +27,7 @@ namespace AeroShot
 
 		MainForm _window = new MainForm();
 		Hotkeys _hotkeys = new Hotkeys();
-        Settings _settings = new Settings();
+		Settings _settings = new Settings();
 
 		public SysTray()
 		{
@@ -40,7 +40,7 @@ namespace AeroShot
 			// Create a tray menu
 			trayMenu = new ContextMenu();
 			trayMenu.MenuItems.Add("Settings...", ShowWindow);
-            trayMenu.MenuItems.Add("-");
+			trayMenu.MenuItems.Add("-");
 			trayMenu.MenuItems.Add("Exit", OnExit);
 
 			// Add menu to tray icon and show it.
@@ -56,22 +56,22 @@ namespace AeroShot
 
 			base.OnLoad(e);
 
-            string saveLocation;
-            if (_settings.diskButton)
-            {
-                saveLocation = "\"" + _settings.folderTextBox + "\"";
-            }
-            else
-            {
-                saveLocation = "the Clipboard";
-            }
-            trayIcon.ShowBalloonTip(10000, "Press Alt+PrtSrn to Capture Screenshots", "Screenshot will be save to " + saveLocation + ".", ToolTipIcon.Info);
+			string saveLocation;
+			if (_settings.diskButton)
+			{
+				saveLocation = "\"" + _settings.folderTextBox + "\"";
+			}
+			else
+			{
+				saveLocation = "the Clipboard";
+			}
+			trayIcon.ShowBalloonTip(10000, "Press Alt+PrtSrn to Capture Screenshots", "Screenshot will be save to " + saveLocation + ".", ToolTipIcon.Info);
 		}
 
 		private void OnExit(object sender, EventArgs e)
 		{
-            _hotkeys.Close(); //unregisters the hotkeys on program exit
-            Application.Exit();
+			_hotkeys.Close(); //unregisters the hotkeys on program exit
+			Application.Exit();
 		}
 
 		private void ShowWindow(object sender, EventArgs e)

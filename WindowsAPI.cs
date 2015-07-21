@@ -209,7 +209,7 @@ namespace AeroShot
 		[DllImport("user32.dll")]
 		internal static extern bool UnregisterHotKey(IntPtr hWnd, int id);
 
-        [DllImport("user32.dll")]
+		[DllImport("user32.dll")]
 		internal static extern bool SystemParametersInfo(uint uiAction, uint uiParam, ref int pvParam, uint fWinIni);
 
 		[DllImport("user32.dll")]

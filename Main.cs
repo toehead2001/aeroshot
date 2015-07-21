@@ -30,7 +30,7 @@ namespace AeroShot
 		private const uint SPI_GETFONTSMOOTHINGTYPE = 0x200A;
 
 		private readonly RegistryKey _registryKey;
-        Settings _settings = new Settings();
+		Settings _settings = new Settings();
 
 		public MainForm()
 		{
@@ -38,21 +38,21 @@ namespace AeroShot
 			Icon = new Icon(typeof(MainForm), "icon.ico");
 			InitializeComponent();
 
-            folderTextBox.Text = _settings.folderTextBox;
-            clipboardButton.Checked = _settings.clipboardButton;
-            diskButton.Checked = _settings.diskButton;
-            resizeCheckbox.Checked = _settings.resizeCheckbox;
-            windowWidth.Value = _settings.windowWidth;
-            windowHeight.Value = _settings.windowHeight;
-            opaqueCheckbox.Checked = _settings.opaqueCheckbox;
-            opaqueType.SelectedIndex = _settings.opaqueType;
-            checkerValue.Value = _settings.checkerValue;
-            opaqueColorHexBox.Text = _settings.opaqueColorHexBox;
+			folderTextBox.Text = _settings.folderTextBox;
+			clipboardButton.Checked = _settings.clipboardButton;
+			diskButton.Checked = _settings.diskButton;
+			resizeCheckbox.Checked = _settings.resizeCheckbox;
+			windowWidth.Value = _settings.windowWidth;
+			windowHeight.Value = _settings.windowHeight;
+			opaqueCheckbox.Checked = _settings.opaqueCheckbox;
+			opaqueType.SelectedIndex = _settings.opaqueType;
+			checkerValue.Value = _settings.checkerValue;
+			opaqueColorHexBox.Text = _settings.opaqueColorHexBox;
 			aeroColorCheckbox.Checked = _settings.aeroColorCheckbox;
 			aeroColorHexBox.Text = _settings.aeroColorHexBox;
-            mouseCheckbox.Checked = _settings.mouseCheckbox;
-            delayCheckbox.Checked = _settings.delayCheckbox;
-            delaySeconds.Value = _settings.delaySeconds;
+			mouseCheckbox.Checked = _settings.mouseCheckbox;
+			delayCheckbox.Checked = _settings.delayCheckbox;
+			delaySeconds.Value = _settings.delaySeconds;
 			clearTypeCheckbox.Checked = _settings.clearTypeCheckbox;
 
 			if (!GlassAvailable())
@@ -74,7 +74,7 @@ namespace AeroShot
 			clearTypeGroupBox.Enabled = clearTypeCheckbox.Checked;
 			aeroColorGroupBox.Enabled = aeroColorCheckbox.Checked;
 
-            _registryKey = Registry.CurrentUser.CreateSubKey(@"Software\AeroShot");
+			_registryKey = Registry.CurrentUser.CreateSubKey(@"Software\AeroShot");
 		}
 
 		private static bool GlassAvailable()
@@ -109,9 +109,9 @@ namespace AeroShot
 		private void BrowseButtonClick(object sender, EventArgs e)
 		{
 			if (folderSelectionDialog.ShowDialog() == DialogResult.OK)
-            {
-                folderTextBox.Text = folderSelectionDialog.SelectedPath;
-            }
+			{
+				folderTextBox.Text = folderSelectionDialog.SelectedPath;
+			}
 		}
 
 		private void opaqueColorDisplayClick(object sender, EventArgs e)
@@ -278,7 +278,7 @@ namespace AeroShot
 			aeroColorDialog.Color = Color.FromArgb(Convert.ToInt32("FF" + aeroColorHexBox.Text, 16));
 		}
 
-        private void OkButtonClick(object sender, EventArgs e)
+		private void OkButtonClick(object sender, EventArgs e)
 		{
 			if (clipboardButton.Checked)
 				_registryKey.SetValue("LastPath", "*" + folderTextBox.Text);
@@ -342,13 +342,13 @@ namespace AeroShot
 			data = BitConverter.ToInt64(b, 0);
 			_registryKey.SetValue("Delay", data, RegistryValueKind.QWord);
 
-            this.Close();
+			this.Close();
 		}
 
-        private void CancelButtonClick(object sender, EventArgs e)
-        {
-            this.Close();
-        }
+		private void CancelButtonClick(object sender, EventArgs e)
+		{
+			this.Close();
+		}
 	}
 
 	public class ColorDisplay : UserControl
