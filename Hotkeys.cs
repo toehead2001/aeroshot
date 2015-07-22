@@ -16,7 +16,6 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
 using System;
-using System.Drawing;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -102,10 +101,10 @@ namespace AeroShot
 					_settings.WindowWidth,
 					_settings.WindowHeight,
 					type,
-					Color.FromArgb(Convert.ToInt32("FF" + _settings.OpaqueColorHex, 16)),
+					_settings.OpaqueColor,
 					_settings.CheckerSize,
 					_settings.UseAeroColor,
-					Color.FromArgb(Convert.ToInt32("FF" + _settings.AeroColorHex, 16)),
+					_settings.AeroColor,
 					_settings.CaputreMouse,
 					_settings.DisableClearType);
 		}

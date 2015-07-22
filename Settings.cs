@@ -16,22 +16,23 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
 using System;
-using System.Text;
 using Microsoft.Win32;
 
 namespace AeroShot
 {
-	sealed class Settings
+    using System.Drawing;
+
+    sealed class Settings
 	{
         public bool UseDisk;
         public bool UseClipboard;
         public string FolderPath;
 		public bool UseOpaqueBackground;
 		public byte OpaqueType;
-        public string OpaqueColorHex;
+        public Color OpaqueColor;
         public int CheckerSize = 8;
         public bool UseAeroColor;
-		public string AeroColorHex;
+		public Color AeroColor;
 		public bool Resize;
 		public int WindowHeight = 640;
 		public int WindowWidth = 480;
@@ -89,14 +90,8 @@ namespace AeroShot
 					OpaqueType = 0;
 				if ((b[0] & 4) == 4)
 					OpaqueType = 1;
-
 				CheckerSize = b[1] + 2;
-
-				var hex = new StringBuilder(6);
-				hex.AppendFormat("{0:X2}", b[2]);
-				hex.AppendFormat("{0:X2}", b[3]);
-				hex.AppendFormat("{0:X2}", b[4]);
-				OpaqueColorHex = hex.ToString();
+                OpaqueColor = Color.FromArgb(b[2], b[3], b[4]);
 			}
 			else
 				OpaqueType = 0;
@@ -108,12 +103,7 @@ namespace AeroShot
 				for (int i = 0; i < 8; i++)
 					b[i] = (byte)(((long)value >> (i * 8)) & 0xff);
 				UseAeroColor = (b[0] & 1) == 1;
-
-				var hex = new StringBuilder(6);
-				hex.AppendFormat("{0:X2}", b[1]);
-				hex.AppendFormat("{0:X2}", b[2]);
-				hex.AppendFormat("{0:X2}", b[3]);
-				AeroColorHex = hex.ToString();
+				AeroColor = Color.FromArgb(b[1], b[2], b[3]);
 			}
 			else
 				OpaqueType = 0;
@@ -137,4 +127,12 @@ namespace AeroShot
 			}
 		}
 	}
+
+    static class HexColor
+    {
+        public static string Encode(Color color)
+        {
+            return color.IsEmpty ? null : ColorTranslator.ToHtml(color).Substring(1);
+        }
+    }
 }

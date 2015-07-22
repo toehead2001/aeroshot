@@ -46,9 +46,9 @@ namespace AeroShot
 			opaqueCheckbox.Checked = _settings.UseOpaqueBackground;
 			opaqueType.SelectedIndex = _settings.OpaqueType;
 			checkerValue.Value = _settings.CheckerSize;
-			opaqueColorHexBox.Text = _settings.OpaqueColorHex;
+            opaqueColorHexBox.Text = HexColor.Encode(_settings.OpaqueColor);
 			aeroColorCheckbox.Checked = _settings.UseAeroColor;
-			aeroColorHexBox.Text = _settings.AeroColorHex;
+            aeroColorHexBox.Text = HexColor.Encode(_settings.AeroColor);
 			mouseCheckbox.Checked = _settings.CaputreMouse;
 			delayCheckbox.Checked = _settings.DelayCapture;
 			delaySeconds.Value = _settings.DelayCaptureSeconds;
