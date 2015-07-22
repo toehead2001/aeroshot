@@ -37,10 +37,15 @@ namespace AeroShot
 
         public static Settings LoadSettingsFromRegistry()
         {
+            using (var registryKey = Registry.CurrentUser.CreateSubKey(@"Software\AeroShot"))
+                return LoadSettings(registryKey);
+        }
+
+        public static Settings LoadSettings(RegistryKey registryKey)
+        {
             var settings = new Settings();
 
             object value;
-			var registryKey = Registry.CurrentUser.CreateSubKey(@"Software\AeroShot");
 
 			if ((value = registryKey.GetValue("LastPath")) != null &&
 				value.GetType() == (typeof(string)))
