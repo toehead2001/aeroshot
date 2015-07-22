@@ -37,6 +37,8 @@ namespace AeroShot
 			Icon = new Icon(typeof(MainForm), "icon.ico");
 			InitializeComponent();
 
+		    Text = string.Format(Text, Application.ProductName, Application.ProductVersion);
+
 			folderTextBox.Text = _settings.folderTextBox;
 			clipboardButton.Checked = _settings.clipboardButton;
 			diskButton.Checked = _settings.diskButton;
