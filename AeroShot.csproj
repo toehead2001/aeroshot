@@ -72,6 +72,7 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="UnsafeBitmap.cs" />
+    <Compile Include="Switch.cs" />
     <Compile Include="WindowsAPI.cs" />
     <EmbeddedResource Include="icon.ico" />
     <Reference Include="System" />

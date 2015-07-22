@@ -40,20 +40,20 @@ namespace AeroShot
 			folderTextBox.Text = _settings.FolderPath;
 			clipboardButton.Checked = _settings.UseClipboard;
 			diskButton.Checked = _settings.UseDisk;
-			resizeCheckbox.Checked = _settings.UseResizeDimensions;
-            windowWidth.Value = _settings.ResizeDimensions.Width;
-			windowHeight.Value = _settings.ResizeDimensions.Height;
-            opaqueCheckbox.Checked = _settings.UseOpaqueBackground;
-            opaqueType.SelectedIndex = _settings.OpaqueBackgroundType == ScreenshotBackgroundType.Checkerboard ? 0
-                                     : _settings.OpaqueBackgroundType == ScreenshotBackgroundType.SolidColor ? 1
+			resizeCheckbox.Checked = _settings.ResizeDimensions.On;
+            windowWidth.Value = _settings.ResizeDimensions.Value.Width;
+			windowHeight.Value = _settings.ResizeDimensions.Value.Height;
+            opaqueCheckbox.Checked = _settings.OpaqueBackgroundType.On;
+            opaqueType.SelectedIndex = _settings.OpaqueBackgroundType.Value == ScreenshotBackgroundType.Checkerboard ? 0
+                                     : _settings.OpaqueBackgroundType.Value == ScreenshotBackgroundType.SolidColor ? 1
                                      : -1;
 			checkerValue.Value = _settings.CheckerboardBackgroundCheckerSize;
             opaqueColorHexBox.Text = HexColor.Encode(_settings.SolidBackgroundColor);
-			aeroColorCheckbox.Checked = _settings.UseAeroColor;
-            aeroColorHexBox.Text = HexColor.Encode(_settings.AeroColor);
+			aeroColorCheckbox.Checked = _settings.AeroColor.On;
+            aeroColorHexBox.Text = HexColor.Encode(_settings.AeroColor.Value);
 			mouseCheckbox.Checked = _settings.CaputreMouse;
-			delayCheckbox.Checked = _settings.DelayCapture;
-			delaySeconds.Value = (decimal) _settings.DelayCaptureDuration.TotalSeconds;
+			delayCheckbox.Checked = _settings.DelayCaptureDuration.On;
+			delaySeconds.Value = (decimal) _settings.DelayCaptureDuration.Value.TotalSeconds;
 			clearTypeCheckbox.Checked = _settings.DisableClearType;
 
 			if (!GlassAvailable())

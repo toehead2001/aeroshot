@@ -64,10 +64,10 @@ namespace AeroShot
 				_busyCapturing = true;
 				_worker = new Thread(() =>
 				{
-					if (CtrlAlt)
-						Thread.Sleep(TimeSpan.FromSeconds(3));
-					else if (_settings.DelayCapture)
-						Thread.Sleep(_settings.DelayCaptureDuration);
+                    if (CtrlAlt)
+                        Thread.Sleep(TimeSpan.FromSeconds(3));
+                    else
+                        _settings.DelayCaptureDuration.WhenOnThen(Thread.Sleep);
 					try
 					{
 						Screenshot.CaptureWindow(ref info);
@@ -92,14 +92,11 @@ namespace AeroShot
 					WindowsApi.GetForegroundWindow(),
 					_settings.UseClipboard,
 					_settings.FolderPath,
-					_settings.UseResizeDimensions ? _settings.ResizeDimensions : (Size?) null,
-					_settings.UseOpaqueBackground
-                        ? _settings.OpaqueBackgroundType
-                        : ScreenshotBackgroundType.Transparent,
+					_settings.ResizeDimensions.Convert(v => (Size?) v),
+                    _settings.OpaqueBackgroundType.GetValueOrDefault(),
 					_settings.SolidBackgroundColor,
 					_settings.CheckerboardBackgroundCheckerSize,
-					_settings.UseAeroColor,
-					_settings.AeroColor,
+					_settings.AeroColor.Convert(v => (Color?) v),
 					_settings.CaputreMouse,
 					_settings.DisableClearType);
 		}

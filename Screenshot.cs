@@ -34,8 +34,7 @@ namespace AeroShot
 		public bool CaptureMouse;
 		public bool DisableClearType;
 		public int CheckerboardSize;
-		public bool CustomGlass;
-		public Color AeroColor;
+		public Color? AeroColor;
 		public bool ClipboardNotDisk;
 		public string DiskSaveDirectory;
 		public Size? Resize;
@@ -44,18 +43,17 @@ namespace AeroShot
 		public ScreenshotTask(IntPtr window, bool clipboard, string file,
 							  Size? resize,
 							  ScreenshotBackgroundType backType, Color backColor,
-							  int checkerSize, bool customGlass, Color aeroColor,
+							  int checkerSize, Color? aeroColor,
 							  bool mouse, bool clearType)
 		{
 			WindowHandle = window;
 			ClipboardNotDisk = clipboard;
 			DiskSaveDirectory = file;
-			Resize = resize;
+			Resize = resize.HasValue && resize.Value.IsEmpty ? null : resize;
 			Background = backType;
 			BackgroundColor = backColor;
 			CheckerboardSize = checkerSize;
-			CustomGlass = customGlass;
-			AeroColor = aeroColor;
+			AeroColor = aeroColor.HasValue && aeroColor.Value.IsEmpty ? null : aeroColor;
 			CaptureMouse = mouse;
 			DisableClearType = clearType;
 		}
@@ -117,7 +115,7 @@ namespace AeroShot
 					bool AeroColorToggled = false;
 					WindowsApi.DWM_COLORIZATION_PARAMS originalParameters;
 					WindowsApi.DwmGetColorizationParameters(out originalParameters);
-					if (data.CustomGlass && AeroEnabled())
+					if (data.AeroColor != null && AeroEnabled())
 					{
 						// Original colorization parameters
 						originalParameters.clrGlassReflectionIntensity = 50;
@@ -127,7 +125,7 @@ namespace AeroShot
 						WindowsApi.DwmGetColorizationParameters(out parameters);
 						parameters.clrAfterGlowBalance = 2;
 						parameters.clrBlurBalance = 29;
-						parameters.clrColor = ColorToBgra(data.AeroColor);
+						parameters.clrColor = ColorToBgra(data.AeroColor.Value);
 						parameters.nIntensity = 69;
 
 						// Call the DwmSetColorizationParameters to make the change take effect.

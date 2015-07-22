@@ -16,28 +16,23 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
 using System;
+using System.Drawing;
 using Microsoft.Win32;
 
 namespace AeroShot
 {
-    using System.Drawing;
-
     sealed class Settings
 	{
         public bool UseDisk;
         public bool UseClipboard;
         public string FolderPath;
-        public bool UseOpaqueBackground;
-        public ScreenshotBackgroundType OpaqueBackgroundType;
+        public Switch<ScreenshotBackgroundType> OpaqueBackgroundType;
         public Color SolidBackgroundColor;
         public int CheckerboardBackgroundCheckerSize = 8;
-        public bool UseAeroColor;
-		public Color AeroColor;
-		public bool UseResizeDimensions;
-        public Size ResizeDimensions = new Size(640, 480);
+        public Switch<Color> AeroColor;
+        public Switch<Size> ResizeDimensions = Switch.Off(new Size(640, 480));
 		public bool CaputreMouse;
-		public bool DelayCapture;
-		public TimeSpan DelayCaptureDuration = TimeSpan.FromSeconds(3);
+        public Switch<TimeSpan> DelayCaptureDuration = Switch.Off(TimeSpan.FromSeconds(3));
 		public bool DisableClearType;
 		private readonly RegistryKey _registryKey;
 
@@ -73,11 +68,13 @@ namespace AeroShot
 				var b = new byte[8];
 				for (int i = 0; i < 8; i++)
 					b[i] = (byte)(((long)value >> (i * 8)) & 0xff);
-				UseResizeDimensions = (b[0] & 1) == 1;
+				var use = (b[0] & 1) == 1;
 				var width = b[1] << 16 | b[2] << 8 | b[3];
 				var height = b[4] << 16 | b[5] << 8 | b[6];
-                ResizeDimensions = new Size(width, height);
+                ResizeDimensions = Switch.Create(use, new Size(width, height));
 			}
+
+            var defaultOpaqueBackgroundType = Switch.Off(ScreenshotBackgroundType.Checkerboard);
 
 			if ((value = _registryKey.GetValue("Opaque")) != null &&
 				value.GetType() == (typeof(long)))
@@ -85,17 +82,16 @@ namespace AeroShot
 				var b = new byte[8];
 				for (int i = 0; i < 8; i++)
 					b[i] = (byte)(((long)value >> (i * 8)) & 0xff);
-                OpaqueBackgroundType = ScreenshotBackgroundType.Transparent;
-				UseOpaqueBackground = (b[0] & 1) == 1;
-				if ((b[0] & 2) == 2)
-					OpaqueBackgroundType = ScreenshotBackgroundType.Checkerboard;
-				if ((b[0] & 4) == 4)
-					OpaqueBackgroundType = ScreenshotBackgroundType.SolidColor;
+				var use = (b[0] & 1) == 1;
+                var type = (b[0] & 2) == 2 ? ScreenshotBackgroundType.Checkerboard
+                         : (b[0] & 4) == 4 ? ScreenshotBackgroundType.SolidColor
+                         : ScreenshotBackgroundType.Transparent;
+                OpaqueBackgroundType = Switch.Create(use, type);
 				CheckerboardBackgroundCheckerSize = b[1] + 2;
                 SolidBackgroundColor = Color.FromArgb(b[2], b[3], b[4]);
 			}
 			else
-				OpaqueBackgroundType = 0;
+                OpaqueBackgroundType = defaultOpaqueBackgroundType;
 
 			if ((value = _registryKey.GetValue("AeroColor")) != null &&
 				value.GetType() == (typeof(long)))
@@ -103,11 +99,11 @@ namespace AeroShot
 				var b = new byte[8];
 				for (int i = 0; i < 8; i++)
 					b[i] = (byte)(((long)value >> (i * 8)) & 0xff);
-				UseAeroColor = (b[0] & 1) == 1;
-				AeroColor = Color.FromArgb(b[1], b[2], b[3]);
+				var use = (b[0] & 1) == 1;
+                AeroColor = Switch.Create(use, Color.FromArgb(b[1], b[2], b[3]));
 			}
 			else
-				OpaqueBackgroundType = 0;
+                OpaqueBackgroundType = defaultOpaqueBackgroundType;
 
 			if ((value = _registryKey.GetValue("CapturePointer")) != null &&
 				value.GetType() == (typeof(int)))
@@ -123,8 +119,8 @@ namespace AeroShot
 				var b = new byte[8];
 				for (int i = 0; i < 8; i++)
 					b[i] = (byte)(((long)value >> (i * 8)) & 0xff);
-				DelayCapture = (b[0] & 1) == 1;
-                DelayCaptureDuration = TimeSpan.FromSeconds(b[1]);
+				var use = (b[0] & 1) == 1;
+                DelayCaptureDuration = Switch.Create(use, TimeSpan.FromSeconds(b[1]));
 			}
 		}
 	}
