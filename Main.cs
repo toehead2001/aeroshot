@@ -53,7 +53,7 @@ namespace AeroShot
             aeroColorHexBox.Text = HexColor.Encode(_settings.AeroColor);
 			mouseCheckbox.Checked = _settings.CaputreMouse;
 			delayCheckbox.Checked = _settings.DelayCapture;
-			delaySeconds.Value = _settings.DelayCaptureSeconds;
+			delaySeconds.Value = (decimal) _settings.DelayCaptureDuration.TotalSeconds;
 			clearTypeCheckbox.Checked = _settings.DisableClearType;
 
 			if (!GlassAvailable())

@@ -37,7 +37,7 @@ namespace AeroShot
         public Size ResizeDimensions = new Size(640, 480);
 		public bool CaputreMouse;
 		public bool DelayCapture;
-		public byte DelayCaptureSeconds = 3;
+		public TimeSpan DelayCaptureDuration = TimeSpan.FromSeconds(3);
 		public bool DisableClearType;
 		private readonly RegistryKey _registryKey;
 
@@ -124,7 +124,7 @@ namespace AeroShot
 				for (int i = 0; i < 8; i++)
 					b[i] = (byte)(((long)value >> (i * 8)) & 0xff);
 				DelayCapture = (b[0] & 1) == 1;
-				DelayCaptureSeconds = b[1];
+                DelayCaptureDuration = TimeSpan.FromSeconds(b[1]);
 			}
 		}
 	}

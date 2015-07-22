@@ -67,7 +67,7 @@ namespace AeroShot
 					if (CtrlAlt)
 						Thread.Sleep(TimeSpan.FromSeconds(3));
 					else if (_settings.DelayCapture)
-						Thread.Sleep(TimeSpan.FromSeconds(_settings.DelayCaptureSeconds));
+						Thread.Sleep(_settings.DelayCaptureDuration);
 					try
 					{
 						Screenshot.CaptureWindow(ref info);
