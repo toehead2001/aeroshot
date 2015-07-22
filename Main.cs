@@ -37,22 +37,22 @@ namespace AeroShot
 			Icon = new Icon(typeof(MainForm), "icon.ico");
 			InitializeComponent();
 
-			folderTextBox.Text = _settings.folderTextBox;
-			clipboardButton.Checked = _settings.clipboardButton;
-			diskButton.Checked = _settings.diskButton;
-			resizeCheckbox.Checked = _settings.resizeCheckbox;
-			windowWidth.Value = _settings.windowWidth;
-			windowHeight.Value = _settings.windowHeight;
-			opaqueCheckbox.Checked = _settings.opaqueCheckbox;
-			opaqueType.SelectedIndex = _settings.opaqueType;
-			checkerValue.Value = _settings.checkerValue;
-			opaqueColorHexBox.Text = _settings.opaqueColorHexBox;
-			aeroColorCheckbox.Checked = _settings.aeroColorCheckbox;
-			aeroColorHexBox.Text = _settings.aeroColorHexBox;
-			mouseCheckbox.Checked = _settings.mouseCheckbox;
-			delayCheckbox.Checked = _settings.delayCheckbox;
-			delaySeconds.Value = _settings.delaySeconds;
-			clearTypeCheckbox.Checked = _settings.clearTypeCheckbox;
+			folderTextBox.Text = _settings.FolderTextBox;
+			clipboardButton.Checked = _settings.ClipboardButton;
+			diskButton.Checked = _settings.DiskButton;
+			resizeCheckbox.Checked = _settings.ResizeCheckbox;
+			windowWidth.Value = _settings.WindowWidth;
+			windowHeight.Value = _settings.WindowHeight;
+			opaqueCheckbox.Checked = _settings.OpaqueCheckbox;
+			opaqueType.SelectedIndex = _settings.OpaqueType;
+			checkerValue.Value = _settings.CheckerValue;
+			opaqueColorHexBox.Text = _settings.OpaqueColorHexBox;
+			aeroColorCheckbox.Checked = _settings.AeroColorCheckbox;
+			aeroColorHexBox.Text = _settings.AeroColorHexBox;
+			mouseCheckbox.Checked = _settings.MouseCheckbox;
+			delayCheckbox.Checked = _settings.DelayCheckbox;
+			delaySeconds.Value = _settings.DelaySeconds;
+			clearTypeCheckbox.Checked = _settings.ClearTypeCheckbox;
 
 			if (!GlassAvailable())
 			{

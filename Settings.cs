@@ -23,23 +23,23 @@ namespace AeroShot
 {
 	public class Settings
 	{
-		public bool firstRun;
-		public int checkerValue = 8;
-		public string opaqueColorHexBox;
-		public string folderTextBox;
-		public bool opaqueCheckbox;
-		public byte opaqueType;
-		public bool aeroColorCheckbox;
-		public string aeroColorHexBox;
-		public bool resizeCheckbox;
-		public int windowHeight = 640;
-		public int windowWidth = 480;
-		public bool diskButton;
-		public bool clipboardButton;
-		public bool mouseCheckbox;
-		public bool delayCheckbox;
-		public byte delaySeconds = 3;
-		public bool clearTypeCheckbox;
+		public bool FirstRun;
+		public int CheckerValue = 8;
+		public string OpaqueColorHexBox;
+		public string FolderTextBox;
+		public bool OpaqueCheckbox;
+		public byte OpaqueType;
+		public bool AeroColorCheckbox;
+		public string AeroColorHexBox;
+		public bool ResizeCheckbox;
+		public int WindowHeight = 640;
+		public int WindowWidth = 480;
+		public bool DiskButton;
+		public bool ClipboardButton;
+		public bool MouseCheckbox;
+		public bool DelayCheckbox;
+		public byte DelaySeconds = 3;
+		public bool ClearTypeCheckbox;
 		private readonly RegistryKey _registryKey;
 
 
@@ -50,7 +50,7 @@ namespace AeroShot
 
 			if ((value = _registryKey.GetValue("FirstRun")) == null)
 			{
-				firstRun = true;
+				FirstRun = true;
 			}
 
 
@@ -59,18 +59,18 @@ namespace AeroShot
 			{
 				if (((string)value).Substring(0, 1) == "*")
 				{
-					folderTextBox = ((string)value).Substring(1);
-					clipboardButton = true;
+					FolderTextBox = ((string)value).Substring(1);
+					ClipboardButton = true;
 				}
 				else
 				{
-					folderTextBox = (string)value;
-					diskButton = true;
+					FolderTextBox = (string)value;
+					DiskButton = true;
 				}
 			}
 			else
 			{
-				folderTextBox =
+				FolderTextBox =
 					Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
 			}
 
@@ -80,9 +80,9 @@ namespace AeroShot
 				var b = new byte[8];
 				for (int i = 0; i < 8; i++)
 					b[i] = (byte)(((long)value >> (i * 8)) & 0xff);
-				resizeCheckbox = (b[0] & 1) == 1;
-				windowWidth = b[1] << 16 | b[2] << 8 | b[3];
-				windowHeight = b[4] << 16 | b[5] << 8 | b[6];
+				ResizeCheckbox = (b[0] & 1) == 1;
+				WindowWidth = b[1] << 16 | b[2] << 8 | b[3];
+				WindowHeight = b[4] << 16 | b[5] << 8 | b[6];
 			}
 
 			if ((value = _registryKey.GetValue("Opaque")) != null &&
@@ -91,22 +91,22 @@ namespace AeroShot
 				var b = new byte[8];
 				for (int i = 0; i < 8; i++)
 					b[i] = (byte)(((long)value >> (i * 8)) & 0xff);
-				opaqueCheckbox = (b[0] & 1) == 1;
+				OpaqueCheckbox = (b[0] & 1) == 1;
 				if ((b[0] & 2) == 2)
-					opaqueType = 0;
+					OpaqueType = 0;
 				if ((b[0] & 4) == 4)
-					opaqueType = 1;
+					OpaqueType = 1;
 
-				checkerValue = b[1] + 2;
+				CheckerValue = b[1] + 2;
 
 				var hex = new StringBuilder(6);
 				hex.AppendFormat("{0:X2}", b[2]);
 				hex.AppendFormat("{0:X2}", b[3]);
 				hex.AppendFormat("{0:X2}", b[4]);
-				opaqueColorHexBox = hex.ToString();
+				OpaqueColorHexBox = hex.ToString();
 			}
 			else
-				opaqueType = 0;
+				OpaqueType = 0;
 
 			if ((value = _registryKey.GetValue("AeroColor")) != null &&
 				value.GetType() == (typeof(long)))
@@ -114,24 +114,24 @@ namespace AeroShot
 				var b = new byte[8];
 				for (int i = 0; i < 8; i++)
 					b[i] = (byte)(((long)value >> (i * 8)) & 0xff);
-				aeroColorCheckbox = (b[0] & 1) == 1;
+				AeroColorCheckbox = (b[0] & 1) == 1;
 
 				var hex = new StringBuilder(6);
 				hex.AppendFormat("{0:X2}", b[1]);
 				hex.AppendFormat("{0:X2}", b[2]);
 				hex.AppendFormat("{0:X2}", b[3]);
-				aeroColorHexBox = hex.ToString();
+				AeroColorHexBox = hex.ToString();
 			}
 			else
-				opaqueType = 0;
+				OpaqueType = 0;
 
 			if ((value = _registryKey.GetValue("CapturePointer")) != null &&
 				value.GetType() == (typeof(int)))
-				mouseCheckbox = ((int)value & 1) == 1;
+				MouseCheckbox = ((int)value & 1) == 1;
 
 			if ((value = _registryKey.GetValue("ClearType")) != null &&
 				value.GetType() == (typeof(int)))
-				clearTypeCheckbox = ((int)value & 1) == 1;
+				ClearTypeCheckbox = ((int)value & 1) == 1;
 
 			if ((value = _registryKey.GetValue("Delay")) != null &&
 				value.GetType() == (typeof(long)))
@@ -139,8 +139,8 @@ namespace AeroShot
 				var b = new byte[8];
 				for (int i = 0; i < 8; i++)
 					b[i] = (byte)(((long)value >> (i * 8)) & 0xff);
-				delayCheckbox = (b[0] & 1) == 1;
-				delaySeconds = b[1];
+				DelayCheckbox = (b[0] & 1) == 1;
+				DelaySeconds = b[1];
 			}
 		}
 	}

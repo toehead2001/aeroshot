@@ -66,8 +66,8 @@ namespace AeroShot
 				{
 					if (CtrlAlt)
 						Thread.Sleep(TimeSpan.FromSeconds(3));
-					else if (_settings.delayCheckbox)
-						Thread.Sleep(TimeSpan.FromSeconds(_settings.delaySeconds));
+					else if (_settings.DelayCheckbox)
+						Thread.Sleep(TimeSpan.FromSeconds(_settings.DelaySeconds));
 					try
 					{
 						Screenshot.CaptureWindow(ref info);
@@ -88,26 +88,26 @@ namespace AeroShot
 		private ScreenshotTask GetParamteresFromUI()
 		{
 			var type = ScreenshotTask.BackgroundType.Transparent;
-			if (_settings.opaqueCheckbox && _settings.opaqueType == 0)
+			if (_settings.OpaqueCheckbox && _settings.OpaqueType == 0)
 				type = ScreenshotTask.BackgroundType.Checkerboard;
-			else if (_settings.opaqueCheckbox && _settings.opaqueType == 1)
+			else if (_settings.OpaqueCheckbox && _settings.OpaqueType == 1)
 				type = ScreenshotTask.BackgroundType.SolidColor;
 
 			return
 				new ScreenshotTask(
 					WindowsApi.GetForegroundWindow(),
-					_settings.clipboardButton,
-					_settings.folderTextBox,
-					_settings.resizeCheckbox,
-					_settings.windowWidth,
-					_settings.windowHeight,
+					_settings.ClipboardButton,
+					_settings.FolderTextBox,
+					_settings.ResizeCheckbox,
+					_settings.WindowWidth,
+					_settings.WindowHeight,
 					type,
-					Color.FromArgb(Convert.ToInt32("FF" + _settings.opaqueColorHexBox, 16)),
-					_settings.checkerValue,
-					_settings.aeroColorCheckbox,
-					Color.FromArgb(Convert.ToInt32("FF" + _settings.aeroColorHexBox, 16)),
-					_settings.mouseCheckbox,
-					_settings.clearTypeCheckbox);
+					Color.FromArgb(Convert.ToInt32("FF" + _settings.OpaqueColorHexBox, 16)),
+					_settings.CheckerValue,
+					_settings.AeroColorCheckbox,
+					Color.FromArgb(Convert.ToInt32("FF" + _settings.AeroColorHexBox, 16)),
+					_settings.MouseCheckbox,
+					_settings.ClearTypeCheckbox);
 		}
 	}
 }

@@ -57,9 +57,9 @@ namespace AeroShot
 			base.OnLoad(e);
 
 			string saveLocation;
-			if (_settings.diskButton)
+			if (_settings.DiskButton)
 			{
-				saveLocation = "\"" + _settings.folderTextBox + "\"";
+				saveLocation = "\"" + _settings.FolderTextBox + "\"";
 			}
 			else
 			{
