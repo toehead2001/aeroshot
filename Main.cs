@@ -28,7 +28,6 @@ namespace AeroShot
 		private const uint SPI_GETFONTSMOOTHING = 0x004A;
 		private const uint SPI_GETFONTSMOOTHINGTYPE = 0x200A;
 
-		private readonly RegistryKey _registryKey;
 		Settings _settings = Settings.LoadSettingsFromRegistry();
 
 		public MainForm()
@@ -74,8 +73,6 @@ namespace AeroShot
 			delayGroupBox.Enabled = delayCheckbox.Checked;
 			clearTypeGroupBox.Enabled = clearTypeCheckbox.Checked;
 			aeroColorGroupBox.Enabled = aeroColorCheckbox.Checked;
-
-			_registryKey = Registry.CurrentUser.CreateSubKey(@"Software\AeroShot");
 		}
 
 		private static bool GlassAvailable()
@@ -281,67 +278,23 @@ namespace AeroShot
 
 		private void OkButtonClick(object sender, EventArgs e)
 		{
-			if (clipboardButton.Checked)
-				_registryKey.SetValue("LastPath", "*" + folderTextBox.Text);
-			else
-				_registryKey.SetValue("LastPath", folderTextBox.Text);
-
-			// Save resizing settings in an 8-byte long
-			var b = new byte[8];
-			b[0] = (byte)(resizeCheckbox.Checked ? 1 : 0);
-
-			b[3] = (byte)((int)windowWidth.Value & 0xff);
-			b[2] = (byte)(((int)windowWidth.Value >> 8) & 0xff);
-			b[1] = (byte)(((int)windowWidth.Value >> 16) & 0xff);
-
-			b[6] = (byte)((int)windowHeight.Value & 0xff);
-			b[5] = (byte)(((int)windowHeight.Value >> 8) & 0xff);
-			b[4] = (byte)(((int)windowHeight.Value >> 16) & 0xff);
-
-			long data = BitConverter.ToInt64(b, 0);
-			_registryKey.SetValue("WindowSize", data, RegistryValueKind.QWord);
-
-			// Save background color settings in an 8-byte long
-			b = new byte[8];
-			b[0] = (byte)(opaqueCheckbox.Checked ? 1 : 0);
-			b[0] += (byte)Math.Pow(2, opaqueType.SelectedIndex + 1);
-
-			b[1] = (byte)(checkerValue.Value - 2);
-
-			b[2] = opaqueColorDialog.Color.R;
-			b[3] = opaqueColorDialog.Color.G;
-			b[4] = opaqueColorDialog.Color.B;
-
-			data = BitConverter.ToInt64(b, 0);
-			_registryKey.SetValue("Opaque", data, RegistryValueKind.QWord);
-
-			// Save background color settings in an 8-byte long
-			b = new byte[8];
-			b[0] = (byte)(aeroColorCheckbox.Checked ? 1 : 0);
-
-			b[1] = aeroColorDialog.Color.R;
-			b[2] = aeroColorDialog.Color.G;
-			b[3] = aeroColorDialog.Color.B;
-
-			data = BitConverter.ToInt64(b, 0);
-			_registryKey.SetValue("AeroColor", data, RegistryValueKind.QWord);
-
-			_registryKey.SetValue("CapturePointer",
-								  mouseCheckbox.Checked ? 1 : 0,
-								  RegistryValueKind.DWord);
-
-			_registryKey.SetValue("ClearType",
-					  clearTypeCheckbox.Checked ? 1 : 0,
-					  RegistryValueKind.DWord);
-
-			// Save delay settings in an 8-byte long
-			b = new byte[8];
-			b[0] = (byte)(delayCheckbox.Checked ? 1 : 0);
-
-			b[1] = (byte)(((int)delaySeconds.Value) & 0xff);
-
-			data = BitConverter.ToInt64(b, 0);
-			_registryKey.SetValue("Delay", data, RegistryValueKind.QWord);
+            Settings.SaveSettingsToRegistry(new Settings
+            {
+                UseClipboard         = clipboardButton.Checked,
+                FolderPath           = folderTextBox.Text,
+                ResizeDimensions     = Switch.Create(resizeCheckbox.Checked,
+                                                     new Size((int) windowWidth.Value,
+                                                              (int) windowHeight.Value)),
+                OpaqueBackgroundType = Switch.Create(opaqueCheckbox.Checked,
+                                                     opaqueType.SelectedIndex == 1
+                                                     ? ScreenshotBackgroundType.SolidColor
+                                                     : ScreenshotBackgroundType.Checkerboard),
+                SolidBackgroundColor = opaqueColorDialog.Color,
+                AeroColor            = Switch.Create(aeroColorCheckbox.Checked, aeroColorDialog.Color),
+                CaputreMouse         = mouseCheckbox.Checked,
+                DisableClearType     = clearTypeCheckbox.Checked,
+                DelayCaptureDuration = Switch.Create(delayCheckbox.Checked, TimeSpan.FromSeconds((int) delaySeconds.Value)),
+            });
 
 			this.Close();
 		}
