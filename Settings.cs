@@ -23,7 +23,6 @@ namespace AeroShot
 {
 	public class Settings
 	{
-		public bool FirstRun;
 		public int CheckerValue = 8;
 		public string OpaqueColorHexBox;
 		public string FolderTextBox;
@@ -47,12 +46,6 @@ namespace AeroShot
 		{
 			object value;
 			_registryKey = Registry.CurrentUser.CreateSubKey(@"Software\AeroShot");
-
-			if ((value = _registryKey.GetValue("FirstRun")) == null)
-			{
-				FirstRun = true;
-			}
-
 
 			if ((value = _registryKey.GetValue("LastPath")) != null &&
 				value.GetType() == (typeof(string)))
