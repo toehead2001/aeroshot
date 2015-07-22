@@ -27,9 +27,9 @@ namespace AeroShot
         public bool UseDisk;
         public bool UseClipboard;
         public string FolderPath;
-		public bool UseOpaqueBackground;
-		public byte OpaqueType;
-        public Color OpaqueColor;
+        public bool UseOpaqueBackground;
+        public ScreenshotBackgroundType BackgroundType;
+        public Color OpaqueBackgroundColor;
         public int CheckerSize = 8;
         public bool UseAeroColor;
 		public Color AeroColor;
@@ -85,16 +85,17 @@ namespace AeroShot
 				var b = new byte[8];
 				for (int i = 0; i < 8; i++)
 					b[i] = (byte)(((long)value >> (i * 8)) & 0xff);
+                BackgroundType = ScreenshotBackgroundType.Transparent;
 				UseOpaqueBackground = (b[0] & 1) == 1;
 				if ((b[0] & 2) == 2)
-					OpaqueType = 0;
+					BackgroundType = ScreenshotBackgroundType.Checkerboard;
 				if ((b[0] & 4) == 4)
-					OpaqueType = 1;
+					BackgroundType = ScreenshotBackgroundType.SolidColor;
 				CheckerSize = b[1] + 2;
-                OpaqueColor = Color.FromArgb(b[2], b[3], b[4]);
+                OpaqueBackgroundColor = Color.FromArgb(b[2], b[3], b[4]);
 			}
 			else
-				OpaqueType = 0;
+				BackgroundType = 0;
 
 			if ((value = _registryKey.GetValue("AeroColor")) != null &&
 				value.GetType() == (typeof(long)))
@@ -106,7 +107,7 @@ namespace AeroShot
 				AeroColor = Color.FromArgb(b[1], b[2], b[3]);
 			}
 			else
-				OpaqueType = 0;
+				BackgroundType = 0;
 
 			if ((value = _registryKey.GetValue("CapturePointer")) != null &&
 				value.GetType() == (typeof(int)))

@@ -86,13 +86,7 @@ namespace AeroShot
 
 		private ScreenshotTask GetParamteresFromUI()
 		{
-			var type = ScreenshotTask.BackgroundType.Transparent;
-			if (_settings.UseOpaqueBackground && _settings.OpaqueType == 0)
-				type = ScreenshotTask.BackgroundType.Checkerboard;
-			else if (_settings.UseOpaqueBackground && _settings.OpaqueType == 1)
-				type = ScreenshotTask.BackgroundType.SolidColor;
-
-			return
+		    return
 				new ScreenshotTask(
 					WindowsApi.GetForegroundWindow(),
 					_settings.UseClipboard,
@@ -100,8 +94,10 @@ namespace AeroShot
 					_settings.Resize,
 					_settings.WindowWidth,
 					_settings.WindowHeight,
-					type,
-					_settings.OpaqueColor,
+					_settings.UseOpaqueBackground
+                        ? _settings.BackgroundType
+                        : ScreenshotBackgroundType.Transparent,
+					_settings.OpaqueBackgroundColor,
 					_settings.CheckerSize,
 					_settings.UseAeroColor,
 					_settings.AeroColor,

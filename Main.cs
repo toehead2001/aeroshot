@@ -43,10 +43,12 @@ namespace AeroShot
 			resizeCheckbox.Checked = _settings.Resize;
 			windowWidth.Value = _settings.WindowWidth;
 			windowHeight.Value = _settings.WindowHeight;
-			opaqueCheckbox.Checked = _settings.UseOpaqueBackground;
-			opaqueType.SelectedIndex = _settings.OpaqueType;
+            opaqueCheckbox.Checked = _settings.UseOpaqueBackground;
+            opaqueType.SelectedIndex = _settings.BackgroundType == ScreenshotBackgroundType.Checkerboard ? 0
+                                     : _settings.BackgroundType == ScreenshotBackgroundType.SolidColor ? 1
+                                     : -1;
 			checkerValue.Value = _settings.CheckerSize;
-            opaqueColorHexBox.Text = HexColor.Encode(_settings.OpaqueColor);
+            opaqueColorHexBox.Text = HexColor.Encode(_settings.OpaqueBackgroundColor);
 			aeroColorCheckbox.Checked = _settings.UseAeroColor;
             aeroColorHexBox.Text = HexColor.Encode(_settings.AeroColor);
 			mouseCheckbox.Checked = _settings.CaputreMouse;

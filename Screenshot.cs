@@ -28,14 +28,7 @@ namespace AeroShot
 {
 	internal struct ScreenshotTask
 	{
-		public enum BackgroundType
-		{
-			Transparent,
-			Checkerboard,
-			SolidColor
-		}
-
-		public BackgroundType Background;
+	    public ScreenshotBackgroundType Background;
 		public Color BackgroundColor;
 		public bool CaptureMouse;
 		public bool DisableClearType;
@@ -51,7 +44,7 @@ namespace AeroShot
 
 		public ScreenshotTask(IntPtr window, bool clipboard, string file,
 							  bool resize, int resizeX, int resizeY,
-							  BackgroundType backType, Color backColor,
+							  ScreenshotBackgroundType backType, Color backColor,
 							  int checkerSize, bool customGlass, Color aeroColor,
 							  bool mouse, bool clearType)
 		{
@@ -71,7 +64,14 @@ namespace AeroShot
 		}
 	}
 
-	internal static class Screenshot
+    enum ScreenshotBackgroundType
+    {
+        Transparent,
+        Checkerboard,
+        SolidColor
+    }
+
+    internal static class Screenshot
 	{
 		private const uint SWP_NOACTIVATE = 0x0010;
 		private const int GWL_STYLE = -16;
@@ -186,7 +186,7 @@ namespace AeroShot
 					{
 						if (data.ClipboardNotDisk &&
 							data.Background !=
-							ScreenshotTask.BackgroundType.Transparent)
+							ScreenshotBackgroundType.Transparent)
 							// Screenshot is already opaque, don't need to modify it
 							Clipboard.SetImage(s);
 						else if (data.ClipboardNotDisk)
@@ -342,8 +342,8 @@ namespace AeroShot
 			ref ScreenshotTask data)
 		{
 			Color tmpColor = data.BackgroundColor;
-			if (data.Background == ScreenshotTask.BackgroundType.Transparent ||
-				data.Background == ScreenshotTask.BackgroundType.Checkerboard)
+			if (data.Background == ScreenshotBackgroundType.Transparent ||
+				data.Background == ScreenshotBackgroundType.Checkerboard)
 				tmpColor = Color.White;
 			var backdrop = new Form
 			{
@@ -401,7 +401,7 @@ namespace AeroShot
 												  rct.Right - rct.Left,
 												  rct.Bottom - rct.Top));
 
-			if (data.Background == ScreenshotTask.BackgroundType.SolidColor)
+			if (data.Background == ScreenshotBackgroundType.SolidColor)
 			{
 				backdrop.Dispose();
 				if (data.CaptureMouse)
@@ -432,7 +432,7 @@ namespace AeroShot
 			whiteShot.Dispose();
 			blackShot.Dispose();
 
-			if (data.Background == ScreenshotTask.BackgroundType.Checkerboard)
+			if (data.Background == ScreenshotBackgroundType.Checkerboard)
 			{
 				var final = new Bitmap(transparentImage.Width,
 									   transparentImage.Height,
