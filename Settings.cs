@@ -33,9 +33,8 @@ namespace AeroShot
         public int CheckerboardBackgroundCheckerSize = 8;
         public bool UseAeroColor;
 		public Color AeroColor;
-		public bool Resize;
-		public int WindowHeight = 480;
-		public int WindowWidth = 640;
+		public bool UseResizeDimensions;
+        public Size ResizeDimensions = new Size(640, 480);
 		public bool CaputreMouse;
 		public bool DelayCapture;
 		public byte DelayCaptureSeconds = 3;
@@ -74,9 +73,10 @@ namespace AeroShot
 				var b = new byte[8];
 				for (int i = 0; i < 8; i++)
 					b[i] = (byte)(((long)value >> (i * 8)) & 0xff);
-				Resize = (b[0] & 1) == 1;
-				WindowWidth = b[1] << 16 | b[2] << 8 | b[3];
-				WindowHeight = b[4] << 16 | b[5] << 8 | b[6];
+				UseResizeDimensions = (b[0] & 1) == 1;
+				var width = b[1] << 16 | b[2] << 8 | b[3];
+				var height = b[4] << 16 | b[5] << 8 | b[6];
+                ResizeDimensions = new Size(width, height);
 			}
 
 			if ((value = _registryKey.GetValue("Opaque")) != null &&

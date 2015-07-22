@@ -16,6 +16,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
 using System;
+using System.Drawing;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -91,14 +92,12 @@ namespace AeroShot
 					WindowsApi.GetForegroundWindow(),
 					_settings.UseClipboard,
 					_settings.FolderPath,
-					_settings.Resize,
-					_settings.WindowWidth,
-					_settings.WindowHeight,
+					_settings.UseResizeDimensions ? _settings.ResizeDimensions : (Size?) null,
 					_settings.UseOpaqueBackground
-                        ? _settings.BackgroundType
+                        ? _settings.OpaqueBackgroundType
                         : ScreenshotBackgroundType.Transparent,
-					_settings.OpaqueBackgroundColor,
-					_settings.CheckerSize,
+					_settings.SolidBackgroundColor,
+					_settings.CheckerboardBackgroundCheckerSize,
 					_settings.UseAeroColor,
 					_settings.AeroColor,
 					_settings.CaputreMouse,

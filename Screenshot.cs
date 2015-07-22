@@ -16,6 +16,7 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
 using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
@@ -26,7 +27,7 @@ using System.Windows.Forms;
 
 namespace AeroShot
 {
-	internal struct ScreenshotTask
+    internal struct ScreenshotTask
 	{
 	    public ScreenshotBackgroundType Background;
 		public Color BackgroundColor;
@@ -37,13 +38,11 @@ namespace AeroShot
 		public Color AeroColor;
 		public bool ClipboardNotDisk;
 		public string DiskSaveDirectory;
-		public bool DoResize;
-		public int ResizeX;
-		public int ResizeY;
+		public Size? Resize;
 		public IntPtr WindowHandle;
 
 		public ScreenshotTask(IntPtr window, bool clipboard, string file,
-							  bool resize, int resizeX, int resizeY,
+							  Size? resize,
 							  ScreenshotBackgroundType backType, Color backColor,
 							  int checkerSize, bool customGlass, Color aeroColor,
 							  bool mouse, bool clearType)
@@ -51,9 +50,7 @@ namespace AeroShot
 			WindowHandle = window;
 			ClipboardNotDisk = clipboard;
 			DiskSaveDirectory = file;
-			DoResize = resize;
-			ResizeX = resizeX;
-			ResizeY = resizeY;
+			Resize = resize;
 			Background = backType;
 			BackgroundColor = backColor;
 			CheckerboardSize = checkerSize;
@@ -139,7 +136,7 @@ namespace AeroShot
 					}
 
 					var r = new WindowsRect(0);
-					if (data.DoResize)
+					if (data.Resize != null)
 					{
 						SmartResizeWindow(ref data, out r);
 						Thread.Sleep(100);
@@ -237,7 +234,7 @@ namespace AeroShot
 						s.Dispose();
 					}
 
-					if (data.DoResize)
+					if (data.Resize != null)
 					{
 						if (
 							(WindowsApi.GetWindowLong(data.WindowHandle,
@@ -309,6 +306,9 @@ namespace AeroShot
 		private static void SmartResizeWindow(ref ScreenshotTask data,
 											  out WindowsRect oldWindowSize)
 		{
+            Debug.Assert(data.Resize != null);
+            var dim = data.Resize.Value;
+
 			oldWindowSize = new WindowsRect(0);
 			if ((WindowsApi.GetWindowLong(data.WindowHandle, GWL_STYLE) &
 				 WS_SIZEBOX) != WS_SIZEBOX)
@@ -323,9 +323,9 @@ namespace AeroShot
 			{
 				WindowsApi.SetWindowPos(data.WindowHandle, (IntPtr)0, r.Left,
 										r.Top,
-										data.ResizeX -
+										dim.Width -
 										(f.Width - (r.Right - r.Left)),
-										data.ResizeY -
+										dim.Height -
 										(f.Height - (r.Bottom - r.Top)),
 										SWP_SHOWWINDOW);
 				f.Dispose();
@@ -333,7 +333,7 @@ namespace AeroShot
 			else
 			{
 				WindowsApi.SetWindowPos(data.WindowHandle, (IntPtr)0, r.Left,
-										r.Top, data.ResizeX, data.ResizeY,
+										r.Top, dim.Width, dim.Height,
 										SWP_SHOWWINDOW);
 			}
 		}

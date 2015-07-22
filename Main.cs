@@ -40,15 +40,15 @@ namespace AeroShot
 			folderTextBox.Text = _settings.FolderPath;
 			clipboardButton.Checked = _settings.UseClipboard;
 			diskButton.Checked = _settings.UseDisk;
-			resizeCheckbox.Checked = _settings.Resize;
-			windowWidth.Value = _settings.WindowWidth;
-			windowHeight.Value = _settings.WindowHeight;
+			resizeCheckbox.Checked = _settings.UseResizeDimensions;
+            windowWidth.Value = _settings.ResizeDimensions.Width;
+			windowHeight.Value = _settings.ResizeDimensions.Height;
             opaqueCheckbox.Checked = _settings.UseOpaqueBackground;
-            opaqueType.SelectedIndex = _settings.BackgroundType == ScreenshotBackgroundType.Checkerboard ? 0
-                                     : _settings.BackgroundType == ScreenshotBackgroundType.SolidColor ? 1
+            opaqueType.SelectedIndex = _settings.OpaqueBackgroundType == ScreenshotBackgroundType.Checkerboard ? 0
+                                     : _settings.OpaqueBackgroundType == ScreenshotBackgroundType.SolidColor ? 1
                                      : -1;
-			checkerValue.Value = _settings.CheckerSize;
-            opaqueColorHexBox.Text = HexColor.Encode(_settings.OpaqueBackgroundColor);
+			checkerValue.Value = _settings.CheckerboardBackgroundCheckerSize;
+            opaqueColorHexBox.Text = HexColor.Encode(_settings.SolidBackgroundColor);
 			aeroColorCheckbox.Checked = _settings.UseAeroColor;
             aeroColorHexBox.Text = HexColor.Encode(_settings.AeroColor);
 			mouseCheckbox.Checked = _settings.CaputreMouse;
