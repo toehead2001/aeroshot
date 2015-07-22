@@ -29,16 +29,16 @@ namespace AeroShot
 {
     internal struct ScreenshotTask
 	{
-	    public ScreenshotBackgroundType Background;
-		public Color BackgroundColor;
-		public bool CaptureMouse;
-		public bool DisableClearType;
-		public int CheckerboardSize;
-		public Color? AeroColor;
-		public bool ClipboardNotDisk;
-		public string DiskSaveDirectory;
-		public Size? Resize;
-		public IntPtr WindowHandle;
+	    public readonly ScreenshotBackgroundType Background;
+		public readonly Color BackgroundColor;
+		public readonly bool CaptureMouse;
+		public readonly bool DisableClearType;
+		public readonly int CheckerboardSize;
+		public readonly Color? AeroColor;
+		public readonly bool ClipboardNotDisk;
+		public readonly string DiskSaveDirectory;
+		public readonly Size? Resize;
+		public readonly IntPtr WindowHandle;
 
 		public ScreenshotTask(IntPtr window, bool clipboard, string file,
 							  Size? resize,
