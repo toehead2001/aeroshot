@@ -28,14 +28,14 @@ namespace AeroShot
         public bool UseClipboard;
         public string FolderPath;
         public bool UseOpaqueBackground;
-        public ScreenshotBackgroundType BackgroundType;
-        public Color OpaqueBackgroundColor;
-        public int CheckerSize = 8;
+        public ScreenshotBackgroundType OpaqueBackgroundType;
+        public Color SolidBackgroundColor;
+        public int CheckerboardBackgroundCheckerSize = 8;
         public bool UseAeroColor;
 		public Color AeroColor;
 		public bool Resize;
-		public int WindowHeight = 640;
-		public int WindowWidth = 480;
+		public int WindowHeight = 480;
+		public int WindowWidth = 640;
 		public bool CaputreMouse;
 		public bool DelayCapture;
 		public byte DelayCaptureSeconds = 3;
@@ -85,17 +85,17 @@ namespace AeroShot
 				var b = new byte[8];
 				for (int i = 0; i < 8; i++)
 					b[i] = (byte)(((long)value >> (i * 8)) & 0xff);
-                BackgroundType = ScreenshotBackgroundType.Transparent;
+                OpaqueBackgroundType = ScreenshotBackgroundType.Transparent;
 				UseOpaqueBackground = (b[0] & 1) == 1;
 				if ((b[0] & 2) == 2)
-					BackgroundType = ScreenshotBackgroundType.Checkerboard;
+					OpaqueBackgroundType = ScreenshotBackgroundType.Checkerboard;
 				if ((b[0] & 4) == 4)
-					BackgroundType = ScreenshotBackgroundType.SolidColor;
-				CheckerSize = b[1] + 2;
-                OpaqueBackgroundColor = Color.FromArgb(b[2], b[3], b[4]);
+					OpaqueBackgroundType = ScreenshotBackgroundType.SolidColor;
+				CheckerboardBackgroundCheckerSize = b[1] + 2;
+                SolidBackgroundColor = Color.FromArgb(b[2], b[3], b[4]);
 			}
 			else
-				BackgroundType = 0;
+				OpaqueBackgroundType = 0;
 
 			if ((value = _registryKey.GetValue("AeroColor")) != null &&
 				value.GetType() == (typeof(long)))
@@ -107,7 +107,7 @@ namespace AeroShot
 				AeroColor = Color.FromArgb(b[1], b[2], b[3]);
 			}
 			else
-				BackgroundType = 0;
+				OpaqueBackgroundType = 0;
 
 			if ((value = _registryKey.GetValue("CapturePointer")) != null &&
 				value.GetType() == (typeof(int)))
