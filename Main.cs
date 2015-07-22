@@ -29,7 +29,7 @@ namespace AeroShot
 		private const uint SPI_GETFONTSMOOTHINGTYPE = 0x200A;
 
 		private readonly RegistryKey _registryKey;
-		Settings _settings = new Settings();
+		Settings _settings = Settings.LoadSettingsFromRegistry();
 
 		public MainForm()
 		{

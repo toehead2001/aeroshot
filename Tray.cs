@@ -27,7 +27,7 @@ namespace AeroShot
 
 		MainForm _window = new MainForm();
 		Hotkeys _hotkeys = new Hotkeys();
-		Settings _settings = new Settings();
+		Settings _settings = Settings.LoadSettingsFromRegistry();
 
 		public SysTray()
 		{

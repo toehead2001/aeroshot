@@ -34,35 +34,35 @@ namespace AeroShot
 		public bool CaputreMouse;
         public Switch<TimeSpan> DelayCaptureDuration = Switch.Off(TimeSpan.FromSeconds(3));
 		public bool DisableClearType;
-		private readonly RegistryKey _registryKey;
 
+        public static Settings LoadSettingsFromRegistry()
+        {
+            var settings = new Settings();
 
-		public Settings()
-		{
-			object value;
-			_registryKey = Registry.CurrentUser.CreateSubKey(@"Software\AeroShot");
+            object value;
+			var registryKey = Registry.CurrentUser.CreateSubKey(@"Software\AeroShot");
 
-			if ((value = _registryKey.GetValue("LastPath")) != null &&
+			if ((value = registryKey.GetValue("LastPath")) != null &&
 				value.GetType() == (typeof(string)))
 			{
 				if (((string)value).Substring(0, 1) == "*")
 				{
-					FolderPath = ((string)value).Substring(1);
-					UseClipboard = true;
+				    settings.FolderPath = ((string)value).Substring(1);
+				    settings.UseClipboard = true;
 				}
 				else
 				{
-					FolderPath = (string)value;
-					UseDisk = true;
+				    settings.FolderPath = (string)value;
+				    settings.UseDisk = true;
 				}
 			}
 			else
 			{
-				FolderPath =
+			    settings.FolderPath =
 					Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
 			}
 
-			if ((value = _registryKey.GetValue("WindowSize")) != null &&
+			if ((value = registryKey.GetValue("WindowSize")) != null &&
 				value.GetType() == (typeof(long)))
 			{
 				var b = new byte[8];
@@ -71,12 +71,12 @@ namespace AeroShot
 				var use = (b[0] & 1) == 1;
 				var width = b[1] << 16 | b[2] << 8 | b[3];
 				var height = b[4] << 16 | b[5] << 8 | b[6];
-                ResizeDimensions = Switch.Create(use, new Size(width, height));
+			    settings.ResizeDimensions = Switch.Create(use, new Size(width, height));
 			}
 
             var defaultOpaqueBackgroundType = Switch.Off(ScreenshotBackgroundType.Checkerboard);
 
-			if ((value = _registryKey.GetValue("Opaque")) != null &&
+			if ((value = registryKey.GetValue("Opaque")) != null &&
 				value.GetType() == (typeof(long)))
 			{
 				var b = new byte[8];
@@ -86,42 +86,44 @@ namespace AeroShot
                 var type = (b[0] & 2) == 2 ? ScreenshotBackgroundType.Checkerboard
                          : (b[0] & 4) == 4 ? ScreenshotBackgroundType.SolidColor
                          : ScreenshotBackgroundType.Transparent;
-                OpaqueBackgroundType = Switch.Create(use, type);
-				CheckerboardBackgroundCheckerSize = b[1] + 2;
-                SolidBackgroundColor = Color.FromArgb(b[2], b[3], b[4]);
+			    settings.OpaqueBackgroundType = Switch.Create(use, type);
+			    settings.CheckerboardBackgroundCheckerSize = b[1] + 2;
+			    settings.SolidBackgroundColor = Color.FromArgb(b[2], b[3], b[4]);
 			}
 			else
-                OpaqueBackgroundType = defaultOpaqueBackgroundType;
+			    settings.OpaqueBackgroundType = defaultOpaqueBackgroundType;
 
-			if ((value = _registryKey.GetValue("AeroColor")) != null &&
+			if ((value = registryKey.GetValue("AeroColor")) != null &&
 				value.GetType() == (typeof(long)))
 			{
 				var b = new byte[8];
 				for (int i = 0; i < 8; i++)
 					b[i] = (byte)(((long)value >> (i * 8)) & 0xff);
 				var use = (b[0] & 1) == 1;
-                AeroColor = Switch.Create(use, Color.FromArgb(b[1], b[2], b[3]));
+			    settings.AeroColor = Switch.Create(use, Color.FromArgb(b[1], b[2], b[3]));
 			}
 			else
-                OpaqueBackgroundType = defaultOpaqueBackgroundType;
+			    settings.OpaqueBackgroundType = defaultOpaqueBackgroundType;
 
-			if ((value = _registryKey.GetValue("CapturePointer")) != null &&
+			if ((value = registryKey.GetValue("CapturePointer")) != null &&
 				value.GetType() == (typeof(int)))
-				CaputreMouse = ((int)value & 1) == 1;
+			    settings.CaputreMouse = ((int)value & 1) == 1;
 
-			if ((value = _registryKey.GetValue("ClearType")) != null &&
+			if ((value = registryKey.GetValue("ClearType")) != null &&
 				value.GetType() == (typeof(int)))
-				DisableClearType = ((int)value & 1) == 1;
+			    settings.DisableClearType = ((int)value & 1) == 1;
 
-			if ((value = _registryKey.GetValue("Delay")) != null &&
+			if ((value = registryKey.GetValue("Delay")) != null &&
 				value.GetType() == (typeof(long)))
 			{
 				var b = new byte[8];
 				for (int i = 0; i < 8; i++)
 					b[i] = (byte)(((long)value >> (i * 8)) & 0xff);
 				var use = (b[0] & 1) == 1;
-                DelayCaptureDuration = Switch.Create(use, TimeSpan.FromSeconds(b[1]));
+			    settings.DelayCaptureDuration = Switch.Create(use, TimeSpan.FromSeconds(b[1]));
 			}
+
+            return settings;
 		}
 	}
 
