@@ -26,10 +26,10 @@ namespace AeroShot
         public bool UseDisk;
         public bool UseClipboard;
         public string FolderPath;
-        public Switch<ScreenshotBackgroundType> OpaqueBackgroundType;
+        public Switch<ScreenshotBackgroundType> OpaqueBackgroundType = Switch.Off(ScreenshotBackgroundType.Checkerboard);
         public Color SolidBackgroundColor;
         public int CheckerboardBackgroundCheckerSize = 8;
-        public Switch<Color> AeroColor;
+        public Switch<Color> AeroColor = Switch.Off(Color.White);
         public Switch<Size> ResizeDimensions = Switch.Off(new Size(640, 480));
 		public bool CaputreMouse;
         public Switch<TimeSpan> DelayCaptureDuration = Switch.Off(TimeSpan.FromSeconds(3));
