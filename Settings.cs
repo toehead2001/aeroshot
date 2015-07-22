@@ -21,7 +21,7 @@ using Microsoft.Win32;
 
 namespace AeroShot
 {
-	public class Settings
+	sealed class Settings
 	{
         public bool UseDisk;
         public bool UseClipboard;
