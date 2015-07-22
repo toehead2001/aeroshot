@@ -37,22 +37,22 @@ namespace AeroShot
 			Icon = new Icon(typeof(MainForm), "icon.ico");
 			InitializeComponent();
 
-			folderTextBox.Text = _settings.FolderTextBox;
-			clipboardButton.Checked = _settings.ClipboardButton;
-			diskButton.Checked = _settings.DiskButton;
-			resizeCheckbox.Checked = _settings.ResizeCheckbox;
+			folderTextBox.Text = _settings.FolderPath;
+			clipboardButton.Checked = _settings.UseClipboard;
+			diskButton.Checked = _settings.UseDisk;
+			resizeCheckbox.Checked = _settings.Resize;
 			windowWidth.Value = _settings.WindowWidth;
 			windowHeight.Value = _settings.WindowHeight;
-			opaqueCheckbox.Checked = _settings.OpaqueCheckbox;
+			opaqueCheckbox.Checked = _settings.UseOpaqueBackground;
 			opaqueType.SelectedIndex = _settings.OpaqueType;
-			checkerValue.Value = _settings.CheckerValue;
-			opaqueColorHexBox.Text = _settings.OpaqueColorHexBox;
-			aeroColorCheckbox.Checked = _settings.AeroColorCheckbox;
-			aeroColorHexBox.Text = _settings.AeroColorHexBox;
-			mouseCheckbox.Checked = _settings.MouseCheckbox;
-			delayCheckbox.Checked = _settings.DelayCheckbox;
-			delaySeconds.Value = _settings.DelaySeconds;
-			clearTypeCheckbox.Checked = _settings.ClearTypeCheckbox;
+			checkerValue.Value = _settings.CheckerSize;
+			opaqueColorHexBox.Text = _settings.OpaqueColorHex;
+			aeroColorCheckbox.Checked = _settings.UseAeroColor;
+			aeroColorHexBox.Text = _settings.AeroColorHex;
+			mouseCheckbox.Checked = _settings.CaputreMouse;
+			delayCheckbox.Checked = _settings.DelayCapture;
+			delaySeconds.Value = _settings.DelayCaptureSeconds;
+			clearTypeCheckbox.Checked = _settings.DisableClearType;
 
 			if (!GlassAvailable())
 			{
