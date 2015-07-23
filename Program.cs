@@ -1,4 +1,4 @@
-﻿/*  AeroShot - Transparent screenshot utility for Windows
+/*  AeroShot - Transparent screenshot utility for Windows
 	Copyright (C) 2015 toe_head2001
 	Copyright (C) 2012 Caleb Joseph
 
@@ -23,7 +23,7 @@ using System.Windows.Forms;
 [assembly: AssemblyTitle("AeroShot Mini")]
 [assembly: AssemblyProduct("AeroShot Mini")]
 [assembly: AssemblyDescription("Screenshot capture utility for Windows Aero")]
-[assembly: AssemblyCopyright("© 2015 toe_head2001")]
+[assembly: AssemblyCopyright("\u00a9 2015 toe_head2001")]
 [assembly: AssemblyVersion("1.5.0.0")]
 [assembly: AssemblyFileVersion("1.5.0.0")]
 [assembly: ComVisible(false)]
@@ -37,7 +37,7 @@ namespace AeroShot
 		{
 			if (Environment.OSVersion.Version.Major < 6)
 			{
-				MessageBox.Show("Windows Vista or newer is required.", "AeroShot");
+				MessageBox.Show("Windows Vista or newer is required.", Application.ProductName);
 				return;
 			}
 
