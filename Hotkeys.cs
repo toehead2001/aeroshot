@@ -55,7 +55,7 @@ namespace AeroShot
 
 			if (m.Msg == WM_HOTKEY)
 			{
-				_settings = Settings.LoadSettingsFromRegistry();
+				_settings = Settings.LoadSettings();
 
 				if (_busyCapturing)
 					return;

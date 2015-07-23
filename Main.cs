@@ -19,7 +19,6 @@ using System;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
-using Microsoft.Win32;
 
 namespace AeroShot
 {
@@ -28,7 +27,7 @@ namespace AeroShot
 		private const uint SPI_GETFONTSMOOTHING = 0x004A;
 		private const uint SPI_GETFONTSMOOTHINGTYPE = 0x200A;
 
-		Settings _settings = Settings.LoadSettingsFromRegistry();
+		Settings _settings = Settings.LoadSettings();
 
 		public MainForm()
 		{
@@ -278,7 +277,7 @@ namespace AeroShot
 
 		private void OkButtonClick(object sender, EventArgs e)
 		{
-            Settings.SaveSettingsToRegistry(new Settings
+            Settings.SaveSettings(new Settings
             {
                 UseClipboard         = clipboardButton.Checked,
                 FolderPath           = folderTextBox.Text,
