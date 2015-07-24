@@ -180,13 +180,16 @@ namespace AeroShot
 
         public static Settings LoadSettingsFromRegistry()
         {
-            using (var registryKey = Registry.CurrentUser.CreateSubKey(@"Software\AeroShot"))
+            using (var registryKey = Registry.CurrentUser.OpenSubKey(@"Software\AeroShot"))
                 return LoadSettings(registryKey);
         }
 
         public static Settings LoadSettings(RegistryKey registryKey)
         {
             var settings = new Settings();
+
+            if (registryKey == null)
+                return settings;
 
             object value;
 
