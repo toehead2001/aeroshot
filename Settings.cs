@@ -178,14 +178,9 @@ namespace AeroShot
                               : Convert.ToString(value, CultureInfo.InvariantCulture));
         }
 
-        static RegistryKey CreateRegistryKey()
-        {
-            return Registry.CurrentUser.CreateSubKey(@"Software\AeroShot");
-        }
-
         public static Settings LoadSettingsFromRegistry()
         {
-            using (var registryKey = CreateRegistryKey())
+            using (var registryKey = Registry.CurrentUser.CreateSubKey(@"Software\AeroShot"))
                 return LoadSettings(registryKey);
         }
 
