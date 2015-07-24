@@ -193,17 +193,17 @@ namespace AeroShot
 
             object value;
 
-			if ((value = registryKey.GetValue("LastPath")) != null &&
-				value.GetType() == (typeof(string)))
-			{
-				if (((string)value).Substring(0, 1) == "*")
+            if ((value = registryKey.GetValue("LastPath")) is string)
+            {
+                var str = value.ToString();
+				if (str.Substring(0, 1) == "*")
 				{
-				    settings.FolderPath = ((string)value).Substring(1);
+				    settings.FolderPath = str.Substring(1);
 				    settings.UseClipboard = true;
 				}
 				else
 				{
-				    settings.FolderPath = (string)value;
+				    settings.FolderPath = str;
 				    settings.UseDisk = true;
 				}
 			}
@@ -213,8 +213,7 @@ namespace AeroShot
 					Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
 			}
 
-			if ((value = registryKey.GetValue("WindowSize")) != null &&
-				value.GetType() == (typeof(long)))
+            if ((value = registryKey.GetValue("WindowSize")) is long)
 			{
 				var b = new byte[8];
 				for (int i = 0; i < 8; i++)
@@ -227,8 +226,7 @@ namespace AeroShot
 
             var defaultOpaqueBackgroundType = Switch.Off(ScreenshotBackgroundType.Checkerboard);
 
-			if ((value = registryKey.GetValue("Opaque")) != null &&
-				value.GetType() == (typeof(long)))
+            if ((value = registryKey.GetValue("Opaque")) is long)
 			{
 				var b = new byte[8];
 				for (int i = 0; i < 8; i++)
@@ -244,8 +242,7 @@ namespace AeroShot
 			else
 			    settings.OpaqueBackgroundType = defaultOpaqueBackgroundType;
 
-			if ((value = registryKey.GetValue("AeroColor")) != null &&
-				value.GetType() == (typeof(long)))
+			if ((value = registryKey.GetValue("AeroColor")) is long)
 			{
 				var b = new byte[8];
 				for (int i = 0; i < 8; i++)
@@ -256,16 +253,13 @@ namespace AeroShot
 			else
 			    settings.OpaqueBackgroundType = defaultOpaqueBackgroundType;
 
-			if ((value = registryKey.GetValue("CapturePointer")) != null &&
-				value.GetType() == (typeof(int)))
+			if ((value = registryKey.GetValue("CapturePointer")) is int)
 			    settings.CaputreMouse = ((int)value & 1) == 1;
 
-			if ((value = registryKey.GetValue("ClearType")) != null &&
-				value.GetType() == (typeof(int)))
+			if ((value = registryKey.GetValue("ClearType")) is int)
 			    settings.DisableClearType = ((int)value & 1) == 1;
 
-			if ((value = registryKey.GetValue("Delay")) != null &&
-				value.GetType() == (typeof(long)))
+			if ((value = registryKey.GetValue("Delay")) is long)
 			{
 				var b = new byte[8];
 				for (int i = 0; i < 8; i++)
