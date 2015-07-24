@@ -31,7 +31,7 @@ namespace AeroShot
     sealed class Settings
 	{
         public bool UseDisk { get; set; }
-        public bool UseClipboard { get; set; }
+        public bool UseClipboard { get { return !UseDisk; } set { UseDisk = !value; } }
         public string FolderPath { get; set; }
         public Switch<ScreenshotBackgroundType> OpaqueBackgroundType { get; set; }
         public Color SolidBackgroundColor { get; set; }
@@ -82,7 +82,6 @@ namespace AeroShot
             if (ini != null)
             {
                 settings.UseDisk          = ReadSetting(ini, "save-device", v => "file".Equals(v, StringComparison.OrdinalIgnoreCase));
-                settings.UseClipboard     = !settings.UseDisk;
                 settings.FolderPath       = ReadSetting(ini, "save-file-path", Environment.GetFolderPath(Environment.SpecialFolder.MyPictures), s => s);
                 settings.OpaqueBackgroundType
                                           = Switch.Create(ReadSetting(ini, "use-opaque-background", Truthy.Parse),
