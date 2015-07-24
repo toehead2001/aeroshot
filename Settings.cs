@@ -30,17 +30,26 @@ namespace AeroShot
 
     sealed class Settings
 	{
-        public bool UseDisk;
-        public bool UseClipboard;
-        public string FolderPath;
-        public Switch<ScreenshotBackgroundType> OpaqueBackgroundType = Switch.Off(ScreenshotBackgroundType.Checkerboard);
-        public Color SolidBackgroundColor;
-        public int CheckerboardBackgroundCheckerSize = 8;
-        public Switch<Color> AeroColor = Switch.Off(Color.White);
-        public Switch<Size> ResizeDimensions = Switch.Off(new Size(640, 480));
-		public bool CaputreMouse;
-        public Switch<TimeSpan> DelayCaptureDuration = Switch.Off(TimeSpan.FromSeconds(3));
-		public bool DisableClearType;
+        public bool UseDisk { get; set; }
+        public bool UseClipboard { get; set; }
+        public string FolderPath { get; set; }
+        public Switch<ScreenshotBackgroundType> OpaqueBackgroundType { get; set; }
+        public Color SolidBackgroundColor { get; set; }
+        public int CheckerboardBackgroundCheckerSize { get; set; }
+        public Switch<Color> AeroColor { get; set; }
+        public Switch<Size> ResizeDimensions { get; set; }
+		public bool CaputreMouse { get; set; }
+        public Switch<TimeSpan> DelayCaptureDuration { get; set; }
+		public bool DisableClearType { get; set; }
+
+        public Settings()
+        {
+            OpaqueBackgroundType              = Switch.Off(ScreenshotBackgroundType.Checkerboard);
+            CheckerboardBackgroundCheckerSize = 8;
+            AeroColor                         = Switch.Off(Color.White);
+            ResizeDimensions                  = Switch.Off(new Size(640, 480));
+            DelayCaptureDuration              = Switch.Off(TimeSpan.FromSeconds(3));
+        }
 
         static string _iniFilePath;
 
