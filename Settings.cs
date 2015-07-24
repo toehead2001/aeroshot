@@ -65,6 +65,34 @@ namespace AeroShot
                  : LoadSettingsFromRegistry();
         }
 
+        static class IniKey
+        {
+            public const string AppVersion                        = "app-version";
+            public const string SaveDevice                        = "save-device";
+            public const string SaveFilePath                      = "save-file-path";
+            public const string UseOpaqueBackground               = "use-opaque-background";
+            public const string OpaqueBackgroundType              = "opaque-background-type";
+            public const string SolidBackgroundColor              = "solid-background-color";
+            public const string CheckerboardBackgroundCheckerSize = "checkerboard-background-checker-size";
+            public const string UseAeroColor                      = "use-aero-color";
+            public const string AeroColor                         = "aero-color";
+            public const string UseWindowResizeDimensions         = "use-window-resize-dimensions";
+            public const string ResizeWindowWidth                 = "resize-window-width";
+            public const string ResizeWindowHeight                = "resize-window-height";
+            public const string UseDelayCapture                   = "use-delay-capture";
+            public const string DelayCaptureSeconds               = "delay-capture-seconds";
+            public const string CapturePointer                    = "capture-pointer";
+            public const string DisableClearType                  = "disable-clear-type";
+        }
+
+        static class IniWord
+        {
+            public const string File         = "file";
+            public const string Solid        = "solid";
+            public const string Clipboard    = "clipboard";
+            public const string Checkerboard = "checkerboard";
+        }
+
         static Settings LoadSettingsFromIniFile(string path)
         {
             return LoadSettingsFromIni(File.ReadAllText(path));
@@ -81,27 +109,27 @@ namespace AeroShot
 
             if (ini != null)
             {
-                settings.UseDisk          = ReadSetting(ini, "save-device", v => "file".Equals(v, StringComparison.OrdinalIgnoreCase));
-                settings.FolderPath       = ReadSetting(ini, "save-file-path", Environment.GetFolderPath(Environment.SpecialFolder.MyPictures), s => s);
+                settings.UseDisk          = ReadSetting(ini, IniKey.SaveDevice, v => IniWord.File.Equals(v, StringComparison.OrdinalIgnoreCase));
+                settings.FolderPath       = ReadSetting(ini, IniKey.SaveFilePath, Environment.GetFolderPath(Environment.SpecialFolder.MyPictures), s => s);
                 settings.OpaqueBackgroundType
-                                          = Switch.Create(ReadSetting(ini, "use-opaque-background", Truthy.Parse),
-                                                          ReadSetting(ini, "opaque-background-type", v => "solid".Equals(v, StringComparison.OrdinalIgnoreCase)
+                                          = Switch.Create(ReadSetting(ini, IniKey.UseOpaqueBackground, Truthy.Parse),
+                                                          ReadSetting(ini, IniKey.OpaqueBackgroundType, v => IniWord.Solid.Equals(v, StringComparison.OrdinalIgnoreCase)
                                                                                                           ? ScreenshotBackgroundType.SolidColor
                                                                                                           : ScreenshotBackgroundType.Checkerboard));
                 settings.SolidBackgroundColor
-                                          = ReadSetting(ini, "solid-background-color", settings.SolidBackgroundColor, ColorTranslator.FromHtml);
+                                          = ReadSetting(ini, IniKey.SolidBackgroundColor, settings.SolidBackgroundColor, ColorTranslator.FromHtml);
                 settings.CheckerboardBackgroundCheckerSize
-                                          = ReadSetting(ini, "checkerboard-background-checker-size", settings.CheckerboardBackgroundCheckerSize, ParseInt);
-                settings.AeroColor        = Switch.Create(ReadSetting(ini, "use-aero-color", Truthy.Parse),
-                                                          ReadSetting(ini, "aero-color", settings.AeroColor.Value, ColorTranslator.FromHtml));
-                settings.ResizeDimensions = Switch.Create(ReadSetting(ini, "use-window-resize-dimensions", Truthy.Parse),
-                                                          new Size(ReadSetting(ini, "resize-window-width", settings.ResizeDimensions.Value.Width, ParseInt),
-                                                                   ReadSetting(ini, "resize-window-height", settings.ResizeDimensions.Value.Height, ParseInt)));
+                                          = ReadSetting(ini, IniKey.CheckerboardBackgroundCheckerSize, settings.CheckerboardBackgroundCheckerSize, ParseInt);
+                settings.AeroColor        = Switch.Create(ReadSetting(ini, IniKey.UseAeroColor, Truthy.Parse),
+                                                          ReadSetting(ini, IniKey.AeroColor, settings.AeroColor.Value, ColorTranslator.FromHtml));
+                settings.ResizeDimensions = Switch.Create(ReadSetting(ini, IniKey.UseWindowResizeDimensions, Truthy.Parse),
+                                                          new Size(ReadSetting(ini, IniKey.ResizeWindowWidth, settings.ResizeDimensions.Value.Width, ParseInt),
+                                                                   ReadSetting(ini, IniKey.ResizeWindowHeight, settings.ResizeDimensions.Value.Height, ParseInt)));
                 settings.DelayCaptureDuration
-                                          = Switch.Create(ReadSetting(ini, "use-delay-capture", Truthy.Parse),
-                                                          ReadSetting(ini, "delay-capture-seconds", settings.DelayCaptureDuration.Value, v => TimeSpan.FromSeconds(ParseInt(v))));
-                settings.CaputreMouse     = ReadSetting(ini, "capture-pointer", Truthy.Parse);
-                settings.DisableClearType = ReadSetting(ini, "disable-clear-type", Truthy.Parse);
+                                          = Switch.Create(ReadSetting(ini, IniKey.UseDelayCapture, Truthy.Parse),
+                                                          ReadSetting(ini, IniKey.DelayCaptureSeconds, settings.DelayCaptureDuration.Value, v => TimeSpan.FromSeconds(ParseInt(v))));
+                settings.CaputreMouse     = ReadSetting(ini, IniKey.CapturePointer, Truthy.Parse);
+                settings.DisableClearType = ReadSetting(ini, IniKey.DisableClearType, Truthy.Parse);
             }
 
             return settings;
@@ -138,22 +166,22 @@ namespace AeroShot
         {
             var section = new[]
             {
-                Setting("app-version"                         , Application.ProductVersion),
-                Setting("save-device"                         , settings.UseClipboard ? "clipboard" : "file"),
-                Setting("save-file-path"                      , settings.FolderPath),
-                Setting("use-opaque-background"               , settings.OpaqueBackgroundType.Convert(_ => true)),
-                Setting("opaque-background-type"              , settings.OpaqueBackgroundType.Value == ScreenshotBackgroundType.SolidColor ? "solid" : "checkerboard"),
-                Setting("solid-background-color"              , ColorTranslator.ToHtml(settings.SolidBackgroundColor)),
-                Setting("checkerboard-background-checker-size", settings.CheckerboardBackgroundCheckerSize),
-                Setting("use-aero-color"                      , settings.AeroColor.Convert(_ => true)),
-                Setting("aero-color"                          , ColorTranslator.ToHtml(settings.AeroColor.Value)),
-                Setting("use-window-resize-dimensions"        , settings.ResizeDimensions.Convert(_ => true)),
-                Setting("resize-window-width"                 , settings.ResizeDimensions.Value.Width),
-                Setting("resize-window-height"                , settings.ResizeDimensions.Value.Height),
-                Setting("capture-pointer"                     , settings.CaputreMouse),
-                Setting("use-delay-capture"                   , settings.DelayCaptureDuration.Convert(_ => true)),
-                Setting("delay-capture-seconds"               , settings.DelayCaptureDuration.Value.TotalSeconds),
-                Setting("disable-clear-type"                  , settings.DisableClearType),
+                Setting(IniKey.AppVersion                       , Application.ProductVersion),
+                Setting(IniKey.SaveDevice                       , settings.UseClipboard ? IniWord.Clipboard : IniWord.File),
+                Setting(IniKey.SaveFilePath                     , settings.FolderPath),
+                Setting(IniKey.UseOpaqueBackground              , settings.OpaqueBackgroundType.Convert(_ => true)),
+                Setting(IniKey.OpaqueBackgroundType             , settings.OpaqueBackgroundType.Value == ScreenshotBackgroundType.SolidColor ? IniWord.Solid : IniWord.Checkerboard),
+                Setting(IniKey.SolidBackgroundColor             , ColorTranslator.ToHtml(settings.SolidBackgroundColor)),
+                Setting(IniKey.CheckerboardBackgroundCheckerSize, settings.CheckerboardBackgroundCheckerSize),
+                Setting(IniKey.UseAeroColor                     , settings.AeroColor.Convert(_ => true)),
+                Setting(IniKey.AeroColor                        , ColorTranslator.ToHtml(settings.AeroColor.Value)),
+                Setting(IniKey.UseWindowResizeDimensions        , settings.ResizeDimensions.Convert(_ => true)),
+                Setting(IniKey.ResizeWindowWidth                , settings.ResizeDimensions.Value.Width),
+                Setting(IniKey.ResizeWindowHeight               , settings.ResizeDimensions.Value.Height),
+                Setting(IniKey.CapturePointer                   , settings.CaputreMouse),
+                Setting(IniKey.UseDelayCapture                  , settings.DelayCaptureDuration.Convert(_ => true)),
+                Setting(IniKey.DelayCaptureSeconds              , settings.DelayCaptureDuration.Value.TotalSeconds),
+                Setting(IniKey.DisableClearType                 , settings.DisableClearType),
             };
 
             return string.Join(Environment.NewLine,
