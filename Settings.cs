@@ -292,7 +292,9 @@ namespace AeroShot
     {
         public static string Encode(Color color)
         {
-            return color.IsEmpty ? null : ColorTranslator.ToHtml(color).Substring(1);
+            if (color.IsEmpty) return null;
+            color = Color.FromArgb(color.ToArgb());
+            return ColorTranslator.ToHtml(color).Substring(1); // remove #
         }
     }
 }
