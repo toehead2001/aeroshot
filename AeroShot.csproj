@@ -58,6 +58,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="App_Packages\Gini\Ini.cs" />
+    <Compile Include="Gini.cs" />
     <Compile Include="Hotkeys.cs">
       <SubType>Form</SubType>
     </Compile>
