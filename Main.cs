@@ -27,8 +27,6 @@ namespace AeroShot
 		private const uint SPI_GETFONTSMOOTHING = 0x004A;
 		private const uint SPI_GETFONTSMOOTHINGTYPE = 0x200A;
 
-		Settings _settings = Settings.LoadSettings();
-
 		public MainForm()
 		{
 			DoubleBuffered = true;
@@ -37,24 +35,26 @@ namespace AeroShot
 
             Text = string.Format(Text, Application.ProductName, Application.ProductVersion);
 
-            folderTextBox.Text = _settings.FolderPath;
-			clipboardButton.Checked = _settings.UseClipboard;
-			diskButton.Checked = _settings.UseDisk;
-			resizeCheckbox.Checked = _settings.ResizeDimensions.On;
-            windowWidth.Value = _settings.ResizeDimensions.Value.Width;
-			windowHeight.Value = _settings.ResizeDimensions.Value.Height;
-            opaqueCheckbox.Checked = _settings.OpaqueBackgroundType.On;
-            opaqueType.SelectedIndex = _settings.OpaqueBackgroundType.Value == ScreenshotBackgroundType.Checkerboard ? 0
-                                     : _settings.OpaqueBackgroundType.Value == ScreenshotBackgroundType.SolidColor ? 1
+            var settings = Settings.LoadSettings();
+
+            folderTextBox.Text = settings.FolderPath;
+			clipboardButton.Checked = settings.UseClipboard;
+			diskButton.Checked = settings.UseDisk;
+			resizeCheckbox.Checked = settings.ResizeDimensions.On;
+            windowWidth.Value = settings.ResizeDimensions.Value.Width;
+			windowHeight.Value = settings.ResizeDimensions.Value.Height;
+            opaqueCheckbox.Checked = settings.OpaqueBackgroundType.On;
+            opaqueType.SelectedIndex = settings.OpaqueBackgroundType.Value == ScreenshotBackgroundType.Checkerboard ? 0
+                                     : settings.OpaqueBackgroundType.Value == ScreenshotBackgroundType.SolidColor ? 1
                                      : -1;
-			checkerValue.Value = _settings.CheckerboardBackgroundCheckerSize;
-            opaqueColorHexBox.Text = HexColor.Encode(_settings.SolidBackgroundColor);
-			aeroColorCheckbox.Checked = _settings.AeroColor.On;
-            aeroColorHexBox.Text = HexColor.Encode(_settings.AeroColor.Value);
-			mouseCheckbox.Checked = _settings.CaputreMouse;
-			delayCheckbox.Checked = _settings.DelayCaptureDuration.On;
-			delaySeconds.Value = (decimal) _settings.DelayCaptureDuration.Value.TotalSeconds;
-			clearTypeCheckbox.Checked = _settings.DisableClearType;
+			checkerValue.Value = settings.CheckerboardBackgroundCheckerSize;
+            opaqueColorHexBox.Text = HexColor.Encode(settings.SolidBackgroundColor);
+			aeroColorCheckbox.Checked = settings.AeroColor.On;
+            aeroColorHexBox.Text = HexColor.Encode(settings.AeroColor.Value);
+			mouseCheckbox.Checked = settings.CaputreMouse;
+			delayCheckbox.Checked = settings.DelayCaptureDuration.On;
+			delaySeconds.Value = (decimal) settings.DelayCaptureDuration.Value.TotalSeconds;
+			clearTypeCheckbox.Checked = settings.DisableClearType;
 
 			if (!GlassAvailable())
 			{
