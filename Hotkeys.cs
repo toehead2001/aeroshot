@@ -30,7 +30,6 @@ namespace AeroShot
 		private readonly int[] _windowId;
 		private Thread _worker;
 		private bool _busyCapturing;
-		Settings _settings;
 
 		public Hotkeys()
 		{
@@ -52,53 +51,51 @@ namespace AeroShot
 		protected override void WndProc(ref Message m)
 		{
 			base.WndProc(ref m);
-
 			if (m.Msg == WM_HOTKEY)
-			{
-				_settings = Settings.LoadSettings();
-
-				if (_busyCapturing)
-					return;
-				ScreenshotTask info = GetParamteresFromUI();
-				var CtrlAlt = (m.LParam.ToInt32() & (MOD_ALT | MOD_CONTROL)) == (MOD_ALT | MOD_CONTROL);
-				_busyCapturing = true;
-				_worker = new Thread(() =>
-				{
-                    if (CtrlAlt)
-                        Thread.Sleep(TimeSpan.FromSeconds(3));
-                    else
-                        _settings.DelayCaptureDuration.WhenOnThen(Thread.Sleep);
-					try
-					{
-						Screenshot.CaptureWindow(ref info);
-					}
-					finally
-					{
-						_busyCapturing = false;
-					}
-				})
-				{
-					IsBackground = true
-				};
-				_worker.SetApartmentState(ApartmentState.STA);
-				_worker.Start();
-			}
+                OnHotKey(m);
 		}
 
-		private ScreenshotTask GetParamteresFromUI()
+        void OnHotKey(Message message)
 		{
-		    return
-				new ScreenshotTask(
-					WindowsApi.GetForegroundWindow(),
-					_settings.UseClipboard,
-					_settings.FolderPath,
-					_settings.ResizeDimensions.Convert(v => (Size?) v),
-                    _settings.OpaqueBackgroundType.GetValueOrDefault(),
-					_settings.SolidBackgroundColor,
-					_settings.CheckerboardBackgroundCheckerSize,
-					_settings.AeroColor.Convert(v => (Color?) v),
-					_settings.CaputreMouse,
-					_settings.DisableClearType);
+			if (_busyCapturing)
+				return;
+
+            var settings = Settings.LoadSettings();
+
+            var info = new ScreenshotTask(
+			    WindowsApi.GetForegroundWindow(),
+			    settings.UseClipboard,
+			    settings.FolderPath,
+			    settings.ResizeDimensions.Convert(v => (Size?) v),
+			    settings.OpaqueBackgroundType.GetValueOrDefault(),
+			    settings.SolidBackgroundColor,
+			    settings.CheckerboardBackgroundCheckerSize,
+			    settings.AeroColor.Convert(v => (Color?) v),
+			    settings.CaputreMouse,
+			    settings.DisableClearType);
+
+            var CtrlAlt = (message.LParam.ToInt32() & (MOD_ALT | MOD_CONTROL)) == (MOD_ALT | MOD_CONTROL);
+			_busyCapturing = true;
+			_worker = new Thread(() =>
+			{
+                if (CtrlAlt)
+                    Thread.Sleep(TimeSpan.FromSeconds(3));
+                else
+                    settings.DelayCaptureDuration.WhenOnThen(Thread.Sleep);
+				try
+				{
+					Screenshot.CaptureWindow(ref info);
+				}
+				finally
+				{
+					_busyCapturing = false;
+				}
+			})
+			{
+				IsBackground = true
+			};
+			_worker.SetApartmentState(ApartmentState.STA);
+			_worker.Start();
 		}
 	}
 }
