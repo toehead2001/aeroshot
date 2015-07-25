@@ -37,23 +37,23 @@ namespace AeroShot
 
             var settings = Settings.LoadSettings();
 
-            folderTextBox.Text = settings.FolderPath;
-			clipboardButton.Checked = settings.UseClipboard;
-			diskButton.Checked = settings.UseDisk;
-			resizeCheckbox.Checked = settings.ResizeDimensions.On;
-            windowWidth.Value = settings.ResizeDimensions.Value.Width;
-			windowHeight.Value = settings.ResizeDimensions.Value.Height;
-            opaqueCheckbox.Checked = settings.OpaqueBackgroundType.On;
-            opaqueType.SelectedIndex = settings.OpaqueBackgroundType.Value == ScreenshotBackgroundType.Checkerboard ? 0
-                                     : settings.OpaqueBackgroundType.Value == ScreenshotBackgroundType.SolidColor ? 1
-                                     : -1;
-			checkerValue.Value = settings.CheckerboardBackgroundCheckerSize;
-            opaqueColorHexBox.Text = HexColor.Encode(settings.SolidBackgroundColor);
+            folderTextBox.Text        = settings.FolderPath;
+			clipboardButton.Checked   = settings.UseClipboard;
+			diskButton.Checked        = settings.UseDisk;
+			resizeCheckbox.Checked    = settings.ResizeDimensions.On;
+            windowWidth.Value         = settings.ResizeDimensions.Value.Width;
+			windowHeight.Value        = settings.ResizeDimensions.Value.Height;
+            opaqueCheckbox.Checked    = settings.OpaqueBackgroundType.On;
+            opaqueType.SelectedIndex  = ScreenshotBackgroundType.Checkerboard == settings.OpaqueBackgroundType.Value ? 0
+                                      : ScreenshotBackgroundType.SolidColor   == settings.OpaqueBackgroundType.Value ? 1
+                                      : -1;
+			checkerValue.Value        = settings.CheckerboardBackgroundCheckerSize;
+            opaqueColorHexBox.Text    = HexColor.Encode(settings.SolidBackgroundColor);
 			aeroColorCheckbox.Checked = settings.AeroColor.On;
-            aeroColorHexBox.Text = HexColor.Encode(settings.AeroColor.Value);
-			mouseCheckbox.Checked = settings.CaputreMouse;
-			delayCheckbox.Checked = settings.DelayCaptureDuration.On;
-			delaySeconds.Value = (decimal) settings.DelayCaptureDuration.Value.TotalSeconds;
+            aeroColorHexBox.Text      = HexColor.Encode(settings.AeroColor.Value);
+			mouseCheckbox.Checked     = settings.CaputreMouse;
+			delayCheckbox.Checked     = settings.DelayCaptureDuration.On;
+			delaySeconds.Value        = (decimal) settings.DelayCaptureDuration.Value.TotalSeconds;
 			clearTypeCheckbox.Checked = settings.DisableClearType;
 
 			if (!GlassAvailable())
