@@ -54,8 +54,7 @@ namespace AeroShot
             }
 
 
-            if ((value = _registryKey.GetValue("LastPath")) != null &&
-                value.GetType() == (typeof(string)))
+            if ((value = _registryKey.GetValue("LastPath")) != null && value.GetType() == (typeof(string)))
             {
                 if (((string)value).Substring(0, 1) == "*")
                 {
@@ -74,8 +73,7 @@ namespace AeroShot
                     Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
             }
 
-            if ((value = _registryKey.GetValue("WindowSize")) != null &&
-                value.GetType() == (typeof(long)))
+            if ((value = _registryKey.GetValue("WindowSize")) != null && value.GetType() == (typeof(long)))
             {
                 var b = new byte[8];
                 for (int i = 0; i < 8; i++)
@@ -85,8 +83,7 @@ namespace AeroShot
                 windowHeight = b[4] << 16 | b[5] << 8 | b[6];
             }
 
-            if ((value = _registryKey.GetValue("Opaque")) != null &&
-                value.GetType() == (typeof(long)))
+            if ((value = _registryKey.GetValue("Opaque")) != null && value.GetType() == (typeof(long)))
             {
                 var b = new byte[8];
                 for (int i = 0; i < 8; i++)
@@ -108,8 +105,7 @@ namespace AeroShot
             else
                 opaqueType = 0;
 
-            if ((value = _registryKey.GetValue("AeroColor")) != null &&
-                value.GetType() == (typeof(long)))
+            if ((value = _registryKey.GetValue("AeroColor")) != null && value.GetType() == (typeof(long)))
             {
                 var b = new byte[8];
                 for (int i = 0; i < 8; i++)
@@ -125,16 +121,13 @@ namespace AeroShot
             else
                 opaqueType = 0;
 
-            if ((value = _registryKey.GetValue("CapturePointer")) != null &&
-                value.GetType() == (typeof(int)))
+            if ((value = _registryKey.GetValue("CapturePointer")) != null && value.GetType() == (typeof(int)))
                 mouseCheckbox = ((int)value & 1) == 1;
 
-            if ((value = _registryKey.GetValue("ClearType")) != null &&
-                value.GetType() == (typeof(int)))
+            if ((value = _registryKey.GetValue("ClearType")) != null && value.GetType() == (typeof(int)))
                 clearTypeCheckbox = ((int)value & 1) == 1;
 
-            if ((value = _registryKey.GetValue("Delay")) != null &&
-                value.GetType() == (typeof(long)))
+            if ((value = _registryKey.GetValue("Delay")) != null && value.GetType() == (typeof(long)))
             {
                 var b = new byte[8];
                 for (int i = 0; i < 8; i++)

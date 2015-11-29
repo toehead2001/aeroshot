@@ -58,8 +58,7 @@ namespace AeroShot
                 _width = 4 * (_width / 4 + 1);
 
             //Lock Image
-            _bitmapData = _inputBitmap.LockBits(bounds, ImageLockMode.ReadWrite,
-                                                PixelFormat.Format32bppArgb);
+            _bitmapData = _inputBitmap.LockBits(bounds, ImageLockMode.ReadWrite, PixelFormat.Format32bppArgb);
             _pBase = (byte*)_bitmapData.Scan0.ToPointer();
         }
 

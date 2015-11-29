@@ -91,15 +91,15 @@ namespace AeroShot
             _window.Activate();
         }
 
-        protected override void Dispose(bool isDisposing)
+        protected override void Dispose(bool disposing)
         {
-            if (isDisposing)
+            if (disposing)
             {
                 // Release the icon resource.
                 trayIcon.Dispose();
             }
 
-            base.Dispose(isDisposing);
+            base.Dispose(disposing);
         }
     }
 }

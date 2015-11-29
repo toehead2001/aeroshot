@@ -224,8 +224,7 @@ namespace AeroShot
         private void opaqueColorHexBoxTextChange(object sender, EventArgs e)
         {
             var c = new[] {
-                '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C',
-                'D', 'E', 'F', 'a', 'b', 'c', 'd', 'e', 'f'
+                '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F', 'a', 'b', 'c', 'd', 'e', 'f'
             };
             foreach (char v in opaqueColorHexBox.Text)
             {
@@ -239,8 +238,7 @@ namespace AeroShot
                     }
                 }
                 if (!b)
-                    opaqueColorHexBox.Text = opaqueColorHexBox.Text.Replace(v.ToString(),
-                                                                  string.Empty);
+                    opaqueColorHexBox.Text = opaqueColorHexBox.Text.Replace(v.ToString(), string.Empty);
             }
 
             if (opaqueColorHexBox.TextLength != 6)
@@ -253,8 +251,7 @@ namespace AeroShot
         private void AeroColorTextboxTextChange(object sender, EventArgs e)
         {
             var c = new[] {
-                '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C',
-                'D', 'E', 'F', 'a', 'b', 'c', 'd', 'e', 'f'
+                '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F', 'a', 'b', 'c', 'd', 'e', 'f'
             };
             foreach (char v in aeroColorHexBox.Text)
             {
@@ -268,8 +265,7 @@ namespace AeroShot
                     }
                 }
                 if (!b)
-                    aeroColorHexBox.Text = aeroColorHexBox.Text.Replace(v.ToString(),
-                                                                  string.Empty);
+                    aeroColorHexBox.Text = aeroColorHexBox.Text.Replace(v.ToString(), string.Empty);
             }
 
             if (opaqueColorHexBox.TextLength != 6)
@@ -326,13 +322,9 @@ namespace AeroShot
             data = BitConverter.ToInt64(b, 0);
             _registryKey.SetValue("AeroColor", data, RegistryValueKind.QWord);
 
-            _registryKey.SetValue("CapturePointer",
-                                  mouseCheckbox.Checked ? 1 : 0,
-                                  RegistryValueKind.DWord);
+            _registryKey.SetValue("CapturePointer", mouseCheckbox.Checked ? 1 : 0, RegistryValueKind.DWord);
 
-            _registryKey.SetValue("ClearType",
-                      clearTypeCheckbox.Checked ? 1 : 0,
-                      RegistryValueKind.DWord);
+            _registryKey.SetValue("ClearType", clearTypeCheckbox.Checked ? 1 : 0, RegistryValueKind.DWord);
 
             // Save delay settings in an 8-byte long
             b = new byte[8];
@@ -354,8 +346,7 @@ namespace AeroShot
 
     public class ColorDisplay : UserControl
     {
-        private readonly SolidBrush _border =
-            new SolidBrush(SystemColors.Window);
+        private readonly SolidBrush _border = new SolidBrush(SystemColors.Window);
 
         private SolidBrush _brush;
         private Color _color = Color.Black;
@@ -385,13 +376,8 @@ namespace AeroShot
                 _brush = new SolidBrush(_color);
             else
             {
-                var grayScale =
-                    (byte)
-                    (((_color.R * .3) + (_color.G * .59) + (_color.B * .11)));
-                _brush =
-                    new SolidBrush(
-                        ControlPaint.Light(Color.FromArgb(grayScale, grayScale,
-                                                            grayScale)));
+                var grayScale = (byte)(((_color.R * .3) + (_color.G * .59) + (_color.B * .11)));
+                _brush = new SolidBrush(ControlPaint.Light(Color.FromArgb(grayScale, grayScale, grayScale)));
             }
             e.Graphics.FillRectangle(_border, e.ClipRectangle);
             e.Graphics.FillRectangle(_brush, rect);
