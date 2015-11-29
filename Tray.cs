@@ -46,6 +46,9 @@ namespace AeroShot
             // Add menu to tray icon and show it.
             trayIcon.ContextMenu = trayMenu;
             trayIcon.Visible = true;
+
+            // Handle the DoubleClick event to open the Settings window.
+            trayIcon.DoubleClick += ShowWindow;
         }
 
 
