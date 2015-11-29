@@ -9,47 +9,21 @@ AeroShot is dead, long live **AeroShot Mini**!
 
 AeroShot Mini is the next generation of the original AeroShot, and is based on its Free Software code base. AeroShot Mini runs from the system tray, and doesn't have a main window GUI. A settings window is still available if need.
 
-If you want the original AeroShot experience with the newer features, **AeroShot Classic** is available. See the comparison table below.
-
-
-Feature | AeroShot Classic | AeroShot Mini
-------- | ---------------- | -------------
-Send screenshots to the clipboard | **Yes** | **Yes**
-Save screenshots to disk | **Yes** | **Yes**
-Resize windows when capturing screenshots | **Yes** | **Yes**
-Transparent, Opaque, or Checkered backgrounds | **Yes** | **Yes**
-Capture mouse pointer in screenshots | **Yes** | **Yes**
-Delayed screenshot capture when using hotkey | **Yes** | **Yes**
-Disable ClearType while capturing screenshots | **Yes** | **Yes**
-Custom colors for Aero Glass | No | **Yes**
-Capture screenshots via GUI | **Yes** | No
-System tray icon | No | **Yes**
+If you want the original AeroShot experience with the newer features, *AeroShot Classic* is available, but it doesn't have all the features of *AeroShot Mini*, and no features will be added.
 
 ## Usage
-Press **Alt + Print Screen** on the desired window to be captured, while AeroShot is running somewhere in the background.
+Press **Alt + Print Screen** on the desired window to be captured, while AeroShot is running in the background.
 
-*If you are running* AeroShot Classic *you may also capture screenshots by selecting a window from the drop down list, and clicking the* 'Capture Screenshot' *button*.
-
-Both of these methods will save a transparent or opaque PNG image into the chosen folder with a file name corresponding to the title of the captured window, or to the clipboard if selected. Please be aware that very few applications support pasting transparent images from the clipboard, and that they will most likely not be correctly pasted.
-
-## Screenshots
-
-### AeroShot Mini
-![AeroShot Mini](https://aeroshot.ml/gfx/tray.png)
-
-![AeroShot Mini - Settings](https://aeroshot.ml/gfx/settings.png)
-
-### AeroShot Classic
-![AeroShot Classic](https://aeroshot.ml/gfx/classic.png)
+This save a transparent or opaque PNG image into the chosen folder with a file name corresponding to the title of the captured window, or to the clipboard if selected. Please be aware that very few applications support pasting transparent images from the clipboard, and that they will most likely not be correctly pasted.
 
 ## Examples
 These examples have all been captured with AeroShot, using the "Resize window" option. Note how they have been captured with a transparent background, checkerboards have been added to better show this effect.
 
-![Example 1](https://aeroshot.ml/gfx/eg1.png)
+![Example 1](http://i43.tinypic.com/4h5tl1.png)
 
-![Example 2](https://aeroshot.ml/gfx/eg2.png)
+![Example 2](http://i43.tinypic.com/nyiaes.png)
 
-![Example 3](https://aeroshot.ml/gfx/eg3.png)
+![Example 3](http://i41.tinypic.com/2jj3k.png)
 
 ## Change Log
 
@@ -62,7 +36,7 @@ These examples have all been captured with AeroShot, using the "Resize window" o
 ##### AeroShot Mini
 * Added option to change the color of Aero Glass. For obvious reasons, it only works in Windows 7 & Vista.
 
-**Note:** Custom Aero Glass colors was not added to *Classic*, as this was a quick release before *Mini* and *Classic* get merge back together. Classic is being released as v1.4.1.
+**Note:** Custom Aero Glass colors was not added to *Classic*, as it's dead now and this is the release.
 
 ### 1.4.0
 11th May 2015
