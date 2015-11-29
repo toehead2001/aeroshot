@@ -107,7 +107,8 @@ namespace AeroShot
                     _settings.aeroColorCheckbox,
                     Color.FromArgb(Convert.ToInt32("FF" + _settings.aeroColorHexBox, 16)),
                     _settings.mouseCheckbox,
-                    _settings.clearTypeCheckbox);
+                    _settings.clearTypeCheckbox,
+                    _settings.shadowCheckbox);
         }
     }
 }

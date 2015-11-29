@@ -47,13 +47,14 @@ namespace AeroShot
         public bool DoResize;
         public int ResizeX;
         public int ResizeY;
+        public bool DisableShadow;
         public IntPtr WindowHandle;
 
         public ScreenshotTask(IntPtr window, bool clipboard, string file,
                               bool resize, int resizeX, int resizeY,
                               BackgroundType backType, Color backColor,
                               int checkerSize, bool customGlass, Color aeroColor,
-                              bool mouse, bool clearType)
+                              bool mouse, bool clearType, bool shadow)
         {
             WindowHandle = window;
             ClipboardNotDisk = clipboard;
@@ -68,6 +69,7 @@ namespace AeroShot
             AeroColor = aeroColor;
             CaptureMouse = mouse;
             DisableClearType = clearType;
+            DisableShadow = shadow;
         }
     }
 
@@ -85,6 +87,8 @@ namespace AeroShot
         private const uint FE_FONTSMOOTHINGSTANDARD = 0x1;
         private const uint SPIF_UPDATEINIFILE = 0x1;
         private const uint SPIF_SENDCHANGE = 0x2;
+
+        private static uint SPI_SETDROPSHADOW = 0x1025;
 
         private const uint RDW_FRAME = 0x0400;
         private const uint RDW_INVALIDATE = 0x0001;
@@ -137,6 +141,13 @@ namespace AeroShot
                         AeroColorToggled = true;
                     }
 
+                    bool ShadowToggled = false;
+                    if (data.DisableShadow && ShadowEnabled())
+                    {
+                        WindowsApi.SystemParametersInfo(SPI_SETDROPSHADOW, 0, false, 0);
+                        ShadowToggled = true;
+                    }
+
                     var r = new WindowsRect(0);
                     if (data.DoResize)
                     {
@@ -165,6 +176,12 @@ namespace AeroShot
                         WindowsApi.SystemParametersInfo(SPI_SETFONTSMOOTHINGTYPE, 0, FE_FONTSMOOTHINGCLEARTYPE, SPIF_UPDATEINIFILE | SPIF_SENDCHANGE);
                         WindowsApi.RedrawWindow(data.WindowHandle, IntPtr.Zero, IntPtr.Zero, RDW_FRAME | RDW_INVALIDATE | RDW_UPDATENOW | RDW_ALLCHILDREN);
                     }
+
+                    if (ShadowToggled)
+                    {
+                        WindowsApi.SystemParametersInfo(SPI_SETDROPSHADOW, 0, true, 0);
+                    }
+
                     // Show the taskbar again
                     if (data.WindowHandle != start &&
                         data.WindowHandle != taskbar)
@@ -257,6 +274,11 @@ namespace AeroShot
             bool aeroEnabled;
             WindowsApi.DwmIsCompositionEnabled(out aeroEnabled);
             return aeroEnabled;
+        }
+
+        private static bool ShadowEnabled()
+        {
+            return System.Windows.SystemParameters.DropShadow;
         }
 
         // Helper method to convert from a .NET color to a Win32 BGRA-format color.

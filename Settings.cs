@@ -40,6 +40,7 @@ namespace AeroShot
         public bool delayCheckbox;
         public byte delaySeconds = 3;
         public bool clearTypeCheckbox;
+        public bool shadowCheckbox;
         private readonly RegistryKey _registryKey;
 
 
@@ -126,6 +127,9 @@ namespace AeroShot
 
             if ((value = _registryKey.GetValue("ClearType")) != null && value.GetType() == (typeof(int)))
                 clearTypeCheckbox = ((int)value & 1) == 1;
+
+            if ((value = _registryKey.GetValue("Shadow")) != null && value.GetType() == (typeof(int)))
+                shadowCheckbox = ((int)value & 1) == 1;
 
             if ((value = _registryKey.GetValue("Delay")) != null && value.GetType() == (typeof(long)))
             {
