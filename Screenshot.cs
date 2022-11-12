@@ -197,30 +197,9 @@ namespace AeroShot
                     }
                     else
                     {
-                        if (data.ClipboardNotDisk && data.Background !=
-                            ScreenshotTask.BackgroundType.Transparent)
-                            // Screenshot is already opaque, don't need to modify it
-                            Clipboard.SetImage(s);
-                        else if (data.ClipboardNotDisk)
+                        if (data.ClipboardNotDisk)
                         {
-                            var whiteS = new Bitmap(s.Width, s.Height, PixelFormat.Format24bppRgb);
-                            using (Graphics graphics = Graphics.FromImage(whiteS))
-                            {
-                                graphics.Clear(Color.White);
-                                graphics.DrawImage(s, 0, 0, s.Width, s.Height);
-                            }
-                            using (var stream = new MemoryStream())
-                            {
-                                // Save screenshot in clipboard as PNG which some applications support (eg. Microsoft Office)
-                                s.Save(stream, ImageFormat.Png);
-                                var pngClipboardData = new DataObject("PNG", stream);
-
-                                // Add fallback for applications that don't support PNG from clipboard (eg. Photoshop or Paint)
-                                pngClipboardData.SetData(DataFormats.Bitmap, whiteS);
-                                Clipboard.Clear();
-                                Clipboard.SetDataObject(pngClipboardData, true);
-                            }
-                            whiteS.Dispose();
+                            Dibv5.SetImageAsDibv5(s);
                         }
                         else
                         {
